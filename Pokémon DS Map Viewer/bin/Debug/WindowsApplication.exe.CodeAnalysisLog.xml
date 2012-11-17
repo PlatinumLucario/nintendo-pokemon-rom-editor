@@ -1,0 +1,170 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="c:\program files (x86)\microsoft visual studio 11.0\team tools\static analysis tools\fxcop\Xml\CodeAnalysisReport.xsl"?>
+<FxCopReport Version="11.0">
+ <Targets>
+  <Target Name="C:\Users\Andrea\Documents\Reflector\Disassembler\Pokémon DS Map Viewer\bin\Debug\WindowsApplication.exe">
+   <Modules>
+    <Module Name="windowsapplication.exe">
+     <Namespaces>
+      <Namespace Name="PG4Map">
+       <Types>
+        <Type Name="MapEditor" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#SaveMap(System.Int32,System.IO.FileStream)" Kind="Method" Static="False" Accessibility="Private" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="Non eliminare gli oggetti più volte" Category="Microsoft.Usage" CheckId="CA2202" Status="Active" Created="2012-10-16 18:59:43Z" FixCategory="DependsOnFix">
+             <Issue Certainty="75" Level="Warning" Path="c:\Users\Andrea\Documents\Reflector\Disassembler\Pokémon DS Map Viewer\NPRE\Formats\Specific\Pokémon\Maps" File="MapEditor.cs" Line="8348">L'oggetto 'this' può essere eliminato più volte nel metodo 'MapEditor.SaveMap(int, FileStream)'. Per evitare di generare System.ObjectDisposedException, è consigliabile chiamare Dispose su un oggetto non più di una volta.: Lines: 8348</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#renderScene" Kind="Event" Static="False" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="DeclareEventHandlersCorrectly" Category="Microsoft.Design" CheckId="CA1009" Status="Active" Created="2012-10-16 18:59:43Z" FixCategory="Breaking">
+             <Issue Name="First" Certainty="95" Level="Error">Dichiarare il primo parametro di 'Action' come oggetto denominato 'sender'.</Issue>
+             <Issue Name="Second" Certainty="95" Level="Error">Dichiarare il secondo parametro di 'Action' come EventArgs o come istanza di un tipo che estende EventArgs, con nome 'e'.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+        <Type Name="Maps" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Messages>
+          <Message TypeName="TypesThatOwnDisposableFieldsShouldBeDisposable" Category="Microsoft.Design" CheckId="CA1001" Status="Active" Created="2012-10-16 18:59:43Z" FixCategory="DependsOnFix">
+           <Issue Name="DependsOnFix" Certainty="95" Level="CriticalError">Implementare IDisposable in 'Maps' poiché crea membri dei tipi IDisposable seguenti: 'ClosableMemoryStream'. Se 'Maps' è stato distribuito in precedenza, l'aggiunta di nuovi membri che implementano IDisposable in questo tipo è considerata una modifica di interruzione per i consumer esistenti.</Issue>
+          </Message>
+         </Messages>
+        </Type>
+        <Type Name="Preview_Obj" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#RenderScene" Kind="Event" Static="False" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="DeclareEventHandlersCorrectly" Category="Microsoft.Design" CheckId="CA1009" Status="Active" Created="2012-10-16 18:59:43Z" FixCategory="Breaking">
+             <Issue Name="First" Certainty="95" Level="Error">Dichiarare il primo parametro di 'Action' come oggetto denominato 'sender'.</Issue>
+             <Issue Name="Second" Certainty="95" Level="Error">Dichiarare il secondo parametro di 'Action' come EventArgs o come istanza di un tipo che estende EventArgs, con nome 'e'.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+        <Type Name="Program" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#WriteMappingFile(System.IO.FileInfo)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="Non eliminare gli oggetti più volte" Category="Microsoft.Usage" CheckId="CA2202" Status="Active" Created="2012-10-16 18:59:43Z" FixCategory="DependsOnFix">
+             <Issue Certainty="75" Level="Warning" Path="c:\Users\Andrea\Documents\Reflector\Disassembler\Pokémon DS Map Viewer\NPRE" File="Program.cs" Line="185">L'oggetto 'writer' può essere eliminato più volte nel metodo 'Program.WriteMappingFile(FileInfo)'. Per evitare di generare System.ObjectDisposedException, è consigliabile chiamare Dispose su un oggetto non più di una volta.: Lines: 185</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+       </Types>
+      </Namespace>
+      <Namespace Name="PG4Map.Formats">
+       <Types>
+        <Type Name="RGBA" Kind="Struct" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#.cctor()" Kind="Method" Static="True" Accessibility="Private" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="InitializeValueTypeStaticFieldsInline" Category="Microsoft.Usage" CheckId="CA2207" Status="Active" Created="2012-10-16 18:59:43Z" FixCategory="NonBreaking">
+             <Issue Certainty="95" Level="CriticalError" Path="c:\Users\Andrea\Documents\Reflector\Disassembler\Pokémon DS Map Viewer\NPRE\Formats\General\Varios" File="RGBA.cs" Line="61">Inizializzare tutti i campi statici in 'RGBA' quando questi campi sono dichiarati e rimuovere i costruttori statici espliciti.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#Item[System.Int32]" Kind="Property" Static="False" Accessibility="Public" ExternallyVisible="True">
+           <Accessors>
+            <Accessor Name="#get_Item(System.Int32)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
+             <Messages>
+              <Message TypeName="DoNotRaiseExceptionsInUnexpectedLocations" Category="Microsoft.Design" CheckId="CA1065" Status="Active" Created="2012-10-16 18:59:43Z" FixCategory="Breaking">
+               <Issue Name="PropertyGetter" Certainty="90" Level="Warning" Path="c:\Users\Andrea\Documents\Reflector\Disassembler\Pokémon DS Map Viewer\NPRE\Formats\General\Varios" File="RGBA.cs" Line="33">'RGBA.this.get(int)' crea un'eccezione di tipo 'Exception' e tale tipo di eccezione non dovrebbe essere generato in una proprietà. Se l'istanza di eccezione può essere generata, utilizzare un altro tipo di eccezione, convertire la proprietà in un metodo o modificare la logica della proprietà in modo che non generi più un'eccezione.</Issue>
+              </Message>
+             </Messages>
+            </Accessor>
+           </Accessors>
+          </Member>
+         </Members>
+        </Type>
+       </Types>
+      </Namespace>
+     </Namespaces>
+    </Module>
+   </Modules>
+  </Target>
+ </Targets>
+ <Rules>
+  <Rule TypeName="DeclareEventHandlersCorrectly" Category="Microsoft.Design" CheckId="CA1009">
+   <Name>Dichiarare correttamente i gestori eventi</Name>
+   <Description>Per convenzione, gli eventi .NET hanno due parametri che specificano, rispettivamente, l'origine e i dati dell'evento. Le firme del gestore eventi devono avere il seguente formato: void MyEventHandler(object sender, EventArgs e). Il parametro 'sender' è sempre di tipo System.Object, anche se è possibile utilizzare un tipo più specifico. il parametro 'e' è sempre di tipo System.EventArgs. Gli eventi che non forniscono dati devono utilizzare il tipo delegato System.EventHandler. I gestori eventi restituiscono un valore void, in modo da poter inviare ogni evento a più metodi di destinazione. Qualsiasi valore restituito da una destinazione viene perso dopo la prima chiamata.</Description>
+   <Resolution Name="First">Dichiarare il primo parametro di {0} come oggetto denominato 'sender'.</Resolution>
+   <Resolution Name="Second">Dichiarare il secondo parametro di {0} come EventArgs o come istanza di un tipo che estende EventArgs, con nome 'e'.</Resolution>
+   <Owner />
+   <Url>http://msdn.microsoft.com/library/ms182133(VS.100).aspx</Url>
+   <Email>[none]</Email>
+   <MessageLevel Certainty="95">Error</MessageLevel>
+   <File Name="designrules.dll" Version="11.0.0.0" />
+  </Rule>
+  <Rule TypeName="DoNotRaiseExceptionsInUnexpectedLocations" Category="Microsoft.Design" CheckId="CA1065">
+   <Name>Non generare eccezioni in posizioni non previste</Name>
+   <Description>Non generare esplicitamente eccezioni da posizioni non previste. Per alcuni metodi, come Equals e GetHashCode, non si prevede la generazione di eccezioni, quindi per le chiamate a tali metodi non viene di norma eseguito il wrapping nei blocchi try catch.</Description>
+   <Resolution Name="PropertyGetter">{0} crea un'eccezione di tipo {1} e tale tipo di eccezione non dovrebbe essere generato in una proprietà. Se l'istanza di eccezione può essere generata, utilizzare un altro tipo di eccezione, convertire la proprietà in un metodo o modificare la logica della proprietà in modo che non generi più un'eccezione.</Resolution>
+   <Owner />
+   <Url>http://msdn.microsoft.com/library/bb386039(VS.100).aspx</Url>
+   <Email>[none]</Email>
+   <MessageLevel Certainty="90">Error, Warning</MessageLevel>
+   <File Name="designrules.dll" Version="11.0.0.0" />
+  </Rule>
+  <Rule TypeName="InitializeValueTypeStaticFieldsInline" Category="Microsoft.Usage" CheckId="CA2207">
+   <Name>Inizializzare i campi statici dei tipi di valore inline</Name>
+   <Description>Non dichiarare costruttori statici espliciti su tipi di valore. L'inizializzazione di dati statici nei costruttori statici espliciti crea un tipo di valore che non viene contrassegnato come 'beforefieldinit' nei metadati. In questo caso, non è certo che il costruttore statico venga sempre chiamato prima dei membri dell'istanza sul tipo di valore.</Description>
+   <Resolution Name="Default">Inizializzare tutti i campi statici in {0} quando questi campi sono dichiarati e rimuovere i costruttori statici espliciti.</Resolution>
+   <Owner />
+   <Url>http://msdn.microsoft.com/library/ms182346(VS.100).aspx</Url>
+   <Email>[none]</Email>
+   <MessageLevel Certainty="95">CriticalError</MessageLevel>
+   <File Name="usagerules.dll" Version="11.0.0.0" />
+  </Rule>
+  <Rule TypeName="Non eliminare gli oggetti più volte" Category="Microsoft.Usage" CheckId="CA2202">
+   <Name>Non eliminare gli oggetti più volte</Name>
+   <Description>È possibile chiamare più volte un metodo Dispose implementato in modo corretto senza che vengano generate eccezioni. Poiché tuttavia tale risultato non è garantito, per evitare di generare System.ObjectDisposedException è consigliabile chiamare Dispose su un oggetto non più di una volta.</Description>
+   <Resolution Name="Default">L'oggetto {0} può essere eliminato più volte nel metodo {1}. Per evitare di generare System.ObjectDisposedException, è consigliabile chiamare Dispose su un oggetto non più di una volta.: Lines: 185</Resolution>
+   <Owner>RuleOwner</Owner>
+   <Url>http://msdn.microsoft.com/library/ms182334(VS.100).aspx</Url>
+   <Email />
+   <MessageLevel Certainty="75">Warning</MessageLevel>
+   <File Name="dataflowrules.dll" Version="11.0.0.0" />
+  </Rule>
+  <Rule TypeName="TypesThatOwnDisposableFieldsShouldBeDisposable" Category="Microsoft.Design" CheckId="CA1001">
+   <Name>I tipi proprietari di campi Disposable devono essere Disposable</Name>
+   <Description>I tipi che dichiarano membri Disposable devono implementare l'interfaccia IDisposable. Se il tipo non è proprietario di risorse non gestite, non implementare finalizzatori su di esso.</Description>
+   <Resolution Name="DependsOnFix">Implementare IDisposable in {0} poiché crea membri dei tipi IDisposable seguenti: {1}. Se {0} è stato distribuito in precedenza, l'aggiunta di nuovi membri che implementano IDisposable in questo tipo è considerata una modifica di interruzione per i consumer esistenti.</Resolution>
+   <Owner />
+   <Url>http://msdn.microsoft.com/library/ms182172(VS.100).aspx</Url>
+   <Email>[none]</Email>
+   <MessageLevel Certainty="95">CriticalError</MessageLevel>
+   <File Name="designrules.dll" Version="11.0.0.0" />
+  </Rule>
+ </Rules>
+ <Localized>
+  <String Key="Category">Categoria</String>
+  <String Key="Certainty">Attendibilità</String>
+  <String Key="CollapseAll">Comprimi tutto</String>
+  <String Key="CheckId">ID controllo</String>
+  <String Key="Error">Errore</String>
+  <String Key="Errors">errori</String>
+  <String Key="ExpandAll">Espandi tutto</String>
+  <String Key="Help">Guida</String>
+  <String Key="Line">Riga</String>
+  <String Key="Messages">messaggi</String>
+  <String Key="LocationNotStoredInPdb">[Percorso non archiviato nel PDB]</String>
+  <String Key="Project">Progetto</String>
+  <String Key="Resolution">Risoluzione</String>
+  <String Key="Rule">Regola</String>
+  <String Key="RuleFile">File delle regole</String>
+  <String Key="RuleDescription">Descrizione regola</String>
+  <String Key="Source">Origine</String>
+  <String Key="Status">Stato</String>
+  <String Key="Target">Destinazione</String>
+  <String Key="Warning">Avviso</String>
+  <String Key="Warnings">avvisi</String>
+  <String Key="ReportTitle">Report di analisi codice</String>
+ </Localized>
+</FxCopReport>
