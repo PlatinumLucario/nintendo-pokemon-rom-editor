@@ -1,0 +1,244 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <ProjectType>local</ProjectType>
+    <ProjectVersion>7.10.377</ProjectVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{3DFAB377-B7C0-4498-8AAE-35A7DFB545DF}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <AssemblyName>Pokémon DS Map Viewer</AssemblyName>
+    <OutputType>WinExe</OutputType>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>C:\Users\Andrea\Desktop\Nuova cartella\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>2</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>1880009F6DF536AD66A69AB6A444E54CC9F4E1AF</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>Pokémon DS Map Viewer_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>true</SignManifests>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <EmbeddedResource Include="NPRE\Formats\Specific\Pokémon\Maps\ChangeSize.resx">
+      <DependentUpon>ChangeSize.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NPRE\Formats\Specific\Pokémon\Maps\MapMatrix.resx">
+      <DependentUpon>MapMatrix.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NPRE\Formats\Specific\Pokémon\Maps\SetNewMaterial.resx">
+      <DependentUpon>SetNewMaterial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NPRE\Formats\Specific\Pokémon\Maps\IsBWDialog.resx">
+      <DependentUpon>IsBWDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NPRE\Formats\Specific\Pokémon\Maps\MapCreator.resx">
+      <DependentUpon>MapCreator.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NPRE\Formats\Specific\Pokémon\Maps\MapEditor.resx">
+      <DependentUpon>MapEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NPRE\Formats\Specific\Pokémon\Scripts\CommandInfo.resx">
+      <DependentUpon>CommandInfo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NPRE\Formats\Specific\Pokémon\Scripts\Scripts.resx">
+      <DependentUpon>Scripts.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NPRE\Formats\Specific\Pokémon\Text\Texts.resx">
+      <DependentUpon>Texts.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NPRE\GUI\ScriptRoutine.resx">
+      <DependentUpon>ScriptRoutine.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NPRE\GUI\Main.resx">
+      <DependentUpon>Main.cs</DependentUpon>
+    </EmbeddedResource>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Tao.Platform.Windows">
+      <HintPath>..\..\..\..\Desktop\Pokèmon\NPRE\Alpha_3.0.0.0\Alpha 3.0.0.0\Tao.Platform.Windows.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Core" />
+    <Reference Include="Tao.OpenGl">
+      <HintPath>..\..\..\..\Desktop\Pokèmon\NPRE\Alpha_3.0.0.0\Alpha 3.0.0.0\Tao.OpenGl.dll</HintPath>
+    </Reference>
+    <Compile Include="NPRE\AssemblyInfo.cs" />
+    <Compile Include="NPRE\Formats\General\Archive\AB_Ed.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NPRE\Formats\General\Archive\Common.cs" />
+    <Compile Include="NPRE\Formats\General\Archive\Narc.cs" />
+    <Compile Include="NPRE\Formats\General\Archive\Nds.cs" />
+    <Compile Include="NPRE\Formats\General\Images\NANR.cs" />
+    <Compile Include="NPRE\Formats\General\Images\NCER.cs" />
+    <Compile Include="NPRE\Formats\General\Images\NCGR.cs" />
+    <Compile Include="NPRE\Formats\General\Images\NCLR.cs" />
+    <Compile Include="NPRE\Formats\General\Images\NitroCFormat.cs" />
+    <Compile Include="NPRE\Formats\General\Images\NSCR.cs" />
+    <Compile Include="NPRE\Formats\General\Models\Nsbmd.cs" />
+    <Compile Include="NPRE\Formats\General\Models\NsbmdModel.cs" />
+    <Compile Include="NPRE\Formats\General\Models\Nsbtx.cs" />
+    <Compile Include="NPRE\Formats\General\Models\Renderer.cs" />
+    <Compile Include="NPRE\Formats\General\Varios\MTX44.cs" />
+    <Compile Include="NPRE\Formats\General\Varios\RGBA.cs" />
+    <Compile Include="NPRE\Formats\Specific\Pokémon\Events\Events.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NPRE\Formats\Specific\Pokémon\Maps\ChangeSize.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NPRE\Formats\Specific\Pokémon\Maps\ChangeSize.Designer.cs">
+      <DependentUpon>ChangeSize.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NPRE\Formats\Specific\Pokémon\Maps\MapMatrix.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NPRE\Formats\Specific\Pokémon\Maps\MapMatrix.Designer.cs">
+      <DependentUpon>MapMatrix.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NPRE\Formats\Specific\Pokémon\Maps\SetNewMaterial.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NPRE\Formats\Specific\Pokémon\Maps\SetNewMaterial.Designer.cs">
+      <DependentUpon>SetNewMaterial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NPRE\Formats\Specific\Pokémon\Maps\IsBWDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NPRE\Formats\Specific\Pokémon\Maps\MapCreator.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NPRE\Formats\Specific\Pokémon\Maps\MapEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NPRE\Formats\Specific\Pokémon\Maps\Maps.cs" />
+    <Compile Include="NPRE\Formats\Specific\Pokémon\Maps\MovLoader.cs" />
+    <Compile Include="NPRE\Formats\Specific\Pokémon\Maps\ObjLoader.cs" />
+    <Compile Include="NPRE\Formats\Specific\Pokémon\Maps\PkmnMapDemuxer.cs" />
+    <Compile Include="NPRE\Formats\Specific\Pokémon\Maps\PkmnMapDemuxer_Bw.cs" />
+    <Compile Include="NPRE\Formats\Specific\Pokémon\Maps\PkmnMapDemuxer_Hg.cs" />
+    <Compile Include="NPRE\Formats\Specific\Pokémon\Maps\PkmnMapHeader.cs" />
+    <Compile Include="NPRE\Formats\Specific\Pokémon\Maps\PkmnMapHeader_Bw.cs" />
+    <Compile Include="NPRE\Formats\Specific\Pokémon\Maps\PkmnMapHeader_Hg.cs" />
+    <Compile Include="NPRE\Formats\Specific\Pokémon\Maps\S0Loader.cs" />
+    <Compile Include="NPRE\Formats\Specific\Pokémon\Scripts\CommandInfo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NPRE\Formats\Specific\Pokémon\Scripts\CommandInfo.Designer.cs">
+      <DependentUpon>CommandInfo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NPRE\Formats\Specific\Pokémon\Scripts\Scripts.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NPRE\Formats\Specific\Pokémon\Text\Texts.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NPRE\Global.cs" />
+    <Compile Include="NPRE\Compression\CompressionFormat.cs" />
+    <Compile Include="NPRE\Compression\Huffman.cs" />
+    <Compile Include="NPRE\GUI\ScriptRoutine.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NPRE\GUI\ScriptRoutine.Designer.cs">
+      <DependentUpon>ScriptRoutine.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NPRE\GUI\Main.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NPRE\Compression\IOUtils.cs" />
+    <Compile Include="NPRE\Compression\SimpleReversedPrioQueue!2.cs" />
+    <Compile Include="NPRE\GUI\Hex_Viewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NPRE\Compression\LZOvl.cs" />
+    <Compile Include="NPRE\System\IO\StreamExt.cs" />
+    <Compile Include="NPRE\System\IO\ClosableMemoryStream.cs" />
+    <Compile Include="NPRE\Compression\RLE.cs" />
+    <Compile Include="NPRE\GUI\Texture.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NPRE\GUI\Preview_Obj.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NPRE\Properties\Resources.cs" />
+    <Compile Include="NPRE\Compression\LZ11.cs" />
+    <Compile Include="NPRE\GUI\TileView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NPRE\Compression\LZ10.cs" />
+    <Compile Include="NPRE\Compression\Convertir.cs" />
+    <Compile Include="NPRE\Program.cs" />
+    <Compile Include="NPRE\Compression\LZUtil.cs" />
+    <Compile Include="NPRE\Utils.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Pokémon DS Map Viewer_TemporaryKey.pfx" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 %28x86 e x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+</Project>

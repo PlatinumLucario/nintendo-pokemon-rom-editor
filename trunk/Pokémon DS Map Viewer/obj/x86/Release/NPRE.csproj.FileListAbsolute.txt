@@ -1,0 +1,19 @@
+C:\Users\Andrea\Documents\Reflector\Disassembler\Pokémon DS Map Viewer\bin\Release\Pokémon DS Map Viewer.exe.manifest
+C:\Users\Andrea\Documents\Reflector\Disassembler\Pokémon DS Map Viewer\bin\Release\Pokémon DS Map Viewer.application
+C:\Users\Andrea\Documents\Reflector\Disassembler\Pokémon DS Map Viewer\bin\Release\Pokémon DS Map Viewer.exe
+C:\Users\Andrea\Documents\Reflector\Disassembler\Pokémon DS Map Viewer\bin\Release\Pokémon DS Map Viewer.pdb
+C:\Users\Andrea\Documents\Reflector\Disassembler\Pokémon DS Map Viewer\bin\Release\Tao.OpenGl.dll
+C:\Users\Andrea\Documents\Reflector\Disassembler\Pokémon DS Map Viewer\bin\Release\Tao.Platform.Windows.dll
+C:\Users\Andrea\Documents\Reflector\Disassembler\Pokémon DS Map Viewer\obj\x86\Release\ResolveAssemblyReference.cache
+C:\Users\Andrea\Documents\Reflector\Disassembler\Pokémon DS Map Viewer\obj\x86\Release\PG4Map.MapCreator.resources
+C:\Users\Andrea\Documents\Reflector\Disassembler\Pokémon DS Map Viewer\obj\x86\Release\PG4Map.MapEditor.resources
+C:\Users\Andrea\Documents\Reflector\Disassembler\Pokémon DS Map Viewer\obj\x86\Release\PG4Map.Formats.Scripts.resources
+C:\Users\Andrea\Documents\Reflector\Disassembler\Pokémon DS Map Viewer\obj\x86\Release\PG4Map.Formats.Texts.resources
+C:\Users\Andrea\Documents\Reflector\Disassembler\Pokémon DS Map Viewer\obj\x86\Release\PG4Map.Main.resources
+C:\Users\Andrea\Documents\Reflector\Disassembler\Pokémon DS Map Viewer\obj\x86\Release\GenerateResource.read.1.tlog
+C:\Users\Andrea\Documents\Reflector\Disassembler\Pokémon DS Map Viewer\obj\x86\Release\GenerateResource.write.1.tlog
+C:\Users\Andrea\Documents\Reflector\Disassembler\Pokémon DS Map Viewer\obj\x86\Release\Pokémon DS Map Viewer.exe.manifest
+C:\Users\Andrea\Documents\Reflector\Disassembler\Pokémon DS Map Viewer\obj\x86\Release\Pokémon DS Map Viewer.application
+C:\Users\Andrea\Documents\Reflector\Disassembler\Pokémon DS Map Viewer\obj\x86\Release\Pokémon DS Map Viewer.exe
+C:\Users\Andrea\Documents\Reflector\Disassembler\Pokémon DS Map Viewer\obj\x86\Release\Pokémon DS Map Viewer.pdb
+C:\Users\Andrea\Documents\Reflector\Disassembler\Pokémon DS Map Viewer\obj\x86\Release\PG4Map.ChangeSizeDialog.resources
