@@ -3999,7 +3999,7 @@
             InitializeComponent();
             OpenGlControl.InitializeContexts();
             renderer = new Renderer(this);
-            renderScene += renderer.RenderFunc1;
+            renderScene += renderer.renderMultipleAction;
             Render();
             reactionNormal(main);
         }
@@ -4034,6 +4034,19 @@
         private void reactionMap(Maps actualMap)
         {
             Tex_File.Text = MapEditor.textureName;
+            
+            resetInterfaceMap();
+            
+            actualMap.associationTable = actualModel.assTableList;
+            
+            PopObjTable(actualMap);
+            PopMovTable(actualMap);
+
+            renderer.modelList.Clear();
+        }
+
+        private void resetInterfaceMap()
+        {
             MapList.Enabled = false;
             SaveObj.Enabled = true;
             AddObj.Enabled = true;
@@ -4044,13 +4057,42 @@
             MovInfo.Columns.Clear();
             ObjInfo.Rows.Clear();
             PolyNumMax.Value = -1M;
-            actualMap.associationTable = actualModel.assTableList;
-            PopObjTable(actualMap);
-            PopMovTable(actualMap);
-            renderer.modelList.Clear();
         }
 
         private void reactionModel()
+        {
+            resetInterfaceModel();
+            
+            PopAssTable(actualModel);
+
+            printInfoMap();
+            
+            renderer.modelList.Clear();
+            Render();
+
+            if (showSingular.Checked)
+                renderMultiple();
+            else
+                renderSingular();
+
+            loadAvailableTextures(actualModel.actualTex);
+
+            showItem();
+        }
+
+        private void renderMultiple()
+        {
+            renderer.modelList.Add(actualModel);
+            renderScene += new Action(renderer.renderSingularAction);
+        }
+
+        private void renderSingular()
+        {
+            renderer.modelList.Add(actualModel);
+            renderScene += new Action(renderer.renderSingularAction);
+        }
+
+        private void resetInterfaceModel()
         {
             AssTable.Rows.Clear();
             AvaTexList.Items.Clear();
@@ -4059,28 +4101,6 @@
             PolyNumMax.Enabled = true;
             AvaTexList.Enabled = true;
             AvaPalList.Enabled = true;
-            PopAssTable(actualModel);
-
-            printInfoMap();
-            renderer.modelList.Clear();
-            Render();
-
-            if (CheckText.Checked)
-            {
-                renderer.modelList.Add(actualModel);
-                //if (renderScene == null)
-                renderScene += new Action(renderer.RenderFunc2);
-            }
-            else
-            {
-                renderer.modelList.Add(actualModel);
-                //if (renderScene == null)
-                renderScene += new Action(renderer.RenderFunc1);
-            }
-
-            loadAvailableTextures(actualModel.actualTex);
-
-            ShowItem();
         }
 
         private void loadAvailableTextures(Nsbtx nsbtx)
@@ -5069,7 +5089,7 @@
 
         private void ReactionNarc()
         {
-            renderScene += renderer.RenderFunc1;
+            renderScene += renderer.renderMultipleAction;
             Render();
             UpdateType();
             MapList.Enabled = true;
@@ -7622,7 +7642,7 @@
             OpenGlControl.Invalidate();
         }
 
-        private void ShowItem()
+        private void showItem()
         {
             Console.AppendText("\nStart Showing method");
             var shapeNum = actualModel.getMDL0at(0).modelInfo.shapeNum;
@@ -7682,7 +7702,7 @@
             PopAssTable(actualModel);
 
             Console.AppendText("\nTry to show...");
-            ShowItem();
+            showItem();
             OpenGlControl.Invalidate();
             if (Maps.type != NSBMD_MODEL)
             {
@@ -8023,10 +8043,8 @@
             if (isPolygonInAssTable())
             {
                 Console.AppendText("\nTexture is active: " + CheckText.Checked);
-                if (CheckText.Checked)
-                    renderer.text_on = 1;
-                else
-                    renderer.text_on = 0;
+
+                setTextureVisibility();
 
 
                 if (actualModel.actualTex != null)
@@ -8040,16 +8058,27 @@
                 {
                     Console.AppendText("\nStart rendering(Full mode)");
                     renderer.setModel(actualModel, false);
-                    renderScene += new Action(renderer.RenderFunc2);
+                    renderer.renderMultipleAction();
+                   // renderScene += new Action(renderer.renderMultipleAction);
                 }
                 else
                 {
                     Console.AppendText("\nStart rendering(Singular mode)");
                     renderer.setModel(actualModel, true);
-                    renderScene += new Action(renderer.RenderFunc1);
+                    renderer.renderSingularAction();
+                    //renderScene += new Action(renderer.renderSingularAction);
                 }
+
                 popVerTable();
             }
+        }
+
+        private void setTextureVisibility()
+        {
+            if (CheckText.Checked)
+                renderer.text_on = 1;
+            else
+                renderer.text_on = 0;
         }
 
         private Boolean isPolygonInAssTable()
@@ -8242,7 +8271,7 @@
                 reactionModel();
 
 
-                ShowItem();
+                showItem();
 
                 OpenGLControl.Invalidate();
             }
@@ -8389,7 +8418,7 @@
                 PolyNumMax.Enabled = true;
                 reactionModel();
                 PopAssTable(actualModel);
-                ShowItem();
+                showItem();
             }
         }
 
@@ -8405,9 +8434,9 @@
             Gl.glLoadIdentity();
  
             var height = Math.Tan(45.0f / 2) * (0.12f + 32.0f) / 4;
-            Gl.glOrtho(-height * aspect, height * aspect, -height, height, 0.12f, 32.0f);
+            //Gl.glOrtho(-height * aspect, height * aspect, -height, height, 0.12f, 32.0f);
 
-            //Glu.gluPerspective(45.0f, aspect, 0.12f, 32.0f);
+            Glu.gluPerspective(45.0f, aspect, 0.12f, 32.0f);
             if (renderScene != null)
             {
                 renderScene();

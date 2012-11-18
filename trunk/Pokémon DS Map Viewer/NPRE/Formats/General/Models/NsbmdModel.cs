@@ -288,7 +288,7 @@
             public int flag;
             public uint offsetDL;
             public int sizeDL;
-            public int materialId;
+            //public int materialId;
             public int stackId;
             public byte[] polygonData;
             public List<CommandStruct> commandList;
