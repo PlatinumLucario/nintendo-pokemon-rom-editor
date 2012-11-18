@@ -1293,6 +1293,11 @@ public class Utils
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar, "BATTLE_RESULT");
                 scriptBoxEditor.AppendText(space + "BATTLE_RESULT " + commandList[3] + " = " + commandList[2] + "();\n");
                 break;
+            case "StoreBattleResult2":
+                newVar = checkStored(commandList, 3);
+                addToVarNameDictionary(varNameDictionary, varLevel, newVar, "BATTLE_RESULT2");
+                scriptBoxEditor.AppendText(space + "BATTLE_RESULT2 " + commandList[3] + " = " + commandList[2] + "();\n");
+                break;
             case "StoreBoundedVariable":
                 newVar = checkStored(commandList, 3);
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar, "BOUNDED_VARIABLE");

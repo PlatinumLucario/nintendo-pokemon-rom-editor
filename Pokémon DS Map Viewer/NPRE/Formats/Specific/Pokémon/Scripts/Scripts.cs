@@ -3134,6 +3134,13 @@ namespace PG4Map.Formats
                     com.Name = "StoreUGFriendNumber";
                     com.parameters.Add(reader.ReadUInt16());
                     break;
+                case 0x216:
+                    com.parameters.Add(reader.ReadUInt16());
+                    break;
+                case 0x217:
+                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16());
+                    break;
                 case 0x218:
                     com.Name = "StoreRandomPokèmonSearch";
                     com.parameters.Add(reader.ReadUInt16());
@@ -3145,6 +3152,12 @@ namespace PG4Map.Formats
                 case 0x21A:
                     com.Name = "CheckRandomPokèmonSearch";
                     com.parameters.Add(reader.ReadUInt16());
+                    break;
+                case 0x21C:
+                    com.Name = "21C";
+                    com.parameters.Add(reader.ReadByte());
+                    //com.parameters.Add(reader.ReadUInt16());
+                    //com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x21D:
                     com.parameters.Add(reader.ReadUInt16());
@@ -3429,6 +3442,21 @@ namespace PG4Map.Formats
                 case 0x268:
                     com.parameters.Add(reader.ReadUInt16());
                     break;
+                case 0x269:
+                    com.Name = "ActRegigigas";
+                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16());
+                    break;
+                case 0x26A:
+                    com.Name = "26A";
+                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16());
+                    break;
+                case 0x26B:
+                    com.Name = "CheckRegis";
+                    com.parameters.Add(reader.ReadUInt16());
+                    break;
                 case 0x270:
                     com.parameters.Add(reader.ReadByte());
                     com.parameters.Add(reader.ReadUInt16());
@@ -3445,6 +3473,10 @@ namespace PG4Map.Formats
                     break;
                 case 0x27A:
                     com.Name = "ShowPanoramicView";
+                    break;
+                case 0x27C:
+                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x27D:
                     com.Name = "SetVarTrendyWord";
@@ -3510,6 +3542,10 @@ namespace PG4Map.Formats
                     break;
                 case 0x291:
                     com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16());
+                    break;
+                case 0x292:
+                    com.parameters.Add(reader.ReadByte());
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x29C:
