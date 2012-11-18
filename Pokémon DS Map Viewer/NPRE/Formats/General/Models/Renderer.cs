@@ -23,11 +23,7 @@
         private MTX44 CurrentMatrix;
         private NsbmdModel.MatTexPalStruct actualMat;
         private MapEditor mapEditor;
-        private bool g_mat = true;
         private static int gCurrentVertex = 0;
-        private bool gOptTexture = true;
-        private bool gOptVertexMode = false;
-        private bool gOptWireFrame = false;
         private float transZ;
         private float rotY;
         private float rotX;
@@ -181,14 +177,14 @@
         #endregion
 
         #region Painting Texture
+
         public void MakeTexture(NsbmdModel mod, List<NsbmdModel.MatTexPalStruct> matList, int idActualMaterial, Boolean modeSingular)
         {
             if (matList == null)
                 matList = mod.matTexPalList;
             if (matList[idActualMaterial].format == 0)
                 return;
-            //MessageBox.Show("\nMaterial num: " + idActualMaterial);
-            //MessageBox.Show("\nMaterial format: " + matList[idActualMaterial].format);
+
             actualMat = matList[idActualMaterial];
             if (actualMat.palData == null)
                 return;
@@ -208,18 +204,21 @@
             }
             byte[] pixels = list.ToArray();
 
-            if (idActualMaterial == 0 && matList.Count == 1)
-            {
-                //MapEditor.Console.AppendText("\nOne polygon map");
+            if (isOneMaterialMap(matList, idActualMaterial))
                 Gl.glBindTexture(Gl.GL_TEXTURE_2D, (int)0);
-            }
             if (modeSingular == true)
                 Gl.glBindTexture(Gl.GL_TEXTURE_2D, (int)1);
             else
                 Gl.glBindTexture(Gl.GL_TEXTURE_2D, (int)idActualMaterial + 1);
+
             Gl.glTexImage2D(Gl.GL_TEXTURE_2D, 0, 0x1908, actualMat.width, actualMat.heigth, 0, 0x1908, 0x1401, pixels);
             Gl.glTexParameteri(Gl.GL_TEXTURE_2D, 0x2801, 0x2600);
             Gl.glTexParameteri(Gl.GL_TEXTURE_2D, 0x2800, 0x2600);
+        }
+
+        private static bool isOneMaterialMap(List<NsbmdModel.MatTexPalStruct> matList, int idActualMaterial)
+        {
+            return idActualMaterial == 0 && matList.Count == 1;
         }
 
         private void checkImageFlipRotated()
@@ -408,7 +407,7 @@
         }
         #endregion
 
-        public NsbmdModel.ShapeInfoStruct Process3DCommand(byte[] polydata, NsbmdModel.ShapeInfoStruct poly)
+        public NsbmdModel.ShapeInfoStruct process3DCommand(byte[] polydata, NsbmdModel.ShapeInfoStruct poly)
         {
             if (polydata == null)
                 return poly;
@@ -767,7 +766,7 @@
             }
         }
 
-        private static void reactionTextureCoordinate(ref NsbmdModel.ShapeInfoStruct poly, BinaryReader reader, ref NsbmdModel.CommandStruct actualCommand, int idCounter, int blockCounter)
+        private void reactionTextureCoordinate(ref NsbmdModel.ShapeInfoStruct poly, BinaryReader reader, ref NsbmdModel.CommandStruct actualCommand, int idCounter, int blockCounter)
         {
             /*
                   Set Texture Coordinates (W)
@@ -790,7 +789,7 @@
             }
         }
 
-        private static void reactionNormal(ref NsbmdModel.ShapeInfoStruct poly, BinaryReader reader, ref NsbmdModel.CommandStruct actualCommand, int idCounter, int blockCounter)
+        private void reactionNormal(ref NsbmdModel.ShapeInfoStruct poly, BinaryReader reader, ref NsbmdModel.CommandStruct actualCommand, int idCounter, int blockCounter)
         {
             /*
                   Set Normal Vector (W)
@@ -814,7 +813,7 @@
             poly.commandList[blockCounter + idCounter] = actualCommand;
         }
 
-        private static void reactionColor(ref NsbmdModel.ShapeInfoStruct poly, BinaryReader reader, ref NsbmdModel.CommandStruct actualCommand, int idCounter, int blockCounter)
+        private void reactionColor(ref NsbmdModel.ShapeInfoStruct poly, BinaryReader reader, ref NsbmdModel.CommandStruct actualCommand, int idCounter, int blockCounter)
         {
             actualCommand = poly.commandList[blockCounter + idCounter];
             actualCommand.par = reader.ReadInt32();
@@ -873,97 +872,84 @@
 
 
 
-        public NsbmdModel RenderModel(int idActualPol, int isTextured, int idActualMaterial)
+        public NsbmdModel renderSinglePolygon(int idActualPol, int isTextured, int idActualMaterial)
         {
-            if (idModel > modelList.Count || modelList.Count <= 0)
+            if (wrongModel())
                 return null;
-            if (idActualPol > modelList[idModel].getMDL0at(0).shapeInfo.shapeList.Count)
+            if (wrongPolygon(idActualPol))
             {
                 mapEditor.Console.AppendText("Wrong id Polygon: " + idActualPol);
                 return null;
             }
-            if (idActualMaterial > modelList[idModel].getMaterials().Count)
+            if (wrongMaterial(idActualMaterial))
             {
                 mapEditor.Console.AppendText("Wrong id Material: " + idActualMaterial);
                 return null;
             }
-            NsbmdModel.ShapeInfoStruct actualPolygon = modelList[idModel].getMDL0at(0).shapeInfo.shapeList[idActualPol];
-            int matid = actualPolygon.materialId;
-            NsbmdModel.MatTexPalStruct actualMaterials = modelList[idModel].getMaterials()[idActualMaterial];
-            NsbmdModel.MatInfoStruct actualMatInfo = modelList[idModel].getMDL0at(0).material.matInfoList[idActualMaterial];
+            var actualPolygon = modelList[idModel].getMDL0at(0).shapeInfo.shapeList[idActualPol];
+            var actualMaterials = modelList[idModel].getMaterials()[idActualMaterial];
+            var actualMatInfo = modelList[idModel].getMDL0at(0).material.matInfoList[idActualMaterial];
 
             for (int num_obj = 0; num_obj < modelList[idModel].getMDL0at(0).nodeInfoList.Count; num_obj++)
             {
-                //MapEditor.Console.AppendText("\nRendering model: " + idActualPol + " with material: " + idActualMaterial);
-
-
-                NsbmdModel.NodeInfoStruct actualNodeInfo = modelList[idModel].getMDL0at(0).nodeInfoList[num_obj];
-
-                if (actualNodeInfo.restoreId != -1)
-                    Gl.glLoadMatrixf(MatrixStack[actualNodeInfo.restoreId].Floats);
-                if (actualNodeInfo.stackId != -1)
-                {
-                    Gl.glGetFloatv(Gl.GL_MODELVIEW_MATRIX, MatrixStack[actualNodeInfo.stackId].Floats);
-                    stackID = actualNodeInfo.stackId;
-                }
-
-                Gl.glLoadIdentity();
-                if ((gOptTexture && !gOptWireFrame) && g_mat)
-                {
-                    if (matid == -1)
-                    {
-                        if (isTextured == 0)
-                        {
-                            Gl.glPolygonMode(0x408, 0x1b01);
-                            Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0);
-                        }
-                        else
-                        {
-                            Gl.glPolygonMode(0x408, 0x1b02);
-                            Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0);
-                        }
-                    }
-                    else
-                    {
-                        if (isTextured == 0)
-                        {
-                            Gl.glPolygonMode(0x408, 0x1b01);
-                            Gl.glBindTexture(Gl.GL_TEXTURE_2D, 1);
-                        }
-                        else
-                        {
-                            Gl.glPolygonMode(0x408, 0x1b02);
-                            Gl.glBindTexture(Gl.GL_TEXTURE_2D, 1);
-                        }
-                        Gl.glMatrixMode(Gl.GL_TEXTURE);
-                        Gl.glLoadIdentity();
-                        if ((actualMaterials.flipS == 1) && (actualMaterials.repeatS > 0))
-                            Gl.glScalef(2f / ((float)actualMaterials.width), 1f / ((float)actualMaterials.heigth), 1f);
-                        else if ((actualMaterials.flipT == 1) && (actualMaterials.repeatT > 0))
-                            Gl.glScalef(1f / ((float)actualMaterials.width), 2f / ((float)actualMaterials.heigth), 1f);
-                        else
-                            Gl.glScalef(1f / ((float)actualMaterials.width), 1f / ((float)actualMaterials.heigth), 1f);
-                    }
-                }
-                else if (isTextured == 0)
-                {
-                    Gl.glPolygonMode(0x408, 0x1b01);
-                    Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0);
-                }
-                else
-                {
-                    Gl.glPolygonMode(0x408, 0x1b02);
-                    Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0);
-                }
-
-                Gl.glColor3f(1f, 1f, 1f);
-                stackID = actualPolygon.stackId;
-                modelList[idModel].getMDL0at(0).shapeInfo.shapeList[idActualPol] = Process3DCommand(actualPolygon.polygonData, actualPolygon);
+                processObjects(idActualPol, isTextured, ref actualPolygon, ref actualMaterials, num_obj);
             }
             return modelList[idModel].getMDL0at(0);
         }
 
-        public NsbmdModel RenderModel2(int idActualPoly, int isTextured, int[] idMaterialArray)
+        private void processObjects(int idActualPol, int isTextured, ref NsbmdModel.ShapeInfoStruct actualPolygon, ref NsbmdModel.MatTexPalStruct actualMaterials, int num_obj)
+        {
+            NsbmdModel.NodeInfoStruct actualNodeInfo = modelList[idModel].getMDL0at(0).nodeInfoList[num_obj];
+
+            if (actualNodeInfo.restoreId != -1)
+                Gl.glLoadMatrixf(MatrixStack[actualNodeInfo.restoreId].Floats);
+            if (actualNodeInfo.stackId != -1)
+            {
+                Gl.glGetFloatv(Gl.GL_MODELVIEW_MATRIX, MatrixStack[actualNodeInfo.stackId].Floats);
+                stackID = actualNodeInfo.stackId;
+            }
+
+            Gl.glLoadIdentity();
+
+            actualPolygon = modelList[idModel].getMDL0at(0).shapeInfo.shapeList[idActualPol];
+            var actualMaterial = modelList[idModel].getMaterials()[idActualMaterial];
+
+            if (isTextured == 0)
+                Gl.glPolygonMode(0x408, 0x1b01);
+            else
+                Gl.glPolygonMode(0x408, 0x1b02);
+
+            Gl.glBindTexture(Gl.GL_TEXTURE_2D, idActualMaterial +  1);
+            Gl.glMatrixMode(Gl.GL_TEXTURE);
+            Gl.glLoadIdentity();
+            if ((actualMaterials.flipS == 1) && (actualMaterials.repeatS > 0))
+                Gl.glScalef(2f / ((float)actualMaterials.width), 1f / ((float)actualMaterials.heigth), 1f);
+            else if ((actualMaterials.flipT == 1) && (actualMaterials.repeatT > 0))
+                Gl.glScalef(1f / ((float)actualMaterials.width), 2f / ((float)actualMaterials.heigth), 1f);
+            else
+                Gl.glScalef(1f / ((float)actualMaterials.width), 1f / ((float)actualMaterials.heigth), 1f);
+
+            Gl.glColor3f(1f, 1f, 1f);
+            stackID = actualPolygon.stackId;
+            modelList[idModel].getMDL0at(0).shapeInfo.shapeList[idActualPol] = process3DCommand(actualPolygon.polygonData, actualPolygon);
+        }
+
+        private bool wrongMaterial(int idActualMaterial)
+        {
+            return idActualMaterial > modelList[idModel].getMaterials().Count;
+        }
+
+        private bool wrongPolygon(int idActualPol)
+        {
+            return idActualPol > modelList[idModel].getMDL0at(0).shapeInfo.shapeList.Count;
+        }
+
+        private bool wrongModel()
+        {
+            return idModel > modelList.Count || modelList.Count <= 0;
+        }
+
+        public NsbmdModel renderAllPolygon(int idActualPoly, int isTextured, int[] idMaterialArray)
         {
             
             if (modelList.Count == 0)
@@ -976,73 +962,55 @@
                 Gl.glGetFloatv(Gl.GL_MODELVIEW_MATRIX, MatrixStack[0].Floats);
                 stackID = 0;
                 Gl.glLoadIdentity();
-                for (int polyCounter = 0; polyCounter < (idActualPoly + 1); polyCounter++)
-                {
-                    var actualPolygon = modelList[idModel].getMDL0at(0).shapeInfo.shapeList[polyCounter];
-                    var matId = idMaterialArray[polyCounter];
-                    var actualMaterial = modelList[idModel].getMaterials()[matId];
-                    if ((gOptTexture && !gOptWireFrame) && g_mat)
-                    {
-                        if (matId == -1)
-                        {
-                            if (isTextured == 0)
-                            {
-                                Gl.glPolygonMode(0x408, 0x1b01);
-                                Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0);
-                            }
-                            else
-                            {
-                                Gl.glPolygonMode(0x408, 0x1b02);
-                                Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0);
-                            }
-                        }
-                        else
-                        {
-                            if (isTextured == 0)
-                            {
-                                Gl.glPolygonMode(0x408, 0x1b01);
-                                Gl.glBindTexture(Gl.GL_TEXTURE_2D, (int)(matId + 1));
-                            }
-                            else
-                            {
-                                Gl.glPolygonMode(0x408, 0x1b02);
-                                Gl.glBindTexture(Gl.GL_TEXTURE_2D, (int)(matId + 1));
-                            }
-                            Gl.glMatrixMode(0x1702);
-                            Gl.glLoadIdentity();
-                            if ((actualMaterial.flipS == 1) && (actualMaterial.repeatS > 0))
-                                Gl.glScalef(2f / ((float)actualMaterial.width), 1f / ((float)actualMaterial.heigth), 1f);
-                            if ((actualMaterial.flipT == 1) && (actualMaterial.repeatT > 0))
-                                Gl.glScalef(1f / ((float)actualMaterial.width), 2f / ((float)actualMaterial.heigth), 1f);
-                            else
-                                Gl.glScalef(1f / ((float)actualMaterial.width), 1f / ((float)actualMaterial.heigth), 1f);
-                        }
-                    }
-                    else if (isTextured == 0)
-                    {
-                        Gl.glPolygonMode(0x408, 0x1b01);
-                        Gl.glBindTexture(0x806f, 0);
-                    }
-                    else
-                    {
-                        Gl.glPolygonMode(0x408, 0x1b02);
-                        Gl.glBindTexture(0x806f, 0);
-                    }
-                    Gl.glColor3f(1f, 1f, 1f);
-                    stackID = actualPolygon.stackId;
-                    modelList[idModel].getMDL0at(0).shapeInfo.shapeList[polyCounter] = Process3DCommand(actualPolygon.polygonData, actualPolygon);
-                }
+                for (int polyCounter = 0; polyCounter <= idActualPoly; polyCounter++)
+                    renderPolygon(isTextured, idMaterialArray, polyCounter);
             }
             return modelList[idModel].getMDL0at(0);
         }
 
-        public void RenderFunc1()
+        private void renderPolygon(int isTextured, int[] idMaterialArray, int polyCounter)
         {
-            
+            var actualPolygon = modelList[idModel].getMDL0at(0).shapeInfo.shapeList[polyCounter];
+            var matId = idMaterialArray[polyCounter];
+            var actualMaterial = modelList[idModel].getMaterials()[matId];
 
+            if (isTextured == 0)
+                Gl.glPolygonMode(0x408, 0x1b01);
+            else
+                Gl.glPolygonMode(0x408, 0x1b02);
+            Gl.glBindTexture(Gl.GL_TEXTURE_2D, (int)(matId + 1));
+            Gl.glMatrixMode(0x1702);
+            Gl.glLoadIdentity();
+            if ((actualMaterial.flipS == 1) && (actualMaterial.repeatS > 0))
+                Gl.glScalef(2f / ((float)actualMaterial.width), 1f / ((float)actualMaterial.heigth), 1f);
+            if ((actualMaterial.flipT == 1) && (actualMaterial.repeatT > 0))
+                Gl.glScalef(1f / ((float)actualMaterial.width), 2f / ((float)actualMaterial.heigth), 1f);
+            else
+                Gl.glScalef(1f / ((float)actualMaterial.width), 1f / ((float)actualMaterial.heigth), 1f);
+
+            Gl.glColor3f(1f, 1f, 1f);
+            stackID = actualPolygon.stackId;
+            modelList[idModel].getMDL0at(0).shapeInfo.shapeList[polyCounter] = process3DCommand(actualPolygon.polygonData, actualPolygon);
+        }
+
+        public void renderSingularAction()
+        {
+            prepareRenderScene();
+            renderSinglePolygon(polyval, text_on, idActualMaterial);
+
+        }
+
+        public void renderMultipleAction()
+        {
+            prepareRenderScene();
+            renderAllPolygon(polyval, text_on, polMatList);
+
+        }
+
+        private void prepareRenderScene()
+        {
             Gl.glEnable(Gl.GL_DEPTH_TEST);
             Gl.glEnable(Gl.GL_TEXTURE_2D);
-            //Gl.glEnable(Gl.GL_CULL_FACE);
             Gl.glAlphaFunc(Gl.GL_GREATER, 0.0f);
             Gl.glEnable(Gl.GL_ALPHA_TEST);
 
@@ -1063,123 +1031,21 @@
             Gl.glRasterPos3f(1f, 0f, 0f);
             Gl.glRasterPos3f(0f, 1f, 0f);
             Gl.glRasterPos3f(0f, 0f, 1f);
+
             transX = -(((float)mapEditor.trackBarTransX.Value) / 10f);
             transY = -(((float)mapEditor.trackBarTransY.Value) / 10f);
             transZ = -(((float)mapEditor.trackBarTransZ.Value) / 10f);
             rotY = (((float)mapEditor.trackBarRotX.Value) / 10f);
             rotX = -(((float)mapEditor.trackBarRotY.Value) / 10f);
             rotZ = -(((float)mapEditor.trackBarRotZ.Value) / 10f);
-            Gl.glTranslatef(transX, 0f, 0f);
-            Gl.glTranslatef(0f, transY, 0f);
-            Gl.glTranslatef(0f, 0f, transZ);
-            Gl.glRotatef(rotX, 1f, 0f, 0f);
-            Gl.glRotatef(rotY, 0f, 1f, 0f);
-            Gl.glRotatef(rotZ, 0f, 1f, 1f);
-
-            Gl.glClearColor(0f, 0f, 1f, 1f);
-            Gl.glClear(Gl.GL_COLOR_BUFFER_BIT | Gl.GL_DEPTH_BUFFER_BIT);
-            RenderModel(polyval, text_on, idActualMaterial);
-
-        }
-
-        public void RenderSelect()
-        {
-
-
-            Gl.glEnable(Gl.GL_DEPTH_TEST);
-            Gl.glEnable(Gl.GL_TEXTURE_2D);
-            //Gl.glEnable(Gl.GL_CULL_FACE);
-            Gl.glAlphaFunc(Gl.GL_GREATER, 0.0f);
-            Gl.glEnable(Gl.GL_ALPHA_TEST);
-
-            Gl.glMatrixMode(Gl.GL_MODELVIEW);
-            Gl.glLoadIdentity();
-
-            Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0);
-            Gl.glBegin(Gl.GL_LINES);
-            Gl.glColor3f(1f, 1f, 1f);
-            Gl.glVertex3f(0f, 0f, 0f);
-            Gl.glVertex3f(1f, 0f, 0f);
-            Gl.glVertex3f(0f, 0f, 0f);
-            Gl.glVertex3f(0f, 1f, 0f);
-            Gl.glVertex3f(0f, 0f, 0f);
-            Gl.glVertex3f(0f, 0f, 1f);
-            Gl.glEnd();
-
-            Gl.glRasterPos3f(1f, 0f, 0f);
-            Gl.glRasterPos3f(0f, 1f, 0f);
-            Gl.glRasterPos3f(0f, 0f, 1f);
-            transX = -(((float)mapEditor.trackBarTransX.Value) / 10f);
-            transY = -(((float)mapEditor.trackBarTransY.Value) / 10f);
-            transZ = -(((float)mapEditor.trackBarTransZ.Value) / 10f);
-            rotY = (((float)mapEditor.trackBarRotX.Value) / 10f);
-            rotX = -(((float)mapEditor.trackBarRotY.Value) / 10f);
-            rotZ = -(((float)mapEditor.trackBarRotZ.Value) / 10f);
-            Gl.glTranslatef(transX, 0f, 0f);
-            Gl.glTranslatef(0f, transY, 0f);
-            Gl.glTranslatef(0f, 0f, transZ);
-            Gl.glRotatef(rotX, 1f, 0f, 0f);
-            Gl.glRotatef(rotY, 0f, 1f, 0f);
-            Gl.glRotatef(rotZ, 0f, 1f, 1f);
-
-            Gl.glClearColor(0f, 0f, 1f, 1f);
-            Gl.glClear(Gl.GL_COLOR_BUFFER_BIT | Gl.GL_DEPTH_BUFFER_BIT);
-            RenderModel(polyval, text_on, idActualMaterial);
-
-        }
-
-
-        public void RenderFunc2()
-        {
-            Gl.glEnable(Gl.GL_DEPTH_TEST);
-            Gl.glEnable(Gl.GL_TEXTURE_2D);
-            //Gl.glEnable(Gl.GL_CULL_FACE); 
-            Gl.glAlphaFunc(Gl.GL_GREATER, 0.0f);
-            Gl.glEnable(Gl.GL_ALPHA_TEST);
-
-            Gl.glMatrixMode(Gl.GL_MODELVIEW);
-            Gl.glLoadIdentity();
-            //Glu.gluLookAt(1, 1, 1, 1, 1, 1, 1, 1, 1);
-
-            Gl.glBindTexture(Gl.GL_TEXTURE_2D, 0);
-            Gl.glBegin(Gl.GL_LINES);
-            Gl.glColor3f(1f, 1f, 1f);
-            Gl.glVertex3f(0f, 0f, 0f);
-            Gl.glVertex3f(1f, 0f, 0f);
-            Gl.glVertex3f(0f, 0f, 0f);
-            Gl.glVertex3f(0f, 1f, 0f);
-            Gl.glVertex3f(0f, 0f, 0f);
-            Gl.glVertex3f(0f, 0f, 1f);
-            Gl.glEnd();
-
-            Gl.glRasterPos3f(1f, 0f, 0f);
-            Gl.glRasterPos3f(0f, 1f, 0f);
-            Gl.glRasterPos3f(0f, 0f, 1f);
-
-            transX = -(((float)mapEditor.trackBarTransX.Value)/10f);
-            transY = -(((float)mapEditor.trackBarTransY.Value) / 10f);
-            transZ = -(((float)mapEditor.trackBarTransZ.Value) / 10f);
-            rotY = (((float)mapEditor.trackBarRotX.Value) / 10f);
-            rotX = -(((float)mapEditor.trackBarRotY.Value) / 10f);
-            rotZ = -(((float)mapEditor.trackBarRotZ.Value)/10f);
             Gl.glTranslatef(transX, 0f, 0f);
             Gl.glTranslatef(0f, transY, 0f);
             Gl.glTranslatef(0f, 0f, transZ);
             Gl.glRotatef(rotX, 1f, 0f, 0f);
             Gl.glRotatef(rotY, 0f, 1f, 0f);
             Gl.glRotatef(rotZ, 0f, 0f, 1f);
-            
-
-
-            //Gl.glTranslatef(0f, 0f, 1.0f);
-            //Gl.glTranslatef(1.0f, 0f, 0f);
-            //Gl.glRotatef(1.0f, 1f, 0f, 0f);
-            //Gl.glRotatef(1.0f, 0f, 1f, 0f);
-
             Gl.glClearColor(0f, 0f, 1f, 1f);
             Gl.glClear(Gl.GL_COLOR_BUFFER_BIT | Gl.GL_DEPTH_BUFFER_BIT);
-            RenderModel2(polyval, text_on, polMatList);
-
         }
 
         public Nsbmd getModel(int modelId)
