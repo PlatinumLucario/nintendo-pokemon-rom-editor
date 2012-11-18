@@ -21,3 +21,24 @@ C:\Users\Andrea\Documents\Reflector\Disassembler\Pokémon DS Map Viewer\obj\x86\
 C:\Users\Andrea\Documents\Reflector\Disassembler\Pokémon DS Map Viewer\obj\x86\Debug\NPRE.GUI.ScriptRoutineViewer.resources
 C:\Users\Andrea\Documents\Reflector\Disassembler\Pokémon DS Map Viewer\obj\x86\Debug\NPRE.csprojResolveAssemblyReference.cache
 C:\Users\Andrea\Documents\Reflector\Disassembler\Pokémon DS Map Viewer\obj\x86\Debug\NPRE.csproj.GenerateResource.Cache
+C:\Users\Andrea\Desktop\Npre\Pokémon DS Map Viewer\obj\x86\Debug\Pokémon DS Map Viewer.exe
+C:\Users\Andrea\Desktop\Npre\Pokémon DS Map Viewer\obj\x86\Debug\Pokémon DS Map Viewer.pdb
+C:\Users\Andrea\Desktop\Npre\Pokémon DS Map Viewer\bin\Debug\Pokémon DS Map Viewer.exe.manifest
+C:\Users\Andrea\Desktop\Npre\Pokémon DS Map Viewer\bin\Debug\Pokémon DS Map Viewer.application
+C:\Users\Andrea\Desktop\Npre\Pokémon DS Map Viewer\bin\Debug\Pokémon DS Map Viewer.exe
+C:\Users\Andrea\Desktop\Npre\Pokémon DS Map Viewer\bin\Debug\Pokémon DS Map Viewer.pdb
+C:\Users\Andrea\Desktop\Npre\Pokémon DS Map Viewer\obj\x86\Debug\NPRE.csprojResolveAssemblyReference.cache
+C:\Users\Andrea\Desktop\Npre\Pokémon DS Map Viewer\obj\x86\Debug\NPRE.Formats.ChangeSize.resources
+C:\Users\Andrea\Desktop\Npre\Pokémon DS Map Viewer\obj\x86\Debug\NPRE.Formats.Specific.Pokémon.Maps.MapMatrix.resources
+C:\Users\Andrea\Desktop\Npre\Pokémon DS Map Viewer\obj\x86\Debug\NPRE.Formats.SetInfoNewPol.resources
+C:\Users\Andrea\Desktop\Npre\Pokémon DS Map Viewer\obj\x86\Debug\PG4Map.IsBWDialog.resources
+C:\Users\Andrea\Desktop\Npre\Pokémon DS Map Viewer\obj\x86\Debug\PG4Map.MapCreator.resources
+C:\Users\Andrea\Desktop\Npre\Pokémon DS Map Viewer\obj\x86\Debug\PG4Map.MapEditor.resources
+C:\Users\Andrea\Desktop\Npre\Pokémon DS Map Viewer\obj\x86\Debug\NPRE.Formats.Specific.Pokémon.Scripts.CommandInfo.resources
+C:\Users\Andrea\Desktop\Npre\Pokémon DS Map Viewer\obj\x86\Debug\PG4Map.Formats.Scripts.resources
+C:\Users\Andrea\Desktop\Npre\Pokémon DS Map Viewer\obj\x86\Debug\PG4Map.Formats.Texts.resources
+C:\Users\Andrea\Desktop\Npre\Pokémon DS Map Viewer\obj\x86\Debug\NPRE.GUI.ScriptRoutineViewer.resources
+C:\Users\Andrea\Desktop\Npre\Pokémon DS Map Viewer\obj\x86\Debug\PG4Map.Main.resources
+C:\Users\Andrea\Desktop\Npre\Pokémon DS Map Viewer\obj\x86\Debug\NPRE.csproj.GenerateResource.Cache
+C:\Users\Andrea\Desktop\Npre\Pokémon DS Map Viewer\obj\x86\Debug\Pokémon DS Map Viewer.exe.manifest
+C:\Users\Andrea\Desktop\Npre\Pokémon DS Map Viewer\obj\x86\Debug\Pokémon DS Map Viewer.application
