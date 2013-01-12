@@ -891,16 +891,14 @@
             var actualMatInfo = modelList[idModel].getMDL0at(0).material.matInfoList[idActualMaterial];
 
             for (int num_obj = 0; num_obj < modelList[idModel].getMDL0at(0).nodeInfoList.Count; num_obj++)
-            {
-                processObjects(idActualPol, isTextured, ref actualPolygon, ref actualMaterials, num_obj);
-            }
+                processObjects(idActualPol, isTextured, ref actualPolygon, ref actualMaterials, num_obj, idActualMaterial);
             return modelList[idModel].getMDL0at(0);
         }
 
-        private void processObjects(int idActualPol, int isTextured, ref NsbmdModel.ShapeInfoStruct actualPolygon, ref NsbmdModel.MatTexPalStruct actualMaterials, int num_obj)
+        private void processObjects(int idActualPol, int isTextured, ref NsbmdModel.ShapeInfoStruct actualPolygon, ref NsbmdModel.MatTexPalStruct actualMaterials, int num_obj, int idActualMateria)
         {
             NsbmdModel.NodeInfoStruct actualNodeInfo = modelList[idModel].getMDL0at(0).nodeInfoList[num_obj];
-
+         
             if (actualNodeInfo.restoreId != -1)
                 Gl.glLoadMatrixf(MatrixStack[actualNodeInfo.restoreId].Floats);
             if (actualNodeInfo.stackId != -1)
@@ -996,7 +994,7 @@
         public void renderSingularAction()
         {
             prepareRenderScene();
-            renderSinglePolygon(polyval, text_on, idActualMaterial);
+            renderSinglePolygon(polyval, text_on, polMatList[polyval]);
 
         }
 
