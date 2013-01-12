@@ -622,7 +622,7 @@ public class Utils
         var commandList = line.Split(' ');
         string movId;
         string tipe;
-        int offset = Int32.Parse(commandList[1]);
+        int offset = Int32.Parse(commandList[1].Substring(0,commandList[1].Length-1));
         var stringOffset = commandList[1];
         if (offset < 10)
             stringOffset = "000" + stringOffset;
@@ -649,8 +649,7 @@ public class Utils
                 scriptBoxEditor.AppendText(space + "UNK " + commandList[3] + ", OW_ID " + commandList[4] + " = " + commandList[2] + "();\n");
                 break;
             case "ActPokèKronApplication":
-                newVar = checkStored(commandList, 3);
-                var varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar2);
+                var varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
                 scriptBoxEditor.AppendText(space + commandList[2] + "( PKRONAPP " + varString + " );\n");
                 break;
             case "AddPeople":
@@ -703,7 +702,11 @@ public class Utils
             case "ChangePokèmonForm":
                 scriptBoxEditor.AppendText(space + commandList[2] + "( FORM " + commandList[3] + ", " + commandList[4] + ", ID " + commandList[5] + ", " + commandList[6] + " );\n");
                 break;
-
+            case "CheckAccessories":
+                newVar = checkStored(commandList, 5);
+                addToVarNameDictionary(varNameDictionary, varLevel, newVar, "ACCESSORIES_TAKEN");
+                scriptBoxEditor.AppendText(space + "ACCESSORIES_TAKEN " + commandList[5] + " = " + commandList[2] + "( ACCESSORIES " + commandList[3] + " , " + "NUMBER " + commandList[4] + " );\n");
+                break;
             case "CheckBadge":
                 newVar = checkStored(commandList, 4);
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar, "BADGE_STATUS");
@@ -715,10 +718,8 @@ public class Utils
                 scriptBoxEditor.AppendText(space + "BOX_SPACE " + commandList[3] + " = " + commandList[2] + "();\n");
                 break;
             case "CheckCasinoPrizeCoins":
-                newVar = checkStored(commandList, 3);
-                newVar2 = checkStored(commandList, 4);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar2);
-                addToVarNameDictionary(varNameDictionary, varLevel, newVar, "COINSBOX_SPACE");
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
+                addToVarNameDictionary(varNameDictionary, varLevel, checkStored(commandList, 3), "COINSBOX_SPACE");
                 scriptBoxEditor.AppendText(space + "COINSBOX_SPACE " + commandList[3] + " = " + commandList[2] + "( PRIZE " + varString +  " );\n");
                 break;
             case "CheckCoinsBoxSpace":
@@ -751,6 +752,11 @@ public class Utils
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar, "DRESSPICTURE_STATUS");
                 scriptBoxEditor.AppendText(space + "DRESSPICTURE_STATUS " + commandList[4] + " = " + commandList[2] + "( PICTURE " + commandList[3] + " );\n");
                 break;
+            case "CheckEgg":
+                newVar = checkStored(commandList, 3);
+                addToVarNameDictionary(varNameDictionary, varLevel, newVar, "EGG_PARTY");
+                scriptBoxEditor.AppendText(space + "EGG_PARTY " + commandList[3] + " = " + commandList[2] + "();\n");
+                break;
             case "CheckErrorSave":
                 newVar = checkStored(commandList, 3);
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar, "ERROR");
@@ -760,6 +766,11 @@ public class Utils
                 newVar = checkStored(commandList, 3);
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar, "MONEY_STATUS");
                 scriptBoxEditor.AppendText(space + "MONEY_STATUS " + commandList[3] + " = " + commandList[2] + "( AMOUNT " + commandList[4] + ", " + commandList[5] + " );\n");
+                break;
+            case "CheckPlantingLimit":
+                newVar = checkStored(commandList, 4);
+                addToVarNameDictionary(varNameDictionary, varLevel, newVar, "PLANTLIMIT_REACHED");
+                scriptBoxEditor.AppendText(space + "PLANTLIMIT_REACHED " + commandList[4] + "  = " + commandList[2] + "( LIMIT" + commandList[3] + " );\n");
                 break;
             case "CheckPoisoned":
                 newVar = checkStored(commandList, 3);
@@ -784,10 +795,8 @@ public class Utils
                 scriptBoxEditor.AppendText(space + "POKE_CAUGHT " + commandList[4] + " = " + commandList[2] + "( POKEMON " + commandList[3] + ");\n");
                 break;
             case "CheckPokèMoveTeacherCompatibility":
-                newVar = checkStored(commandList, 3);
-                newVar2 = checkStored(commandList, 4);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar);
-                addToVarNameDictionary(varNameDictionary, varLevel, newVar, "POKE_COMPATIBLE");
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
+                addToVarNameDictionary(varNameDictionary, varLevel,checkStored(commandList, 3), "POKE_COMPATIBLE");
                 scriptBoxEditor.AppendText(space + "POKE_COMPATIBLE " + commandList[3] + " = " + commandList[2] + "( POKEMON " + commandList[4] + " );\n");
                 break;
             case "CheckPokèrus":
@@ -800,10 +809,15 @@ public class Utils
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar, "SEARCH_RESULT");
                 scriptBoxEditor.AppendText(space + "SEARCH_RESULT " + commandList[3] + " = " + commandList[2] + "();\n");
                 break;
+            case "CheckRibbonPokèmon":
+                newVar = checkStored(commandList, 3);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
+                addToVarNameDictionary(varNameDictionary, varLevel, newVar, "RIBBON_TAKEN");
+                scriptBoxEditor.AppendText(space + "RIBBON_TAKEN " + commandList[3] + " = " + commandList[2] + "( POKE " + varString + ", RIBBON " + commandList[5] + " );\n");
+                break;
             case "CheckSpecialItem":
                 newVar = checkStored(commandList, 4);
-                newVar2 = checkStored(commandList, 3);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar, "SPECIAL_ITEM");
                 scriptBoxEditor.AppendText(space + "SPECIAL_ITEM " + commandList[4] + " = " + commandList[2] + "( ITEM " + commandList[3] + " );\n");
                 break;
@@ -814,8 +828,7 @@ public class Utils
                 break;
             case "ChooseWifiSprite":
                 newVar = checkStored(commandList, 4);
-                newVar2 = checkStored(commandList, 3);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar, "WIFI_SPRITE_CHOSEN");
                 scriptBoxEditor.AppendText(space + "WIFI_SPRITE_CHOSEN " + commandList[4] + " = " + commandList[2] + "( " + varString + " );\n");
                 break;
@@ -830,49 +843,38 @@ public class Utils
                 scriptBoxEditor.AppendText(space + "TRAINER " + commandList[3] + " = INACTIVE;" + "\n");
                 break;
             case "Compare":
-                newVar = checkStored(commandList, 3);
-                newVar2 = checkStored(commandList, 4);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
-                var varString2 = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar2);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
+                var varString2 = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
                 var condition = getCondition(scriptsLine, lineCounter);
                 scriptBoxEditor.AppendText(space + "If( " + varString + " " + condition + " " + varString2 + ")\n");
                 break;
             case "Compare2":
-                newVar = checkStored(commandList, 3);
-                newVar2 = checkStored(commandList, 4);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
-                varString2 = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar2);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
+                varString2 = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
                 condition = getCondition(scriptsLine, lineCounter);
                 scriptBoxEditor.AppendText(space + "If( " + varString + " " + condition + " " + varString2 + ")\n");
                 break;
             case "ComparePhraseBoxInput":
-                newVar = checkStored(commandList, 3);
-                newVar2 = checkStored(commandList, 4);
-                var newVar3 = checkStored(commandList, 5);
-                var newVar4 = checkStored(commandList, 6);
-                var newVar5 = checkStored(commandList, 7);
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar, "COMPARE_RESULT");
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar2);
-                varString2 = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
-                var varString3 = getStoredMagic(varNameDictionary, varLevel, commandList, 5, newVar3);
-                var varString4 = getStoredMagic(varNameDictionary, varLevel, commandList, 6, newVar4);
-                var varString5 = getStoredMagic(varNameDictionary, varLevel, commandList, 7, newVar5);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
+                varString2 = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
+                var varString3 = getStoredMagic(varNameDictionary, varLevel, commandList, 5);
+                var varString4 = getStoredMagic(varNameDictionary, varLevel, commandList, 6);
+                var varString5 = getStoredMagic(varNameDictionary, varLevel, commandList, 7);
                 scriptBoxEditor.AppendText(space + "COMPARE_RESULT " + commandList[3] + " = " + commandList[2] + "( " + varString + ", " + varString3 + ", " + varString4 + ", " + varString5 + " );\n");
                 break;
             case "CopyVar":
-                newVar = checkStored(commandList, 4);
                 newVar2 = checkStored(commandList, 3);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar);
-                addToVarNameDictionary(varNameDictionary, varLevel, newVar2, varString);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
+                if(!varString.Contains("0x"))
+                    addToVarNameDictionary(varNameDictionary, varLevel, newVar2, varString);
                 scriptBoxEditor.AppendText(space + "VAR " + commandList[3] + " = " + varString  + ";\n");
                 break;
             case "Cry":
-                newVar = checkStored(commandList, 3);
                 scriptBoxEditor.AppendText(space + commandList[2] + "( POKE " + commandList[3] + " );\n");
                 break;
             case "DoubleTrainerBattle":
-                newVar = checkStored(commandList, 3);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
                 scriptBoxEditor.AppendText(space + commandList[2] + "( OTHER " + varString + ", OPPONENT " + commandList[4] + ", OPPONENT " + commandList[5] + " );\n");
                 break;
             case "Fanfare":
@@ -880,15 +882,12 @@ public class Utils
                 break;
 
             case "GiveCoins":
-                newVar = checkStored(commandList, 3);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
                 scriptBoxEditor.AppendText(space + commandList[2] + "( AMOUNT " + varString + " );\n");
                 break;
             case "GiveItem":
-                newVar = checkStored(commandList, 3);
-                newVar2 = checkStored(commandList, 4);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
-                varString2 = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar2);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
+                varString2 = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
                 scriptBoxEditor.AppendText(space + commandList[2] + "( ITEM " + varString + " , NUMBER " + varString2 + ", " + commandList[5] + " );\n");
                 break;
             case "GivePokémon":
@@ -941,8 +940,7 @@ public class Utils
                 break;
             case "IncPokèmonHappiness":
                 newVar = checkStored(commandList, 3);
-                newVar2 = checkStored(commandList, 4);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar2);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
                 scriptBoxEditor.AppendText(space  + commandList[2] + "( POKEMON " + varString + " , AMOUNT " + commandList[3] + " );\n");
                 break;
             case "Jump":
@@ -966,92 +964,43 @@ public class Utils
                 scriptBoxEditor.AppendText(space + "" + commandList[2] + "( OW_ID " + commandList[3] + ");\n");
                 break;
             case "Message":
-                newVar = checkStored(commandList, 3);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
                 scriptBoxEditor.AppendText(space + "" + commandList[2] + "( MESSAGE_ID " + commandList[3] + " ");
                 text = "";
-                if (varString.Contains("M"))
-                {
-                    var id = varString.Split('_')[1];
-                    text = textFile.textList[Int32.Parse(id)].text;
-                }
-                else
-                    text = textFile.textList[Int16.Parse(varString)].text;
-                scriptBoxEditor.AppendText(" = " + text + " ");
+                text = getVarString(scriptBoxEditor, textFile, commandList, varString, text);
+                if (text != "")
+                    scriptBoxEditor.AppendText(" = " + text + " ");
                 scriptBoxEditor.AppendText(");\n");
                 break;
             case "Message2":
-                newVar = checkStored(commandList, 3);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
                 scriptBoxEditor.AppendText(space + "" + commandList[2] + "( MESSAGE_ID " + commandList[3] + " ");
-                if (textFile != null)
-                {
-                    if (varString.Contains("M"))
-                        scriptBoxEditor.AppendText(" = " + textFile.textList[varString.ToCharArray()[varString.Length - 2]].text + " ");
-                    else
-                        scriptBoxEditor.AppendText(" = " + textFile.textList[Int16.Parse(varString)].text + " ");
-                }
+                text = "";
+                text = getVarString(scriptBoxEditor, textFile, commandList, varString, text);
+                if (text != "")
+                    scriptBoxEditor.AppendText(" = " + text + " ");
                 scriptBoxEditor.AppendText(");\n");
                 break;
             case "Message3":
-                newVar = checkStored(commandList, 3);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
                 scriptBoxEditor.AppendText(space + "" + commandList[2] + "( MESSAGE_ID " + commandList[3] + " ");
                 text = "";
-                if (varString.Contains("M"))
-                {
-                    var id = varString.Split('_')[1];
-                    text = textFile.textList[Int32.Parse(id)].text;
-                }
-                else if (varString.Contains("VAR"))
-                {
-                    for (int i = scriptBoxEditor.Lines.Length-1; i > 0 && text == ""; i--)
-                    {
-                        var line3 = scriptBoxEditor.Lines[i];
-                        if (line3.Contains("VAR " + commandList[3]))
-                        {
-                            var id = line3.Split('=')[1];
-                            var fixId = id.ToString().TrimStart(' ');
-                            text = textFile.textList[Int16.Parse(fixId)].text;
-                        }
-                    }
-                }
-                else
-                    text = textFile.textList[Int16.Parse(varString)].text;
-                scriptBoxEditor.AppendText(" = " + text + " ");
+                text = getVarString(scriptBoxEditor, textFile, commandList, varString, text);
+                if (text != "")
+                    scriptBoxEditor.AppendText(" = " + text + " ");
                 scriptBoxEditor.AppendText(");\n");
                 break;
             case "Message5":
-                newVar = checkStored(commandList, 3);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
                 scriptBoxEditor.AppendText(space + "" + commandList[2] + "( MESSAGE_ID " + commandList[3] + " ");
-                text = "";
-                if (varString.Contains("M"))
-                {
-                    var id = varString.Split('_')[1];
-                    text = textFile.textList[Int32.Parse(id)].text;
-                }
-                else if (varString.Contains("VAR"))
-                {
-                    for (int i = scriptBoxEditor.Lines.Length - 1; i > 0 && text == ""; i--)
-                    {
-                        var line3 = scriptBoxEditor.Lines[i];
-                        if (line3.Contains("VAR " + commandList[3]))
-                        {
-                            var id = line3.Split('=')[1];
-                            var fixId = id.ToString().TrimStart(' ');
-                            text = textFile.textList[Int16.Parse(fixId)].text;
-                        }
-                    }
-                }
-                else
-                    text = textFile.textList[Int16.Parse(varString)].text;
-                scriptBoxEditor.AppendText(" = " + text + " ");
+                         text = "";
+                text = getVarString(scriptBoxEditor, textFile, commandList, varString, text);
+                if (text != "")
+                    scriptBoxEditor.AppendText(" = " + text + " ");
                 scriptBoxEditor.AppendText(");\n");
                 break;
             case "MessageBattle":
-                newVar = checkStored(commandList, 3);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
                 scriptBoxEditor.AppendText(space + "" + commandList[2] + "( TRAINER_ID " + varString + ", MESSAGE_ID " + commandList[4] + ");\n");
                 break;
             case "Multi":
@@ -1113,7 +1062,7 @@ public class Utils
                 break;
             case "SetTextScriptMulti":
                 newVar = checkStored(commandList, 3);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
                 scriptBoxEditor.AppendText(space + "" + commandList[2] + "( MESSAGE_ID " + commandList[3] + ", SCRIPT " + commandList[4] + " ");
                 text = "";
                 if (varString.Contains("M"))
@@ -1146,8 +1095,8 @@ public class Utils
             case "SetValue":
                 newVar = checkStored(commandList, 3);
                 newVar2 = checkStored(commandList, 4);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar2);
-                varString2 = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
+                varString2 = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
                 //addToVarNameDictionary(varNameDictionary, varLevel, newVar, "VALUE " + varString2);
                 scriptBoxEditor.AppendText(space + "VALUE " + varString2 + " = " + varString + "\n");
                 break;
@@ -1155,8 +1104,8 @@ public class Utils
                 newVar = checkStored(commandList, 3);
                 newVar2 = checkStored(commandList, 4);
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar, "VAR " + commandList[3]);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar2);
-                varString2 = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
+                varString2 = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
                 scriptBoxEditor.AppendText(space + varString2 + " = " + varString + "\n");
                 break;
             case "SetVarAccessories":
@@ -1164,7 +1113,7 @@ public class Utils
                 break;
             case "SetVarStarterAccessories":
                 newVar2 = checkStored(commandList, 4);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar2);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
                 scriptBoxEditor.AppendText(space + "VAR ACC. " + commandList[3] + " = " + varString + ";\n");
                 break;
             case "SetVarAlter":
@@ -1175,91 +1124,96 @@ public class Utils
                 break;
             case "SetVarItem":
                 newVar2 = checkStored(commandList, 4);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar2);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
                 scriptBoxEditor.AppendText(space + "VAR ITEM " + commandList[3] + " = " + varString + ";\n");
                 break;
             case "SetVarItem2":
                 newVar2 = checkStored(commandList, 4);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar2);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
                 scriptBoxEditor.AppendText(space + "VAR ITEM2 " + commandList[3] + " = " + varString + ";\n");
                 break;
             case "SetVarBattleItem":
                 newVar2 = checkStored(commandList, 4);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar2);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
                 scriptBoxEditor.AppendText(space + "VAR BATTLE ITEM " + commandList[3] + " = " + varString + ";\n");
                 break;
             case "SetVarUndergroundItem":
                 newVar2 = checkStored(commandList, 4);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar2);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
                 scriptBoxEditor.AppendText(space + "VAR ITEM " + commandList[3] + " = " + varString + ";\n");
                 break;
             case "SetVarChosenPokèmonSize":
                 newVar = checkStored(commandList, 5);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 5, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 5);
                 scriptBoxEditor.AppendText(space + "VAR " + commandList[3] + " , VAR " + commandList[4] + " = " + commandList[2] + "( " + varString + " );\n");
                 break;
             case "SetVarMoveDeleter":
                 newVar = checkStored(commandList, 4);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
                 scriptBoxEditor.AppendText(space + "VAR MOVE " + commandList[3] + " = " + commandList[2] + "( " + varString + " );\n");
                 break;
             case "SetVarNamePartContest":
                 newVar = checkStored(commandList, 3);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
                 scriptBoxEditor.AppendText(space + "VAR NAME " + commandList[4] + " = " + commandList[2] + "(PART " + varString + " );\n");
                 break;
             case "SetVarModeContest":
                 newVar = checkStored(commandList, 3);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
                 scriptBoxEditor.AppendText(space + "VAR MODE " + commandList[3] + " ;\n");
                 break;
             case "SetVarTypeContest":
                 newVar = checkStored(commandList, 3);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
                 scriptBoxEditor.AppendText(space + "VAR TYPE " + commandList[3] + " ;\n");
                 break;
             case "SetVarNickPokémon":
                 newVar = checkStored(commandList, 4);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
                 scriptBoxEditor.AppendText(space + "VAR NICK " + commandList[3] + " = " + varString + ";\n");
                 break;
             case "SetVarNumber":
                 newVar = checkStored(commandList, 3);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
                 scriptBoxEditor.AppendText(space + "VAR NUM " + commandList[3] + " = " + varString + ";\n");
                 break;
             case "SetVarPartIdMusical":
                 newVar = checkStored(commandList, 3);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
                 scriptBoxEditor.AppendText(space + "PART_ID " + commandList[3] + " = " + varString + ";\n");
                 break;
             case "SetVarPokémon":
                 newVar = checkStored(commandList, 4);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
                 scriptBoxEditor.AppendText(space + "VAR POKE " + commandList[3] + " = " + varString + ";\n");
                 break;
             case "SetVarPokèmonNature":
                 newVar = checkStored(commandList, 4);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
                 scriptBoxEditor.AppendText(space + "VAR NAT " + commandList[3] + " = " + varString + ";\n");
                 break;
             case "SetVarPhraseBoxInput":
                 newVar = checkStored(commandList, 4);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
                 scriptBoxEditor.AppendText(space + "VAR STRING " + commandList[3] + " = " + varString + ";\n");
                 break;
             case "SetVarRandomPrize":
                 newVar = checkStored(commandList, 4);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
                 scriptBoxEditor.AppendText(space + "VAR L " + commandList[3] + " = " + commandList[2] + "( " + varString + " , " + commandList[5] + " );\n");
                 break;
             case "SetVarRequestedPokèmonSize":
                 newVar = checkStored(commandList, 5);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 5, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 5);
                 scriptBoxEditor.AppendText(space + "VAR " + commandList[3] + " , VAR " + commandList[4] + " = " + commandList[2] + "( POKEMON " + varString + " );\n");
                 break;
             case "SetVarRival":
                 scriptBoxEditor.AppendText(space + "VAR NAME " + commandList[3] + " = [RIVAL]" + ";\n");
+                break;
+            case "SetVarSwarmPlace":
+                newVar = checkStored(commandList, 4);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
+                scriptBoxEditor.AppendText(space + "VAR SWARM_PLACE " + commandList[3] + " = " + commandList[2] + "( " + varString + " );\n");
                 break;
             case "SetVarTrainer":
                 scriptBoxEditor.AppendText(space + "VAR TRAINER " + commandList[3] + " = ACTIVE" + ";\n");
@@ -1283,6 +1237,7 @@ public class Utils
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar, "TRAINER_TYPE");
                 scriptBoxEditor.AppendText(space + "TRAINER_TYPE " + commandList[4] + " = " + commandList[2] + "( PART_ID " + commandList[3] + " );\n");
                 break;
+
             case "StoreBadgeNumber":
                 newVar = checkStored(commandList, 3);
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar, "BADGE_NUMBER");
@@ -1298,6 +1253,26 @@ public class Utils
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar, "BATTLE_RESULT2");
                 scriptBoxEditor.AppendText(space + "BATTLE_RESULT2 " + commandList[3] + " = " + commandList[2] + "();\n");
                 break;
+            case "StoreBerryGrownState":
+                newVar = checkStored(commandList, 3);
+                addToVarNameDictionary(varNameDictionary, varLevel, newVar, "GROWN_STATE");
+                scriptBoxEditor.AppendText(space + "GROWN_STATE " + commandList[3] + "  = " + commandList[2] + "();\n");
+                break;
+            case "StoreBerryMatureNumber":
+                newVar = checkStored(commandList, 3);
+                addToVarNameDictionary(varNameDictionary, varLevel, newVar, "BERRY_NUMBER");
+                scriptBoxEditor.AppendText(space + "BERRY_NUMBER " + commandList[3] + "  = " + commandList[2] + "();\n");
+                break;
+            case "StoreBerryMatureType":
+                newVar = checkStored(commandList, 3);
+                addToVarNameDictionary(varNameDictionary, varLevel, newVar, "BERRY_TYPE");
+                scriptBoxEditor.AppendText(space + "BERRY_TYPE " + commandList[3] + "  = " + commandList[2] + "();\n");
+                break;
+            case "StoreBerryPlanted":
+                newVar = checkStored(commandList, 3);
+                addToVarNameDictionary(varNameDictionary, varLevel, newVar, "BERRY");
+                scriptBoxEditor.AppendText(space + "BERRY " + commandList[3] + "  = " + commandList[2] + "();\n");
+                break;
             case "StoreBoundedVariable":
                 newVar = checkStored(commandList, 3);
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar, "BOUNDED_VARIABLE");
@@ -1311,7 +1286,7 @@ public class Utils
             case "StoreCasinoPrizeResult":
                 newVar = checkStored(commandList, 4);
                 newVar2 = checkStored(commandList, 5);
-                newVar3 = checkStored(commandList, 3);
+                var newVar3 = checkStored(commandList, 3);
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar, "PRIZE_ID");
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar2, "PRIZE_NAME");
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar3, "PRIZE_SCRIPT");
@@ -1348,11 +1323,16 @@ public class Utils
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar2, "WORD");
                 newVar3 = checkStored(commandList, 5);
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar3, "WORD_2");
-                newVar4 = checkStored(commandList, 6);
+                var newVar4 = checkStored(commandList, 6);
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar4, "WORD_3");
-                newVar5 = checkStored(commandList, 7);
+                var newVar5 = checkStored(commandList, 7);
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar5, "WORD_4");
                 scriptBoxEditor.AppendText(space + "INSERT_CHECK " + commandList[3] + ", WORD " + commandList[4] + ", WORD_2 " + commandList[5] + ", WORD_3 " + commandList[6] + ", WORD_4 " + commandList[7] + " = " + commandList[2] + "();\n");
+                break;
+            case "StoreFertilizer":
+                newVar = checkStored(commandList, 3);
+                addToVarNameDictionary(varNameDictionary, varLevel, newVar, "FERTILIZER");
+                scriptBoxEditor.AppendText(space + "FERTILIZER " + commandList[3] + "  = " + commandList[2] + "();\n");
                 break;
             case "StoreFlag":
                 scriptBoxEditor.AppendText(space + "If( FLAG " + commandList[3] + " == TRUE)\n");
@@ -1393,13 +1373,11 @@ public class Utils
                 scriptBoxEditor.AppendText(space + "FRIEND_CODE " + commandList[3] + "  = " + commandList[2] + "();\n");
                 break;
             case "StoreHeroPosition":
-                scriptBoxEditor.AppendText(space + "#DEFINE " + commandList[3] + " AS X ;\n");
-                scriptBoxEditor.AppendText(space + "#DEFINE " + commandList[4] + " AS Y ;\n");
                 newVar = checkStored(commandList, 3);
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar, "X");
                 newVar2 = checkStored(commandList, 4);
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar2, "Y");
-                scriptBoxEditor.AppendText(space  + "X,Y = " + commandList[2] + "();\n");
+                scriptBoxEditor.AppendText(space  + "X " + commandList[3] + ",Y " + commandList[4] + " = " + commandList[2] + "();\n");
                 break;
 
             case "StoreItemType":
@@ -1410,7 +1388,7 @@ public class Utils
             case "StoreMove":
                 newVar = checkStored(commandList, 3);
                 newVar2 = checkStored(commandList, 5);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 5, newVar2);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 5);
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar, "MOVE_TEACHED");
                 scriptBoxEditor.AppendText(space + "MOVE_TEACHED " + commandList[3] + " = " + commandList[2] + "( MOVE_ID " + commandList[4] + ", " + varString + " );\n");
                 break;
@@ -1419,15 +1397,25 @@ public class Utils
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar, "MOVE_DELETE");
                 scriptBoxEditor.AppendText(space + "MOVE_DELETE " + commandList[3] + " = " + commandList[2] + "();\n");
                 break;
+            case "StorePalParkPoint":
+                newVar = checkStored(commandList, 4);
+                addToVarNameDictionary(varNameDictionary, varLevel, newVar, "POINT");
+                scriptBoxEditor.AppendText(space + "POINT " + commandList[4] + " = " + commandList[2] + "( TYPE " + commandList[3] + ");\n");
+                break;
+            case "StorePalParkPokèmonCaught":
+                newVar = checkStored(commandList, 3);
+                addToVarNameDictionary(varNameDictionary, varLevel, newVar, "POKE_CAUGHT");
+                scriptBoxEditor.AppendText(space + "POKE_CAUGHT " + commandList[3] + " = " + commandList[2] + "();\n");
+                break;
             case "StorePictureName":
                 newVar = checkStored(commandList, 3);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
                 scriptBoxEditor.AppendText(space + commandList[2] + "( " + varString + " );\n");
                 break;
             case "StorePokèContestFashion":
                 newVar = checkStored(commandList, 3);
                 newVar2 = checkStored(commandList, 5);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar2, "FASHION_LEVEL");
                 scriptBoxEditor.AppendText(space + "FASHION_LEVEL " + commandList[5] + " = " + commandList[2] + "( POKEMON " + varString + ", FASHION " + commandList[4] + " );\n");
                 break;
@@ -1448,7 +1436,7 @@ public class Utils
                 newVar3 = checkStored(commandList, 3);
                 newVar4 = checkStored(commandList, 5);
 
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 6, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 6);
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar2, "LOTTONUMBER_CHECK");
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar4, "LOTTOPOKE_CHECK");
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar3, "LOTTOPOKE_ID");
@@ -1463,7 +1451,7 @@ public class Utils
                 newVar = checkStored(commandList, 3);
                 newVar2 = checkStored(commandList, 4);
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar, "HAPPY_LEVEL");
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar2);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
                 scriptBoxEditor.AppendText(space + "HAPPY_LEVEL " + commandList[3] + " = " + commandList[2] + "( " + varString + ");\n");
                 break;
             case "StorePokèmonId":
@@ -1472,8 +1460,20 @@ public class Utils
                 newVar2 = checkStored(commandList, 4);
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar2, "CHOSEN_POKEMON");
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar, "CHOSEN_POKEMON");
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
                 scriptBoxEditor.AppendText(space + "VAR " + commandList[4] + " = StorePokèmonId( "+ varString + " );\n");
+                break;
+            case "StorePokèmonLevel":
+                newVar = checkStored(commandList, 3);
+                newVar2 = checkStored(commandList, 4);
+                addToVarNameDictionary(varNameDictionary, varLevel, newVar, "LEVEL");
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
+                scriptBoxEditor.AppendText(space + "LEVEL " + commandList[3] + " = " + commandList[2] + "( " + varString + ");\n");
+                break;
+            case "StorePokèmonPartyAtLevel":
+                newVar = checkStored(commandList, 3);
+                addToVarNameDictionary(varNameDictionary, varLevel, newVar, "PARTY_NUM");
+                scriptBoxEditor.AppendText(space + "PARTY_NUM " + commandList[3] + " = " + commandList[2] + "( LEVEL " + commandList[4] + " );\n");
                 break;
             case "StorePokèmonPartyNumber":
                 newVar = checkStored(commandList, 3);
@@ -1490,20 +1490,18 @@ public class Utils
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar, "PARTY_NUM");
                 scriptBoxEditor.AppendText(space + "PARTY_NUM " + commandList[3] + " = " + commandList[2] + "();\n");
                 break;
-
-
             case "StorePokèmonMoveNumber":
                 newVar = checkStored(commandList, 3);
                 newVar2 = checkStored(commandList, 4);
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar, "MOVE_NUM");
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar2);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
                 scriptBoxEditor.AppendText(space + "MOVE_NUM " + commandList[3] + " = " + commandList[2] + "( " + varString + " );\n");
                 break;
             case "StorePokèmonNature":
                 newVar = checkStored(commandList, 3);
                 newVar2 = checkStored(commandList, 4);
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar, "NATURE");
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar2);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
                 scriptBoxEditor.AppendText(space + "NATURE " + commandList[3] + " = " + commandList[2] + "( POKE " + varString + " ) ;\n");
                 break;
             case "StorePokèmonNumberCaught":
@@ -1516,13 +1514,23 @@ public class Utils
                 newVar = checkStored(commandList, 3);
                 newVar2 = checkStored(commandList, 4);
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar, "SIZE");
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar2);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
                 scriptBoxEditor.AppendText(space + "SIZE " + commandList[3] + " = " + commandList[2] + "( " + varString + ");\n");
+                break;
+            case "StoreRandomLevel":
+                newVar = checkStored(commandList, 3);
+                addToVarNameDictionary(varNameDictionary, varLevel, newVar, "RANDOM_LEVEL");
+                scriptBoxEditor.AppendText(space + "RANDOM_LEVEL " + commandList[3] + " = " + commandList[2] + "();\n");
                 break;
             case "StoreRandomPokèmonSearch":
                 newVar = checkStored(commandList, 3);
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar, "RANDOM_POKE");
                 scriptBoxEditor.AppendText(space + "RANDOM_POKE " + commandList[3] + " = " + commandList[2] + "();\n");
+                break;
+            case "StoreRibbonNumber":
+                newVar = checkStored(commandList, 3);
+                addToVarNameDictionary(varNameDictionary, varLevel, newVar, "RIBBON");
+                scriptBoxEditor.AppendText(space + "RIBBON " + commandList[3] + " = " + commandList[2] + "();\n");
                 break;
             case "StoreSpecificPokèmonParty":
                 newVar = checkStored(commandList, 3);
@@ -1551,6 +1559,13 @@ public class Utils
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar, "SAVE_STATUS");
                 scriptBoxEditor.AppendText(space + "SAVE_STATUS " + commandList[3] + "  = " + commandList[2] + "();\n");
                 break;
+            case "StoreSwarmInfo":
+                newVar = checkStored(commandList, 3);
+                addToVarNameDictionary(varNameDictionary, varLevel, newVar, "PLACE");
+                newVar2 = checkStored(commandList, 4);
+                addToVarNameDictionary(varNameDictionary, varLevel, newVar2, "POKE");
+                scriptBoxEditor.AppendText(space + "PLACE " + commandList[3] + ", POKE " + commandList[4] + " = " + commandList[2] + "();\n");
+                break;
             case "StoreTrainerId":
                 scriptBoxEditor.AppendText(space + "If (TRAINER " + commandList[3] + " == INACTIVE);" + "\n");
                 break;
@@ -1574,6 +1589,11 @@ public class Utils
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar, "BATTLE_TYPE");
                 scriptBoxEditor.AppendText(space + "BATTLE_TYPE " + commandList[3] + "  = " + commandList[2] + "();\n");
                 break;
+            case "StoreUnionAlterChoice":
+                newVar = checkStored(commandList, 3);
+                addToVarNameDictionary(varNameDictionary, varLevel, newVar, "ALTER_CHOICE");
+                scriptBoxEditor.AppendText(space + "ALTER_CHOICE " + commandList[3] + " = " + commandList[2] + "();\n");
+                break;
             case "SetVarBattle2?":
                 newVar = checkStored(commandList, 4);
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar, "TRAINER_" + commandList[3]);
@@ -1582,30 +1602,30 @@ public class Utils
             case "TakeItem":
                 newVar = checkStored(commandList, 3);
                 newVar2 = checkStored(commandList, 4);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
-                varString2 = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar2);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
+                varString2 = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
                 scriptBoxEditor.AppendText(space + commandList[2] + "( ITEM " + varString + " , NUMBER " + varString2 + ", " + commandList[5] + " );\n");
                 break;
             case "TakeMoney":
                 newVar = checkStored(commandList, 3);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
                 scriptBoxEditor.AppendText(space + commandList[2] + "( MONEY " + varString +  ", " + commandList[4] + " );\n");
                 break;
             case "TeachPokèmonMove":
                 newVar = checkStored(commandList, 3);
                 newVar2 = checkStored(commandList, 4);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
-                varString2 = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar2);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
+                varString2 = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
                 scriptBoxEditor.AppendText(space + commandList[2] + "( " + varString + ", MOVE " + varString2 + " );\n");
                 break;
             case "TradePokèmon":
                 newVar = checkStored(commandList, 3);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
                 scriptBoxEditor.AppendText(space  + commandList[2] + "( " + varString + " );\n");
                 break;
             case "TrainerBattle":
                 newVar = checkStored(commandList, 3);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
                 scriptBoxEditor.AppendText(space + commandList[2] + "( TRAINER " + varString + ", " + commandList[4] + " );\n");
                 break;
             case "YesNoBox":
@@ -1628,13 +1648,13 @@ public class Utils
                     {
 
                         newVar2 = checkStored(commandList, i);
-                        varString = getStoredMagic(varNameDictionary, varLevel, commandList, i, newVar2);
+                        varString = getStoredMagic(varNameDictionary, varLevel, commandList, i);
                         scriptBoxEditor.AppendText(" " + varString + " ,");
                     }
                 if (commandList[commandList.Length - 2] != "" && commandList.Length > 4)
                 {
                     newVar2 = checkStored(commandList, commandList.Length - 2);
-                    varString = getStoredMagic(varNameDictionary, varLevel, commandList, commandList.Length-2, newVar2);
+                    varString = getStoredMagic(varNameDictionary, varLevel, commandList, commandList.Length-2);
                     scriptBoxEditor.AppendText(" " + varString);
                 }
 
@@ -1650,7 +1670,7 @@ public class Utils
         var commandList = line.Split(' ');
         string movId;
         string tipe;
-        int offset = Int32.Parse(commandList[1]);
+        int offset = Int32.Parse(commandList[1].Substring(0, commandList[1].Length - 1));
         var stringOffset = commandList[1];
         if (offset < 10)
             stringOffset = "000" + stringOffset;
@@ -1660,12 +1680,52 @@ public class Utils
             stringOffset = "0" + stringOffset;
         switch (commandList[2])
         {
+        //    case "1B8":
+        //        newVar = checkStored(commandList, 3);
+        //        var varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
+        //        scriptBoxEditor.AppendText(space + "" + commandList[2] + "( UNK " + commandList[3] + " , MESSAGE_ID " + commandList[4] + " ");
+        //        var text = "";
+        //        if (varString.Contains("M"))
+        //        {
+        //            var id = varString.Split('_')[1];
+        //            text = textFile.textList[Int32.Parse(id)].text;
+        //        }
+        //        else
+        //            text = textFile.textList[Int16.Parse(varString)].text;
+        //        scriptBoxEditor.AppendText(" = " + text + " ");
+        //        scriptBoxEditor.AppendText(");\n");
+        //        break;
             case "1CD":
                 scriptBoxEditor.AppendText(space + commandList[2] + "( " + commandList[3] +
                                            " ," + commandList[4] + " , TRAINER " + commandList[5] + ", " + commandList[6] + ", " + commandList[7] + " );\n");
                 break;
+            case "1EA":
+                var varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
+                addToVarNameDictionary(varNameDictionary, varLevel, checkStored(commandList, 3), "1EA_STATUS_" + commandList[3]);
+                scriptBoxEditor.AppendText(space + "1EA_STATUS " + commandList[3] + " = " + commandList[2] + "();\n");
+                break;
+            case "22D":
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
+                addToVarNameDictionary(varNameDictionary, varLevel, checkStored(commandList, 4), "22D_STATUS");
+                scriptBoxEditor.AppendText(space + "22D_STATUS " + commandList[4] + " = " + commandList[2] + "( " + varString + " );\n");
+                break;
             case "238":
                 scriptBoxEditor.AppendText(space + "VAR " + commandList[4] + " = " + commandList[2] + "(P_1 " + commandList[3] + ");\n");
+                break;
+            case "28C":
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
+                addToVarNameDictionary(varNameDictionary, varLevel, checkStored(commandList, 5), "28C_STATUS");
+                scriptBoxEditor.AppendText(space + "28C_STATUS " + commandList[5] + " = " + commandList[2] + "( " + varString + " , " + commandList[4] + " );\n");
+                break;
+            case "28D":
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
+                addToVarNameDictionary(varNameDictionary, varLevel, checkStored(commandList, 6), "28D_STATUS");
+                scriptBoxEditor.AppendText(space + "28D_STATUS " + commandList[5] + " = " + commandList[2] + "( " + varString + " , " + commandList[4] + " );\n");
+                break;
+            case "28F":
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
+                addToVarNameDictionary(varNameDictionary, varLevel, checkStored(commandList, 4), "28F_STATUS");
+                scriptBoxEditor.AppendText(space + "28F_STATUS " + commandList[4] + " = " + commandList[2] + "( " + varString + " );\n");
                 break;
             case "2AD":
                 newVar = Int32.Parse(commandList[3].Substring(2, commandList[3].Length - 2), System.Globalization.NumberStyles.AllowHexSpecifier);
@@ -1674,8 +1734,7 @@ public class Utils
                 scriptBoxEditor.AppendText(space + "UNK " + commandList[3] + ", OW_ID " + commandList[4] + " = " + commandList[2] + "();\n");
                 break;
             case "ActPokèKronApplication":
-                newVar = checkStored(commandList, 3);
-                var varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar2);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
                 scriptBoxEditor.AppendText(space + commandList[2] + "( PKRONAPP " + varString + " );\n");
                 break;
             case "AddPeople":
@@ -1707,14 +1766,14 @@ public class Utils
 
                 break;
             case "CallMessageBox":
-                scriptBoxEditor.AppendText(space + "BORDER " + commandList[5] + " = " + commandList[2] + "( MESSAGE_ID " + commandList[3] +
-                                           ", TYPE " + commandList[4] + " ");
-                string text = "";
-                if (Int16.Parse(commandList[3]) < textFile.textList.Count)
-                {
-                    text = textFile.textList[Int16.Parse(commandList[3])].text;
-                    scriptBoxEditor.AppendText(" = " + text + " ");
-                }
+               // scriptBoxEditor.AppendText(space + "BORDER " + commandList[5] + " = " + commandList[2] + "( MESSAGE_ID " + commandList[3] +
+                                //           ", TYPE " + commandList[4] + " ");
+                var text = "";
+                //if (Int16.Parse(commandList[3]) < textFile.textList.Count)
+                //{
+                //    text = textFile.textList[Int16.Parse(commandList[3])].text;
+                //    scriptBoxEditor.AppendText(" = " + text + " ");
+                //}
                 scriptBoxEditor.AppendText(" );\n");
                 break;
             case "ChangeOwPosition":
@@ -1742,7 +1801,7 @@ public class Utils
             case "CheckCasinoPrizeCoins":
                 newVar = checkStored(commandList, 3);
                 newVar2 = checkStored(commandList, 4);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar2);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar, "COINSBOX_SPACE");
                 scriptBoxEditor.AppendText(space + "COINSBOX_SPACE " + commandList[3] + " = " + commandList[2] + "( PRIZE " + varString + " );\n");
                 break;
@@ -1760,6 +1819,11 @@ public class Utils
                 newVar = checkStored(commandList, 3);
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar, "HONEY");
                 scriptBoxEditor.AppendText(space + "HONEY " + commandList[3] + " = " + commandList[2] + "();\n");
+                break;
+            case "CheckItem":
+                newVar = checkStored(commandList, 4);
+                addToVarNameDictionary(varNameDictionary, varLevel, newVar, "ITEM_RECEIVED");
+                scriptBoxEditor.AppendText(space + "ITEM_RECEIVED " + commandList[4] + " = " + commandList[2] + "( ITEM " + commandList[3] + " );\n");
                 break;
             case "CheckItemBagSpace":
                 newVar = checkStored(commandList, 5);
@@ -1811,7 +1875,7 @@ public class Utils
             case "CheckPokèMoveTeacherCompatibility":
                 newVar = checkStored(commandList, 3);
                 newVar2 = checkStored(commandList, 4);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar, "POKE_COMPATIBLE");
                 scriptBoxEditor.AppendText(space + "POKE_COMPATIBLE " + commandList[3] + " = " + commandList[2] + "( POKEMON " + commandList[4] + " );\n");
                 break;
@@ -1823,7 +1887,7 @@ public class Utils
             case "CheckSpecialItem":
                 newVar = checkStored(commandList, 4);
                 newVar2 = checkStored(commandList, 3);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar, "SPECIAL_ITEM");
                 scriptBoxEditor.AppendText(space + "SPECIAL_ITEM " + commandList[4] + " = " + commandList[2] + "( ITEM " + commandList[3] + " );\n");
                 break;
@@ -1835,7 +1899,7 @@ public class Utils
             case "ChooseWifiSprite":
                 newVar = checkStored(commandList, 4);
                 newVar2 = checkStored(commandList, 3);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar, "WIFI_SPRITE_CHOSEN");
                 scriptBoxEditor.AppendText(space + "WIFI_SPRITE_CHOSEN " + commandList[4] + " = " + commandList[2] + "( " + varString + " );\n");
                 break;
@@ -1852,38 +1916,34 @@ public class Utils
             case "Compare":
                 newVar = checkStored(commandList, 3);
                 newVar2 = checkStored(commandList, 4);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
-                var varString2 = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar2);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
+                var varString2 = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
                 var condition = getCondition(scriptsLine, lineCounter);
                 scriptBoxEditor.AppendText(space + "If( " + varString + " " + condition + " " + varString2 + ")\n");
                 break;
             case "Compare2":
                 newVar = checkStored(commandList, 3);
                 newVar2 = checkStored(commandList, 4);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
-                varString2 = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar2);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
+                varString2 = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
                 condition = getCondition(scriptsLine, lineCounter);
                 scriptBoxEditor.AppendText(space + "If( " + varString + " " + condition + " " + varString2 + ")\n");
                 break;
             case "ComparePhraseBoxInput":
-                newVar = checkStored(commandList, 3);
-                newVar2 = checkStored(commandList, 4);
-                var newVar3 = checkStored(commandList, 5);
-                var newVar4 = checkStored(commandList, 6);
-                var newVar5 = checkStored(commandList, 7);
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar, "COMPARE_RESULT");
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar2);
-                varString2 = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
-                var varString3 = getStoredMagic(varNameDictionary, varLevel, commandList, 5, newVar3);
-                var varString4 = getStoredMagic(varNameDictionary, varLevel, commandList, 6, newVar4);
-                var varString5 = getStoredMagic(varNameDictionary, varLevel, commandList, 7, newVar5);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
+                varString2 = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
+                var varString3 = getStoredMagic(varNameDictionary, varLevel, commandList, 5);
+                var varString4 = getStoredMagic(varNameDictionary, varLevel, commandList, 6);
+                var varString5 = getStoredMagic(varNameDictionary, varLevel, commandList, 7);
                 scriptBoxEditor.AppendText(space + "COMPARE_RESULT " + commandList[3] + " = " + commandList[2] + "( " + varString + ", " + varString3 + ", " + varString4 + ", " + varString5 + " );\n");
                 break;
             case "CopyVar":
                 newVar = checkStored(commandList, 4);
                 newVar2 = checkStored(commandList, 3);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar);
-                addToVarNameDictionary(varNameDictionary, varLevel, newVar2, varString);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
+                if (!IsNaturalNumber(commandList[4]))
+                    addToVarNameDictionary(varNameDictionary, varLevel, newVar, varString);
                 scriptBoxEditor.AppendText(space + "VAR " + commandList[3] + " = " + varString + ";\n");
                 break;
             case "Cry":
@@ -1892,7 +1952,7 @@ public class Utils
                 break;
             case "DoubleTrainerBattle":
                 newVar = checkStored(commandList, 3);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
                 scriptBoxEditor.AppendText(space + commandList[2] + "( OTHER " + varString + ", OPPONENT " + commandList[4] + ", OPPONENT " + commandList[5] + " );\n");
                 break;
             case "Fanfare":
@@ -1900,14 +1960,14 @@ public class Utils
                 break;
             case "GiveCoins":
                 newVar = checkStored(commandList, 3);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
                 scriptBoxEditor.AppendText(space + commandList[2] + "( AMOUNT " + varString + " );\n");
                 break;
             case "GiveItem":
                 newVar = checkStored(commandList, 3);
                 newVar2 = checkStored(commandList, 4);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
-                varString2 = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar2);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
+                varString2 = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
                 scriptBoxEditor.AppendText(space + commandList[2] + "( ITEM " + varString + " , NUMBER " + varString2 + ", " + commandList[5] + " );\n");
                 break;
             case "GivePokémon":
@@ -1961,7 +2021,7 @@ public class Utils
             case "IncPokèmonHappiness":
                 newVar = checkStored(commandList, 3);
                 newVar2 = checkStored(commandList, 4);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar2);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
                 scriptBoxEditor.AppendText(space + commandList[2] + "( POKEMON " + varString + " , AMOUNT " + commandList[3] + " );\n");
                 break;
             case "Jump":
@@ -1986,59 +2046,37 @@ public class Utils
                 break;
             case "Message":
                 newVar = checkStored(commandList, 3);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
                 scriptBoxEditor.AppendText(space + "" + commandList[2] + "( MESSAGE_ID " + commandList[3] + " ");
                 text = "";
-                if (varString.Contains("M"))
-                {
-                    var id = varString.Split('_')[1];
-                    text = textFile.textList[Int32.Parse(id)].text;
-                }
-                else
-                    text = textFile.textList[Int16.Parse(varString)].text;
-                scriptBoxEditor.AppendText(" = " + text + " ");
+                text = getVarString(scriptBoxEditor, textFile, commandList, varString, text);
+                if (text != "")
+                    scriptBoxEditor.AppendText(" = " + text + " ");
                 scriptBoxEditor.AppendText(");\n");
                 break;
             case "Message2":
                 newVar = checkStored(commandList, 3);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
                 scriptBoxEditor.AppendText(space + "" + commandList[2] + "( MESSAGE_ID " + commandList[3] + " ");
-                if (textFile != null)
-                {
-                    if (varString.Contains("M"))
-                        scriptBoxEditor.AppendText(" = " + textFile.textList[varString.ToCharArray()[varString.Length - 2]].text + " ");
-                    else
-                        scriptBoxEditor.AppendText(" = " + textFile.textList[Int16.Parse(varString)].text + " ");
-                }
+                text = "";
+                text = getVarString(scriptBoxEditor, textFile, commandList, varString, text);
+                if (text != "")
+                    scriptBoxEditor.AppendText(" = " + text + " ");
                 scriptBoxEditor.AppendText(");\n");
                 break;
             case "Message3":
                 newVar = checkStored(commandList, 3);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
                 scriptBoxEditor.AppendText(space + "" + commandList[2] + "( MESSAGE_ID " + commandList[3] + " ");
                 text = "";
-                if (varString.Contains("M"))
-                {
-                    var id = varString.Split('_')[1];
-                    text = textFile.textList[Int32.Parse(id)].text;
-                }
-                else if (varString.Contains("VAR"))
-                {
-                    for (int i = lineCounter; i > 0; i--)
-                    {
-                        var line3 = scriptBoxEditor.Lines[i];
-                        if (line3.Contains("VAR " + commandList[3]))
-                            text = textFile.textList[Int32.Parse(line3.Split(' ')[4])].text;
-                    }
-                }
-                else
-                    text = textFile.textList[Int16.Parse(varString)].text;
-                scriptBoxEditor.AppendText(" = " + text + " ");
+                text = getVarString(scriptBoxEditor, textFile, commandList, varString, text);
+                if (text != "")
+                    scriptBoxEditor.AppendText(" = " + text + " ");
                 scriptBoxEditor.AppendText(");\n");
                 break;
             case "MessageBattle":
                 newVar = checkStored(commandList, 3);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
                 scriptBoxEditor.AppendText(space + "" + commandList[2] + "( TRAINER_ID " + varString + ", MESSAGE_ID " + commandList[4] + ");\n");
                 break;
             case "Multi":
@@ -2102,27 +2140,26 @@ public class Utils
                 scriptBoxEditor.AppendText(space + "TRAINER " + commandList[3] + " = ACTIVE;" + "\n");
                 break;
             case "SetValue":
-                newVar = checkStored(commandList, 3);
-                newVar2 = checkStored(commandList, 4);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar2);
-                varString2 = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
+                varString2 = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
                 //addToVarNameDictionary(varNameDictionary, varLevel, newVar, "VALUE " + varString2);
                 scriptBoxEditor.AppendText(space + "VALUE " + varString2 + " = " + varString + "\n");
                 break;
             case "SetVar":
                 newVar = checkStored(commandList, 3);
                 newVar2 = checkStored(commandList, 4);
-                addToVarNameDictionary(varNameDictionary, varLevel, newVar, "VAR " + commandList[3]);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar2);
-                varString2 = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
-                scriptBoxEditor.AppendText(space + varString2 + " = " + varString + "\n");
+                if (!IsNaturalNumber(commandList[4]))
+                    addToVarNameDictionary(varNameDictionary, varLevel, newVar, "NORM_VAR " + commandList[3]);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
+                varString2 = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
+                scriptBoxEditor.AppendText(space + varString2 + " = " + commandList[4] + "\n");
                 break;
             case "SetVarAccessories":
                 scriptBoxEditor.AppendText(space + "VAR ACC. " + commandList[3] + " = " + commandList[4] + ";\n");
                 break;
             case "SetVarStarterAccessories":
                 newVar2 = checkStored(commandList, 4);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar2);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
                 scriptBoxEditor.AppendText(space + "VAR ACC. " + commandList[3] + " = " + varString + ";\n");
                 break;
             case "SetVarAlter":
@@ -2133,62 +2170,62 @@ public class Utils
                 break;
             case "SetVarItem":
                 newVar2 = checkStored(commandList, 4);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar2);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
                 scriptBoxEditor.AppendText(space + "VAR ITEM " + commandList[3] + " = " + varString + ";\n");
                 break;
             case "SetVarItem2":
                 newVar2 = checkStored(commandList, 4);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar2);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
                 scriptBoxEditor.AppendText(space + "VAR ITEM2 " + commandList[3] + " = " + varString + ";\n");
                 break;
             case "SetVarBattleItem":
                 newVar2 = checkStored(commandList, 4);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar2);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
                 scriptBoxEditor.AppendText(space + "VAR BATTLE ITEM " + commandList[3] + " = " + varString + ";\n");
                 break;
             case "SetVarUndergroundItem":
                 newVar2 = checkStored(commandList, 4);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar2);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
                 scriptBoxEditor.AppendText(space + "VAR ITEM " + commandList[3] + " = " + varString + ";\n");
                 break;
             case "SetVarChosenPokèmonSize":
                 newVar = checkStored(commandList, 5);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 5, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 5);
                 scriptBoxEditor.AppendText(space + "VAR " + commandList[3] + " , VAR " + commandList[4] + " = " + commandList[2] + "( " + varString + " );\n");
                 break;
             case "SetVarMoveDeleter":
                 newVar = checkStored(commandList, 4);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
                 scriptBoxEditor.AppendText(space + "VAR MOVE " + commandList[3] + " = " + commandList[2] + "( " + varString + " );\n");
                 break;
             case "SetVarNickPokémon":
                 newVar = checkStored(commandList, 4);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
                 scriptBoxEditor.AppendText(space + "VAR NICK " + commandList[3] + " = " + varString + ";\n");
                 break;
             case "SetVarNumber":
                 newVar = checkStored(commandList, 3);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
                 scriptBoxEditor.AppendText(space + "VAR NUM " + commandList[3] + " = " + varString + ";\n");
                 break;
             case "SetVarPokémon":
                 newVar = checkStored(commandList, 4);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
                 scriptBoxEditor.AppendText(space + "VAR POKE " + commandList[3] + " = " + varString + ";\n");
                 break;
             case "SetVarPhraseBoxInput":
                 newVar = checkStored(commandList, 4);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
                 scriptBoxEditor.AppendText(space + "VAR STRING " + commandList[3] + " = " + varString + ";\n");
                 break;
             case "SetVarRandomPrize":
                 newVar = checkStored(commandList, 4);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
                 scriptBoxEditor.AppendText(space + "VAR L " + commandList[3] + " = " + commandList[2] + "( " + varString + " , " + commandList[5] + " );\n");
                 break;
             case "SetVarRequestedPokèmonSize":
                 newVar = checkStored(commandList, 5);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 5, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 5);
                 scriptBoxEditor.AppendText(space + "VAR " + commandList[3] + " , VAR " + commandList[4] + " = " + commandList[2] + "( POKEMON " + varString + " );\n");
                 break;
             case "SetVarRival":
@@ -2235,7 +2272,7 @@ public class Utils
             case "StoreCasinoPrizeResult":
                 newVar = checkStored(commandList, 4);
                 newVar2 = checkStored(commandList, 5);
-                newVar3 = checkStored(commandList, 3);
+                var newVar3 = checkStored(commandList, 3);
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar, "PRIZE_ID");
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar2, "PRIZE_NAME");
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar3, "PRIZE_SCRIPT");
@@ -2272,9 +2309,9 @@ public class Utils
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar2, "WORD");
                 newVar3 = checkStored(commandList, 5);
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar3, "WORD_2");
-                newVar4 = checkStored(commandList, 6);
+                var newVar4 = checkStored(commandList, 6);
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar4, "WORD_3");
-                newVar5 = checkStored(commandList, 7);
+                var newVar5 = checkStored(commandList, 7);
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar5, "WORD_4");
                 scriptBoxEditor.AppendText(space + "INSERT_CHECK " + commandList[3] + ", WORD " + commandList[4] + ", WORD_2 " + commandList[5] + ", WORD_3 " + commandList[6] + ", WORD_4 " + commandList[7] + " = " + commandList[2] + "();\n");
                 break;
@@ -2334,7 +2371,7 @@ public class Utils
             case "StoreMove":
                 newVar = checkStored(commandList, 3);
                 newVar2 = checkStored(commandList, 5);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 5, newVar2);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 5);
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar, "MOVE_TEACHED");
                 scriptBoxEditor.AppendText(space + "MOVE_TEACHED " + commandList[3] + " = " + commandList[2] + "( MOVE_ID " + commandList[4] + ", " + varString + " );\n");
                 break;
@@ -2345,13 +2382,13 @@ public class Utils
                 break;
             case "StorePictureName":
                 newVar = checkStored(commandList, 3);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
                 scriptBoxEditor.AppendText(space + commandList[2] + "( " + varString + " );\n");
                 break;
             case "StorePokèContestFashion":
                 newVar = checkStored(commandList, 3);
                 newVar2 = checkStored(commandList, 5);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar2, "FASHION_LEVEL");
                 scriptBoxEditor.AppendText(space + "FASHION_LEVEL " + commandList[5] + " = " + commandList[2] + "( POKEMON " + varString + ", FASHION " + commandList[4] + " );\n");
                 break;
@@ -2372,7 +2409,7 @@ public class Utils
                 newVar3 = checkStored(commandList, 3);
                 newVar4 = checkStored(commandList, 5);
 
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 6, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 6);
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar2, "LOTTONUMBER_CHECK");
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar4, "LOTTOPOKE_CHECK");
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar3, "LOTTOPOKE_ID");
@@ -2387,7 +2424,7 @@ public class Utils
                 newVar = checkStored(commandList, 3);
                 newVar2 = checkStored(commandList, 4);
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar, "HAPPY_LEVEL");
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar2);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
                 scriptBoxEditor.AppendText(space + "HAPPY_LEVEL " + commandList[3] + " = " + commandList[2] + "( " + varString + ");\n");
                 break;
             case "StorePokèmonId":
@@ -2396,8 +2433,13 @@ public class Utils
                 newVar2 = checkStored(commandList, 4);
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar2, "CHOSEN_POKEMON");
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar, "CHOSEN_POKEMON");
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
                 scriptBoxEditor.AppendText(space + "VAR " + commandList[4] + " = StorePokèmonId( " + varString + " );\n");
+                break;
+            case "StorePokèmonPartyAtLevel":
+                newVar = checkStored(commandList, 3);
+                addToVarNameDictionary(varNameDictionary, varLevel, newVar, "PARTY_NUM");
+                scriptBoxEditor.AppendText(space + "PARTY_NUM " + commandList[3] + " = " + commandList[2] + "( LEVEL " + commandList[4] + " );\n");
                 break;
             case "StorePokèmonPartyNumber":
                 newVar = checkStored(commandList, 3);
@@ -2420,7 +2462,7 @@ public class Utils
                 newVar = checkStored(commandList, 3);
                 newVar2 = checkStored(commandList, 4);
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar, "MOVE_NUM");
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar2);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
                 scriptBoxEditor.AppendText(space + "MOVE_NUM " + commandList[3] + " = " + commandList[2] + "( " + varString + ");\n");
                 break;
 
@@ -2428,8 +2470,15 @@ public class Utils
                 newVar = checkStored(commandList, 3);
                 newVar2 = checkStored(commandList, 4);
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar, "SIZE");
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar2);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
                 scriptBoxEditor.AppendText(space + "SIZE " + commandList[3] + " = " + commandList[2] + "( " + varString + ");\n");
+                break;
+            case "StorePokèmonType":
+                newVar = checkStored(commandList, 3);
+                newVar2 = checkStored(commandList, 4);
+                addToVarNameDictionary(varNameDictionary, varLevel, newVar2, "POKE_TYPE");
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3); 
+                scriptBoxEditor.AppendText(space + "POKE_TYPE " + commandList[4] + " = " + commandList[2] + "( POKE " + varString + " );\n");
                 break;
 
             case "StoreSpecificPokèmonParty":
@@ -2477,6 +2526,11 @@ public class Utils
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar, "BATTLE_TYPE");
                 scriptBoxEditor.AppendText(space + "BATTLE_TYPE " + commandList[3] + "  = " + commandList[2] + "();\n");
                 break;
+            case "StoreVersion":
+                newVar = checkStored(commandList, 3);
+                addToVarNameDictionary(varNameDictionary, varLevel, newVar, "VERSION");
+                scriptBoxEditor.AppendText(space + "VERSION " + commandList[3] + "  = " + commandList[2] + "();\n");
+                break;
             case "SetVarBattle2?":
                 newVar = checkStored(commandList, 4);
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar, "TRAINER_" + commandList[3]);
@@ -2485,30 +2539,30 @@ public class Utils
             case "TakeItem":
                 newVar = checkStored(commandList, 3);
                 newVar2 = checkStored(commandList, 4);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
-                varString2 = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar2);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
+                varString2 = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
                 scriptBoxEditor.AppendText(space + commandList[2] + "( ITEM " + varString + " , NUMBER " + varString2 + ", " + commandList[5] + " );\n");
                 break;
             case "TakeMoney":
                 newVar = checkStored(commandList, 3);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
                 scriptBoxEditor.AppendText(space + commandList[2] + "( MONEY " + varString + ", " + commandList[4] + " );\n");
                 break;
             case "TeachPokèmonMove":
                 newVar = checkStored(commandList, 3);
                 newVar2 = checkStored(commandList, 4);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
-                varString2 = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar2);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
+                varString2 = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
                 scriptBoxEditor.AppendText(space + commandList[2] + "( " + varString + ", MOVE " + varString2 + " );\n");
                 break;
             case "TradePokèmon":
                 newVar = checkStored(commandList, 3);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
                 scriptBoxEditor.AppendText(space + commandList[2] + "( " + varString + " );\n");
                 break;
             case "TrainerBattle":
                 newVar = checkStored(commandList, 3);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
                 scriptBoxEditor.AppendText(space + commandList[2] + "( TRAINER " + varString + ", " + commandList[4] + " );\n");
                 break;
             case "YesNoBox":
@@ -2531,13 +2585,13 @@ public class Utils
                     {
 
                         newVar2 = checkStored(commandList, i);
-                        varString = getStoredMagic(varNameDictionary, varLevel, commandList, i, newVar2);
+                        varString = getStoredMagic(varNameDictionary, varLevel, commandList, i);
                         scriptBoxEditor.AppendText(" " + varString + " ,");
                     }
                 if (commandList[commandList.Length - 2] != "" && commandList.Length > 4)
                 {
                     newVar2 = checkStored(commandList, commandList.Length - 2);
-                    varString = getStoredMagic(varNameDictionary, varLevel, commandList, commandList.Length - 2, newVar2);
+                    varString = getStoredMagic(varNameDictionary, varLevel, commandList, commandList.Length - 2);
                     scriptBoxEditor.AppendText(" " + varString);
                 }
 
@@ -2551,14 +2605,13 @@ public class Utils
             case "CopyVar2":
                 newVar = checkStored(commandList, 4);
                 newVar2 = checkStored(commandList, 3);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
                 if (!(IsNaturalNumber(varString)))
                     addToVarNameDictionary(varNameDictionary, varLevel, newVar2, varString);
                 scriptBoxEditor.AppendText(space + "VAR2 " + commandList[3] + " = " + varString + ";\n");
                 break;
             case "DoubleMessage":
-                newVar = checkStored(commandList, 3);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
                 text = "";
                 if (varString.Contains("M"))
                 {
@@ -2568,8 +2621,7 @@ public class Utils
                 else
                     text = textFile.textList[Int16.Parse(varString)].text;
                 scriptBoxEditor.AppendText(space + "MESSAGE_MALE = " + text + ";\n");
-                newVar2 = checkStored(commandList, 4);
-                varString2 = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar);
+                varString2 = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
                 text = "";
                 if (varString2.Contains("M"))
                 {
@@ -2587,13 +2639,12 @@ public class Utils
                 scriptBoxEditor.AppendText(space + "" + commandList[2] + "( );\n");
                 break;
             case "SetVarPokèLottoNumber":
-                newVar = checkStored(commandList, 4);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
                 scriptBoxEditor.AppendText(space + "VAR L " + commandList[3] + " = " + commandList[2] + "( " + varString + " , " + commandList[5] + " );\n");
                 break;
             case "SetVarPokèmon":
                 newVar = checkStored(commandList, 4);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
                 scriptBoxEditor.AppendText(space + "VAR POKE " + commandList[3] + " = " + varString + ";\n");
                 break;
             case "ShowYesNoLowScreen":
@@ -2635,7 +2686,7 @@ public class Utils
                 break;
             case "StorePhotoName":
                 newVar = checkStored(commandList, 3);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
                 scriptBoxEditor.AppendText(space + commandList[2] + "( " + varString + " );\n");
                 break;
             case "StorePhotoSpace":
@@ -2662,25 +2713,101 @@ public class Utils
 
     }
 
+    private static string getVarString(RichTextBox scriptBoxEditor, Texts textFile, string[] commandList, string varString, string text)
+    {
+        if (textFile == null)
+            return "";
+        try
+        {
+            var findValue = 0;
+            if (varString.Contains("M"))
+            {
+                var id = varString.Split('_')[1];
+                text = textFile.textList[Int32.Parse(id)].text;
+            }
+            else if (varString.Contains("VAR") || varString.Contains("0x"))
+            {
+                var pos = scriptBoxEditor.GetLineFromCharIndex(scriptBoxEditor.GetFirstCharIndexOfCurrentLine());
+                var id = "";
+                getVarId(scriptBoxEditor, commandList, ref findValue, pos, ref id);
+                if (id != "")
+                    scriptBoxEditor.AppendText(" (" + id + ") ");
+                if (textFile != null)
+                    text = textFile.textList[Int32.Parse(id)].text;
+            }
+            else
+                text = textFile.textList[Int16.Parse(varString)].text;
+        }
+        catch (FormatException f)
+        {
+            return "";
+        }
+        return text;
+    }
+
+    private static void getVarId(RichTextBox scriptBoxEditor, string[] commandList, ref int findValue, int pos, ref string id)
+    {
+        for (int i = pos - 1; i > 0 && findValue == 0; i--)
+        {
+            var line3 = scriptBoxEditor.Lines[i];
+            if (line3.Contains("VAR " + commandList[3]))
+            {
+                findValue = 1;
+                var lineVector = line3.Split(' ');
+                var lineLength = lineVector.Length;
+                id = lineVector[lineLength - 1].Substring(0, 2);
+                if (id.ToCharArray()[id.Length - 1] == ';')
+                    id = lineVector[lineLength - 1].Substring(0, 1);
+            }
+        }
+    }
+
     internal static void getCommandSimplifiedBW(string[] scriptsLine, int lineCounter, string space, RichTextBox scriptBoxEditor, List<Dictionary<int, string>> varNameDictionary, int varLevel, List<int> visitedLine, int typeROM, Texts textFile)
     {
         var line = scriptsLine[lineCounter];
         var commandList = line.Split(' ');
         string movId;
         string tipe;
-        string functionID;
         //scriptBoxEditor.AppendText(commandList[1] + " ");
         switch (commandList[2])
         {
 
+            case "79":
+                var varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
+                addToVarNameDictionary(varNameDictionary, varLevel, checkStored(commandList, 5), "79_STATUS");
+                scriptBoxEditor.AppendText(space + "79_STATUS " + commandList[5] + " = " + commandList[2] + "( OW_ID " + varString+ " , " + commandList[4] + " );\n");
+                break;
+            case "CE":
+                addToVarNameDictionary(varNameDictionary, varLevel, checkStored(commandList, 3), "CE_VALUE");
+                scriptBoxEditor.AppendText(space + "CE_VALUE " + commandList[3] + " = " + commandList[2] + "();\n");
+                break;
+            case "D2":
+                addToVarNameDictionary(varNameDictionary, varLevel, checkStored(commandList, 3), "D2_VALUE");
+                scriptBoxEditor.AppendText(space + "D2_VALUE " + commandList[3] + " = " + commandList[2] + "();\n");
+                break;
+            case "E1":
+                addToVarNameDictionary(varNameDictionary, varLevel, checkStored(commandList, 3), "E1_VALUE");
+                scriptBoxEditor.AppendText(space + "E1_VALUE " + commandList[3] + " = " + commandList[2] + "();\n");
+                break;
+            case "17B":
+                addToVarNameDictionary(varNameDictionary, varLevel, checkStored(commandList, 3), "17B_STATUS");
+                scriptBoxEditor.AppendText(space + "17B_STATUS " + commandList[3] + " = " + commandList[2] + "();\n");
+                break;
             case "238":
                 scriptBoxEditor.AppendText(space + "VAR " + commandList[4] + " = " + commandList[2] + "(P_1 " + commandList[3] + ");\n");
                 break;
+            case "23D":
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
+                addToVarNameDictionary(varNameDictionary, varLevel, checkStored(commandList, 4), "MESSAGE_ID");
+                scriptBoxEditor.AppendText(space + "MESSAGE_ID " + commandList[4] + " = " + commandList[2] + "( " + varString + " );\n");
+                break;
             case "2AD":
-                newVar = Int32.Parse(commandList[3].Substring(2, commandList[3].Length - 2), System.Globalization.NumberStyles.AllowHexSpecifier);
-                newVar2 = Int32.Parse(commandList[4].Substring(2, commandList[4].Length - 2), System.Globalization.NumberStyles.AllowHexSpecifier);
-                addToVarNameDictionary(varNameDictionary, varLevel, newVar, "OW_ID");
+                addToVarNameDictionary(varNameDictionary, varLevel, checkStored(commandList, 3), "OW_ID");
                 scriptBoxEditor.AppendText(space + "UNK " + commandList[3] + ", OW_ID " + commandList[4] + " = " + commandList[2] + "();\n");
+                break;
+            case "2D1":
+                addToVarNameDictionary(varNameDictionary, varLevel, checkStored(commandList, 3), "2D1_STATUS");
+                scriptBoxEditor.AppendText(space + "2D1_STATUS " + commandList[3] + " = " + commandList[2] + "();\n");
                 break;
             case "AddPeople":
                 scriptBoxEditor.AppendText(space + "" + commandList[2] + "( OW_ID " + commandList[3] + ");\n");
@@ -2711,15 +2838,13 @@ public class Utils
 
                 break;
             case "BorderedMessage":
-                newVar = checkStored(commandList, 3);
-                var varString = getStoredMagic(varNameDictionary, varLevel, commandList, 5, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 5);
                 scriptBoxEditor.AppendText(space + "" + commandList[2] + "( MESSAGE_ID " + commandList[3] + " , COLOR " + commandList[4] + " ");
                 readMessage(scriptBoxEditor, commandList, 5);
                 scriptBoxEditor.AppendText(" );\n");
                 break;
             case "BubbleMessage":
-                newVar = checkStored(commandList, 3);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 5, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 5);
                 scriptBoxEditor.AppendText(space + "" + commandList[2] + "( MESSAGE_ID " + commandList[3] + " , VIEW " + commandList[4] + " ");
                 readMessage(scriptBoxEditor, commandList, 5);
                 scriptBoxEditor.AppendText(" );\n");
@@ -2740,11 +2865,24 @@ public class Utils
                 scriptBoxEditor.AppendText(space + "" + commandList[2] + "( OW_ID " + commandList[3] +
                                            ", P_2 " + commandList[4] + ");\n");
                 break;
+            case "CheckItemBagSpace":
+                newVar = checkStored(commandList, 5);
+                addToVarNameDictionary(varNameDictionary, varLevel, newVar, "ITEMBAG_SPACE");
+                scriptBoxEditor.AppendText(space + "ITEMBAG_SPACE " + commandList[5] + " = " + commandList[2] + "( ITEM " + commandList[3] + " , " + "NUMBER " + commandList[4] + " );\n");
+                break;
+            case "CheckItemBagNumber":
+                newVar = checkStored(commandList, 5);
+                addToVarNameDictionary(varNameDictionary, varLevel, newVar, "ITEMBAG_NUMBER");
+                scriptBoxEditor.AppendText(space + "ITEMBAG_NUMBER " + commandList[5] + " = " + commandList[2] + "( ITEM " + commandList[3] + " , " + "NUMBER " + commandList[4] + " );\n");
+                break;
+            case "CheckMoney":
+                newVar = checkStored(commandList, 3);
+                addToVarNameDictionary(varNameDictionary, varLevel, newVar, "MONEY_STATUS");
+                scriptBoxEditor.AppendText(space + "MONEY_STATUS " + commandList[3] + " = " + commandList[2] + "( AMOUNT " + commandList[4] + ", " + commandList[5] + " );\n");
+                break;
             case "ChooseWifiSprite":
-                newVar = checkStored(commandList, 4);
-                newVar2 = checkStored(commandList, 3);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
-                addToVarNameDictionary(varNameDictionary, varLevel, newVar, "WIFI_SPRITE_CHOSEN");
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
+                addToVarNameDictionary(varNameDictionary, varLevel, checkStored(commandList,4), "WIFI_SPRITE_CHOSEN");
                 scriptBoxEditor.AppendText(space + "WIFI_SPRITE_CHOSEN " + commandList[4] + " = " + commandList[2] + "( " + varString + " );\n");
                 break;
             case "ClearFlag":
@@ -2755,49 +2893,48 @@ public class Utils
                                            " = " + statusFlag + ";\n");
                 break;
             case "ClearVar":
-                newVar = checkStored(commandList, 3);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
                 scriptBoxEditor.AppendText(space + varString + " = CLEARED;" + "\n");
                 break;
             case "ClearTrainerId":
                 scriptBoxEditor.AppendText(space + "TRAINER " + commandList[3] + " = FALSE;" + "\n");
                 break;
             case "Compare":
-                newVar = checkStored(commandList, 3);
-                newVar2 = checkStored(commandList, 4);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
-                var varString2 = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar2);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
+                var varString2 = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
                 var condition = getCondition(scriptsLine, lineCounter);
                 scriptBoxEditor.AppendText(space + "If( " + varString + " " + condition + " " + varString2 + ")\n");
                 break;
             case "Compare2":
-                newVar = checkStored(commandList, 3);
-                newVar2 = checkStored(commandList, 4);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
-                varString2 = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar2);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
+                varString2 = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
                 condition = getCondition(scriptsLine, lineCounter);
                 scriptBoxEditor.AppendText(space + "If( " + varString + " " + condition + " " + varString2 + ")\n");
                 break;
             case "CompareTo":
                 {
-                    varString = getStoredMagic(varNameDictionary, varLevel, null, 0, Int32.Parse(temp));
+                    varString = getStoredMagic(varNameDictionary, varLevel, null, 0);
                     condition = getCondition(scriptsLine, lineCounter);
-                    scriptBoxEditor.AppendText(space + "If( " + varString + " " + condition + " " + commandList[3] + ")\n");
+                    if (scriptsLine[lineCounter + 5].Contains("Condition") && scriptsLine[lineCounter + 4].Contains("Condition"))
+                    {
+                        scriptBoxEditor.AppendText(space + "If ( " + varString + " " + condition + " " + commandList[3] + ") ");
+                        condition = getCondition(scriptsLine, lineCounter + 4);
+                        scriptBoxEditor.AppendText(" " + condition + " ");
+                    }
+                    else
+                        scriptBoxEditor.AppendText(space + "If( " + varString + " " + condition + " " + commandList[3] + ");\n");
                     break;
 
                 }
             case "Condition":
                         break;
             case "CopyVar":
-                newVar = checkStored(commandList, 4);
-                newVar2 = checkStored(commandList, 3);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar);
-                addToVarNameDictionary(varNameDictionary, varLevel, newVar2, varString);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
+                addToVarNameDictionary(varNameDictionary, varLevel, checkStored(commandList, 3), varString);
                 scriptBoxEditor.AppendText(space + "VAR " + commandList[3] + " = " + varString + ";\n");
                 break;
             case "EventGreyMessage":
-                newVar = checkStored(commandList, 3);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 5, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 5);
                 scriptBoxEditor.AppendText(space + "" + commandList[2] + "( MESSAGE_ID " + commandList[3] + " , TYPE " + commandList[4] + " ");
                 readMessage(scriptBoxEditor, commandList, 5);
                 scriptBoxEditor.AppendText(" );\n");
@@ -2867,31 +3004,45 @@ public class Utils
                 scriptBoxEditor.AppendText(space + "" + commandList[2] + "( OW_ID " + commandList[3] + ");\n");
                 break;
             case "Message":
-                newVar = checkStored(commandList, 5);
-                newVar2 = checkStored(commandList, 6);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 5, newVar);
-                varString2 = getStoredMagic(varNameDictionary, varLevel, commandList, 6, newVar2);
-                scriptBoxEditor.AppendText(space + "" + commandList[2] + "( COSTANT " + commandList[3] + " , COSTANT " + commandList[4] +
-                                           " , MESSAGE_ID " + varString + " , OW_ID " + varString2 +
-                                           " , VIEW " + commandList[7] + " , TYPE " + commandList[8] + " ");
-                if (varString.Contains("M"))
-                    scriptBoxEditor.AppendText(" = " + textFile.messageList[varString.ToCharArray()[varString.Length - 2]] + " ");
+                if (commandList.Length < 5)
+                {
+                    scriptBoxEditor.AppendText(space + "" + commandList[2] + "( MESSAGE_ID " + commandList[3]);
+                }
                 else
-                    scriptBoxEditor.AppendText(" = " + textFile.messageList[Int16.Parse(varString)] + " ");
+                {
+                    varString = getStoredMagic(varNameDictionary, varLevel, commandList, 5);
+                    varString2 = getStoredMagic(varNameDictionary, varLevel, commandList, 6);
+                    scriptBoxEditor.AppendText(space + "" + commandList[2] + "( COSTANT " + commandList[3] + " , COSTANT " + commandList[4] +
+                                           " , MESSAGE_ID " + varString + " , OW_ID " + varString2 +
+                                               " , VIEW " + commandList[7] + " , TYPE " + commandList[8] + " ");
+                    if (varString.Contains("M"))
+                        scriptBoxEditor.AppendText(" = " + textFile.messageList[varString.ToCharArray()[varString.Length - 2]] + " ");
+                    else
+                        scriptBoxEditor.AppendText(" = " + textFile.messageList[Int16.Parse(varString)] + " ");
+                }
                 scriptBoxEditor.AppendText(" );\n");
                 break;
             case "Message2":
-                newVar = checkStored(commandList, 5);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 5, newVar);
-                scriptBoxEditor.AppendText(space + "" + commandList[2] + "( COSTANT " + commandList[3] + " , COSTANT " + commandList[4] +
-                                           " , MESSAGE_ID " + varString + 
-                                           " , VIEW " + commandList[6] + " , TYPE " + commandList[7] + " ");
-                if (varString.Contains("M"))
-                    scriptBoxEditor.AppendText(" = " + textFile.messageList[varString.ToCharArray()[varString.Length - 2]] + " ");
+                if (commandList.Length < 5)
+                {
+                    scriptBoxEditor.AppendText(space + "" + commandList[2] + "( MESSAGE_ID " + commandList[3]);
+                    scriptBoxEditor.AppendText(" );\n");
+                }
                 else
-                    scriptBoxEditor.AppendText(" = " + textFile.messageList[Int16.Parse(varString)] + " ");
-                scriptBoxEditor.AppendText(" );\n");
-                break;
+                {
+                    short index = 0;
+                    varString = getStoredMagic(varNameDictionary, varLevel, commandList, 5);
+                    scriptBoxEditor.AppendText(space + "" + commandList[2] + "( COSTANT " + commandList[3] + " , COSTANT " + commandList[4] +
+                                               " , MESSAGE_ID " + varString +
+                                               " , VIEW " + commandList[6] + " , TYPE " + commandList[7] + " ");
+                    if (varString.Contains("M"))
+                        scriptBoxEditor.AppendText(" = " + textFile.messageList[varString.ToCharArray()[varString.Length - 2]] + " ");
+                    else if (Int16.TryParse(varString,out index))
+                        scriptBoxEditor.AppendText(" = " + textFile.messageList[index] + " ");
+
+                    scriptBoxEditor.AppendText(" );\n");
+                }
+                break;      
             case "Message3":
                 scriptBoxEditor.AppendText(space + "" + commandList[2] + "( MESSAGE_ID " + commandList[3]);
                 //scriptBoxEditor.AppendText(" = " + textFile.messageList[varString.ToCharArray()[varString.Length - 2]] + " ");
@@ -2899,16 +3050,14 @@ public class Utils
                 scriptBoxEditor.AppendText(" );\n");
                 break;
             case "Multi":
-                newVar = checkStored(commandList, 7);
-                addToVarNameDictionary(varNameDictionary, varLevel, newVar, "MULTI_CHOSEN");
+                addToVarNameDictionary(varNameDictionary, varLevel, checkStored(commandList, 7), "MULTI_CHOSEN");
                 scriptBoxEditor.AppendText(space + "MULTI_CHOSEN " + commandList[7] + " = " + commandList[2] + "(X " + commandList[4] + " , " +
                     "Y " + commandList[5] + " , " +
                     "CURSOR " + commandList[6] +
                     ");\n");
                 break;
             case "Multi3":
-                newVar = checkStored(commandList, 7);
-                addToVarNameDictionary(varNameDictionary, varLevel, newVar, "MULTI_CHOSEN");
+                addToVarNameDictionary(varNameDictionary, varLevel, checkStored(commandList, 7), "MULTI_CHOSEN");
                 scriptBoxEditor.AppendText(space + "MULTI_CHOSEN " + commandList[7] + " = " + commandList[2] + "(X " + commandList[4] + " , " +
                     "Y " + commandList[5] + " , " +
                     "CURSOR " + commandList[6] + " , " +
@@ -2943,27 +3092,37 @@ public class Utils
                 scriptBoxEditor.AppendText(space + "TRAINER " + commandList[3] + " = TRUE;" + "\n");
                 break;
             case "SetValue":
-                newVar = checkStored(commandList, 3);
-                newVar2 = checkStored(commandList, 4);
-                addToVarNameDictionary(varNameDictionary, varLevel, newVar, "VALUE");
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar2);
+                addToVarNameDictionary(varNameDictionary, varLevel, checkStored(commandList, 3), "VALUE");
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
                 scriptBoxEditor.AppendText(space + "VALUE " + commandList[3] + " = " + varString + "\n");
                 break;
-            case "SetVar":
+            case "SetVar26":
                 newVar = checkStored(commandList, 3);
                 newVar2 = checkStored(commandList, 4);
-                addToVarNameDictionary(varNameDictionary, varLevel, newVar, "VAR " + commandList[3]);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar2);
-                varString2 = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
+                if (!IsNaturalNumber(commandList[4]))
+                    addToVarNameDictionary(varNameDictionary, varLevel, newVar, "NORM_VAR " + commandList[3]);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
+                varString2 = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
                 scriptBoxEditor.AppendText(space + varString2 + " = " + commandList[4] + "\n");
                 break;
-            case "SetVar3":
+            case "SetVarEqVal":
                 newVar = checkStored(commandList, 3);
                 newVar2 = checkStored(commandList, 4);
-                addToVarNameDictionary(varNameDictionary, varLevel, newVar, "VAR " + commandList[3]);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar2);
-                varString2 = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
+                if (!IsNaturalNumber(commandList[4]))
+                    addToVarNameDictionary(varNameDictionary, varLevel, newVar, "NORM_VAR " + commandList[3]);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
+                varString2 = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
                 scriptBoxEditor.AppendText(space + varString2 + " = " + commandList[4] + "\n");
+                break;
+            case "SetVarRoutine":
+                newVar = checkStored(commandList, 3);
+                newVar2 = checkStored(commandList, 4);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
+                addToVarNameDictionary(varNameDictionary, varLevel, newVar, "ROUT_VAR " + commandList[3]);
+                varString2 = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
+                scriptBoxEditor.AppendText(space + varString2 + " = " + varString + ";\n");
+                if (IsNaturalNumber(varString))
+                    addToVarNameDictionary(varNameDictionary, varLevel, newVar, "ROUT_VAR " + varString);
                 break;
             case "SetVarAlter":
                 scriptBoxEditor.AppendText(space + "VAR NAME " + commandList[3] + " = [ALTER]" + ";\n");
@@ -2978,24 +3137,26 @@ public class Utils
                 scriptBoxEditor.AppendText(space + "VAR BATTLE ITEM " + commandList[3] + " = " + commandList[4] + ";\n");
                 break;
             case "SetVarNickPokémon":
-                newVar = checkStored(commandList, 4);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
                 scriptBoxEditor.AppendText(space + "VAR NICK " + commandList[3] + " = " + varString + ";\n");
                 break;
 
             case "SetVarNumber":
-                newVar = checkStored(commandList, 4);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
                 scriptBoxEditor.AppendText(space + "VAR NUM " + commandList[3] + " = " + varString + ";\n");
+                break;
+            case "SetVarPartyPokemon":
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
+                scriptBoxEditor.AppendText(space + "VAR POKE " + commandList[3] + " = " + varString + ";\n");
                 break;
             case "SetVarPokèLottoNumber":
                 newVar = checkStored(commandList, 4);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
                 scriptBoxEditor.AppendText(space + "VAR L " + commandList[3] + " = " + commandList[2] + "( " + varString + " , " + commandList[5] + " );\n");
                 break;
             case "SetVarPhraseBoxInput":
                 newVar = checkStored(commandList, 4);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
                 scriptBoxEditor.AppendText(space + "VAR STRING " + commandList[3] + " = " + varString + ";\n");
                 break;
             case "SetVarRival":
@@ -3013,9 +3174,9 @@ public class Utils
                 scriptBoxEditor.AppendText(space + "DRESS_DECISION " + commandList[4] + " = " + commandList[2] + "(" + commandList[3] + " , " + commandList[5] + " );\n");
                 break;
             case "StoreBadge":
-                newVar = checkStored(commandList, 4);
+                newVar = checkStored(commandList, 3);
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar, "BADGE_STATUS");
-                scriptBoxEditor.AppendText(space + "BADGE_STATUS " + commandList[4] + "= " + commandList[2] + "( BADGE " + commandList[3] + ");\n");
+                scriptBoxEditor.AppendText(space + "BADGE_STATUS " + commandList[3] + "= " + commandList[2] + "( BADGE " + commandList[4] + ");\n");
                 break;
             case "StoreBadgeNumber":
                 newVar = checkStored(commandList, 3);
@@ -3113,9 +3274,13 @@ public class Utils
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar, "ITEMBAG_SPACE");
                 scriptBoxEditor.AppendText(space + "ITEM_BAG_SPACE " + commandList[5] + " = " + commandList[2] + "( ITEM " + commandList[3] + " , " + "NUMBER " + commandList[4] + " );\n");
                 break;
-            case "StorePhotoName":
+            case "StorePartyCountMore":
                 newVar = checkStored(commandList, 3);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
+                addToVarNameDictionary(varNameDictionary, varLevel, newVar, "POKEMON_COUNT");
+                scriptBoxEditor.AppendText(space + "POKEMON_COUNT " + commandList[3] + " = " + commandList[2] + "( LOWER_BOUND " + commandList[4] + " );\n");
+                break;
+            case "StorePhotoName":
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
                 scriptBoxEditor.AppendText(space + commandList[2] + "( " + varString + " );\n");
                 break;
             case "StorePokèdex":
@@ -3130,12 +3295,11 @@ public class Utils
                 break;
             case "StorePokèLottoResults":
 
-                newVar = checkStored(commandList, 6);
                 newVar2 = checkStored(commandList, 4);
                 newVar3 = checkStored(commandList, 3);
                 newVar4 = checkStored(commandList, 5);
 
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 6, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 6);
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar2, "LOTTONUMBER_CHECK");
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar4, "LOTTOPOKE_CHECK");
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar3, "LOTTOPOKE_ID");
@@ -3147,9 +3311,15 @@ public class Utils
                 newVar2 = checkStored(commandList, 4);
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar2, "CHOSEN_POKEMON");
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar, "CHOSEN_POKEMON");
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
                 scriptBoxEditor.AppendText(space + "VAR " + commandList[4] + " = StorePokèmonId( " + varString + " );\n");
                 break;
+            case "StorePokemonPartyAt":
+                newVar = checkStored(commandList, 3);
+                addToVarNameDictionary(varNameDictionary, varLevel, newVar, "POKEMON");
+                scriptBoxEditor.AppendText(space + "POKEMON " + commandList[3] + " = " + commandList[2] + "( POSITION " + commandList[4] + " );\n");
+                break;
+
             case "StorePokèmonPartyNumber":
                 newVar = checkStored(commandList, 3);
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar, "PARTY_NUM");
@@ -3159,6 +3329,12 @@ public class Utils
                 newVar = checkStored(commandList, 3);
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar, "PARTY_NUM");
                 scriptBoxEditor.AppendText(space + "PARTY_NUM " + commandList[3] + " = " + commandList[2] + "();\n");
+                break;
+            case "StorePokèmonSex":
+                newVar = checkStored(commandList, 3);
+                addToVarNameDictionary(varNameDictionary, varLevel, newVar, "SEX");
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 4);
+                scriptBoxEditor.AppendText(space + "SEX " + commandList[3] + " = " + commandList[2] + "( POKE " + varString + ", " + commandList[5] + " );\n");
                 break;
             case "StorePokèKronApplicationStatus":
                 newVar = checkStored(commandList, 3);
@@ -3196,7 +3372,7 @@ public class Utils
                 newVar = checkStored(commandList, 3);
                 //addToVarNameDictionary(varNameDictionary, varLevel, newVar, "VAR 0x" + newVar.ToString("X"));
                 var next = scriptsLine[lineCounter + 1];
-                if (scriptsLine[lineCounter + 1].Contains("StoreVar"))
+                if (scriptsLine[lineCounter + 1].Contains("StoreVar") && scriptsLine[lineCounter + 1].Contains("CompareTo"))
                 {
                     temp2 = next.Split(' ')[1];
                     lineCounter+=2;
@@ -3210,9 +3386,14 @@ public class Utils
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar, "MESSAGE_" + commandList[4]);
                 scriptBoxEditor.AppendText(space + "VAR " + commandList[3] + " = MESSAGE_" + commandList[4] + ";\n");
                 break;
+            case "StoreVersion":
+                newVar = checkStored(commandList, 3);
+                addToVarNameDictionary(varNameDictionary, varLevel, newVar, "VERSION");
+                scriptBoxEditor.AppendText(space + "VERSION " + commandList[3] + "= " + commandList[2] + "();\n");
+                break;
             case "TradePokèmon":
                 newVar = checkStored(commandList, 3);
-                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3, newVar2);
+                varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
                 scriptBoxEditor.AppendText(space + commandList[2] + "( " + varString + " );\n");
                 break;
             case "YesNoBox":
@@ -3231,7 +3412,7 @@ public class Utils
                     {
 
                         newVar2 = checkStored(commandList, i);
-                        varString = getStoredMagic(varNameDictionary, varLevel, commandList, i, newVar2);
+                        varString = getStoredMagic(varNameDictionary, varLevel, commandList, i);
                         scriptBoxEditor.AppendText(" " + varString + " ,");
                     }
                 if (commandList[commandList.Length - 2] != "" && commandList.Length > 4)
@@ -3271,14 +3452,16 @@ public class Utils
             line2 = scriptsLine[functionLineCounter];
             if (line2.Length > 1)
             {
+                if (line2.StartsWith("="))
+                    return;
                 try
                 {
                     if (typeROM == 3 || typeROM == 4)
-                        Utils.getCommandSimplifiedBW(scriptsLine, functionLineCounter, space + "   ", scriptBoxEditor, varNameDictionary, varLevel + 1, visitedLine,3,textFile);
+                        Utils.getCommandSimplifiedBW(scriptsLine, functionLineCounter, space + "   ", scriptBoxEditor, varNameDictionary, varLevel + 1, visitedLine, 3, textFile);
                     else if (typeROM == 2)
                         Utils.getCommandSimplifiedHGSS(scriptsLine, functionLineCounter, space + "   ", scriptBoxEditor, varNameDictionary, varLevel + 1, visitedLine, 2, textFile);
                     else
-                        Utils.getCommandSimplifiedDPP(scriptsLine, functionLineCounter, space + "   ", scriptBoxEditor, varNameDictionary, varLevel + 1,visitedLine,0, textFile);
+                        Utils.getCommandSimplifiedDPP(scriptsLine, functionLineCounter, space + "   ", scriptBoxEditor, varNameDictionary, varLevel + 1, visitedLine, 0, textFile);
                 }
                 catch
                 {
@@ -3287,15 +3470,16 @@ public class Utils
             functionLineCounter++;
             if ((typeROM == 3 || typeROM == 4))
             {
-                if (line2.Contains(" Jump ") || line2.Contains("EndScript") || line2.Contains("EndFunction"))
-                   return; 
-                 if (line2.Contains("End") && scriptsLine[functionLineCounter] == "")
+                if (line2.StartsWith("=") || line2.Contains(" Jump ") || line2.Contains("EndScript") || line2.Contains("EndFunction"))
+                    return;
+                if (line2.Contains("End") && (scriptsLine[functionLineCounter] == "" || scriptsLine[functionLineCounter].Contains("Offset ")))
                     return;
             }
-            if ((typeROM == 0 || typeROM == 1)  && (line2.Contains(" End ") || line2.Contains("KillScript") || (line2.Contains("Jump") && scriptsLine[functionLineCounter] == "" )))
+            if ((typeROM == 0 || typeROM == 1) && (line2.Contains(" End ") || line2.Contains("KillScript") || (line2.Contains("Jump") && scriptsLine[functionLineCounter] == "")))
                 return;
             if ((typeROM == 2) && (line2.Contains(" End ") || line2.Contains("KillScript") || (line2.Contains("Jump"))))// && scriptsLine[functionLineCounter] == "")))
                 return;
+
         } while (functionLineCounter < scriptsLine.Length);
 
     }
@@ -3318,8 +3502,13 @@ public class Utils
         return condition;
     }
 
-    private static string getStoredMagic(List<Dictionary<int, string>> varNameDictionary, int varLevel, string[] commandList, int id, int var)
+    private static string getStoredMagic(List<Dictionary<int, string>> varNameDictionary, int varLevel, string[] commandList, int id)
     {
+        int var = 0;
+        if (id == null)
+            var = Int32.Parse(temp);
+        else
+            var = checkStored(commandList, id);
         var varString = "";
         if (commandList != null)
             varString = commandList[id];
@@ -3352,6 +3541,8 @@ public class Utils
 
     private static int checkStored(string[] commandList, int id)
     {
+        if (commandList== null ||id>commandList.Length)
+            return 0;
         var oldVar2 = 0;
         if (commandList[id].Contains("0x"))
             oldVar2 = Int32.Parse(commandList[id].Substring(2, commandList[id].Length - 2), System.Globalization.NumberStyles.AllowHexSpecifier);

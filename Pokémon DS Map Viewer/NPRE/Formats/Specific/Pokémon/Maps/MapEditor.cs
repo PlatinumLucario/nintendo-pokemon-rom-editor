@@ -399,6 +399,7 @@
         private TextBox northWestHeaderBox;
         private RichTextBox scriptBoxEditor;
         private ComboBox subScripts;
+        private CheckBox OrthoView;
         private ToolStripMenuItem modelIMDToolStripMenuItem;
 
 
@@ -568,6 +569,7 @@
             this.Terrains = new System.Windows.Forms.TabPage();
             this.matrixTerrainInfo = new System.Windows.Forms.DataGridView();
             this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.subScripts = new System.Windows.Forms.ComboBox();
             this.scriptBoxEditor = new System.Windows.Forms.RichTextBox();
             this.scriptBoxViewer = new System.Windows.Forms.RichTextBox();
             this.tabPage6 = new System.Windows.Forms.TabPage();
@@ -735,7 +737,7 @@
             this.label8 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.button3 = new System.Windows.Forms.Button();
-            this.subScripts = new System.Windows.Forms.ComboBox();
+            this.OrthoView = new System.Windows.Forms.CheckBox();
             this.toolStrip.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabControl4.SuspendLayout();
@@ -2026,6 +2028,15 @@
             this.tabPage5.TabIndex = 1;
             this.tabPage5.Text = "Scripts";
             this.tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // subScripts
+            // 
+            this.subScripts.FormattingEnabled = true;
+            this.subScripts.Location = new System.Drawing.Point(570, 19);
+            this.subScripts.Name = "subScripts";
+            this.subScripts.Size = new System.Drawing.Size(121, 21);
+            this.subScripts.TabIndex = 2;
+            this.subScripts.SelectedIndexChanged += new System.EventHandler(this.subScripts_SelectedIndexChanged);
             // 
             // scriptBoxEditor
             // 
@@ -3465,6 +3476,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.OrthoView);
             this.groupBox1.Controls.Add(this.label11);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.trackBarTransZ);
@@ -3862,14 +3874,16 @@
             this.button3.Text = "NORTH";
             this.button3.UseVisualStyleBackColor = true;
             // 
-            // subScripts
+            // OrthoView
             // 
-            this.subScripts.FormattingEnabled = true;
-            this.subScripts.Location = new System.Drawing.Point(570, 19);
-            this.subScripts.Name = "subScripts";
-            this.subScripts.Size = new System.Drawing.Size(121, 21);
-            this.subScripts.TabIndex = 2;
-            this.subScripts.SelectedIndexChanged += new System.EventHandler(this.subScripts_SelectedIndexChanged);
+            this.OrthoView.AutoSize = true;
+            this.OrthoView.Location = new System.Drawing.Point(16, 526);
+            this.OrthoView.Name = "OrthoView";
+            this.OrthoView.Size = new System.Drawing.Size(130, 17);
+            this.OrthoView.TabIndex = 75;
+            this.OrthoView.Text = "Orthogonal Rendering";
+            this.OrthoView.UseVisualStyleBackColor = true;
+            this.OrthoView.CheckedChanged += new System.EventHandler(this.OrthoView_CheckedChanged);
             // 
             // MapEditor
             // 
@@ -4083,7 +4097,7 @@
         private void renderMultiple()
         {
             renderer.modelList.Add(actualModel);
-            renderScene += new Action(renderer.renderSingularAction);
+            renderScene += new Action(renderer.renderMultipleAction);
         }
 
         private void renderSingular()
@@ -8064,6 +8078,7 @@
                 else
                 {
                     Console.AppendText("\nStart rendering(Singular mode)");
+                    OpenGlControl.Invalidate();
                     renderer.setModel(actualModel, true);
                     renderer.renderSingularAction();
                     //renderScene += new Action(renderer.renderSingularAction);
@@ -8434,9 +8449,10 @@
             Gl.glLoadIdentity();
  
             var height = Math.Tan(45.0f / 2) * (0.12f + 32.0f) / 4;
-            //Gl.glOrtho(-height * aspect, height * aspect, -height, height, 0.12f, 32.0f);
-
-            Glu.gluPerspective(45.0f, aspect, 0.12f, 32.0f);
+            if (OrthoView.Checked)
+                Gl.glOrtho(-height * aspect, height * aspect, -height, height, 0.12f, 32.0f);
+            else
+                Glu.gluPerspective(45.0f, aspect, 0.12f, 32.0f);
             if (renderScene != null)
             {
                 renderScene();
@@ -9512,6 +9528,15 @@
         private void subScripts_SelectedIndexChanged(object sender, EventArgs e)
         {
             scriptViewer.printSimplifiedScript(scriptBoxEditor, scriptBoxViewer, romType, subScripts);
+        }
+
+        private void OrthoView_CheckedChanged(object sender, EventArgs e)
+        {
+            if (PolyNumMax.Value != -1)
+            {
+                OpenGlControl.Invalidate();
+                showShape((int)PolyNumMax.Value);
+            }
         }
 
       
