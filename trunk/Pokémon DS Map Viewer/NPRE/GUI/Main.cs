@@ -1201,6 +1201,7 @@ namespace PG4Map
             Narc scriptNarc = new Narc();
             scriptNarc.LoadNarc(new BinaryReader(actualNode));
             var scriptEditor = new Scripts(scriptNarc, textNarc,this);
+            Utils.bwTextNarc = new Narc().LoadNarc(new BinaryReader(actualNds.getFat().getFileStreamAt(Int16.Parse(Sys.Nodes[0].Nodes[0].Nodes[0].Nodes[0].Nodes[2].Tag.ToString()))));
             scriptEditor.Show();
         }
 
