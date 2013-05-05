@@ -3841,93 +3841,152 @@ public class Utils
             case "SetVar(09)":
                 newVar = checkStored(commandList, 3);
                 varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
-                if (!scriptsLine[lineCounter + 1].Contains("CompareTo")) 
-                    scriptBoxEditor.AppendText(space + "SET VAR " +  varString + ";\n");
+                //if (!scriptsLine[lineCounter + 1].Contains("CompareTo")) 
+                //   //scriptBoxEditor.AppendText(space + "SET VAR " +  varString + ";\n");
                 //addToVarNameDictionary(varNameDictionary, varLevel, newVar, "VAR 0x" + newVar.ToString("X"));
                 conditionList = new List<string>();
                 operatorList = new List<string>();
                 blockList = new List<string>();
-                var next = scriptsLine[lineCounter];
-                if (scriptsLine[lineCounter + 1].Contains("SetVar(09)") && scriptsLine[lineCounter + 2].Contains("CompareTo"))
+                int tempLineCounter = lineCounter;
+                List<string> firstMembers = new List<string>();
+                List<string> conditions = new List<string>();
+                List<string> secondMembers = new List<string>();
+                int numSetVar = 0;
+                bool setVarCompareConditionBlock = scriptsLine[tempLineCounter].Contains("SetVar(09)") && scriptsLine[tempLineCounter + 1].Contains("CompareTo");
+                bool setVarsetVarConditionBlock = scriptsLine[tempLineCounter].Contains("SetVar(09)") && scriptsLine[tempLineCounter + 1].Contains("SetVar(09)");
+                if (setVarCompareConditionBlock || setVarsetVarConditionBlock)
                 {
-                    temp2 = next.Split(' ')[1];
-                    var text = getTextFromCondition(temp2, cond);
-                    lineCounter += 2;
-                    condition = getCondition(scriptsLine, lineCounter);
-                    scriptBoxEditor.AppendText(space + "If( " + temp + " " + condition + " " + text + ")");
-
-                }
-                else if (scriptsLine[lineCounter + 1].Contains("SetVar(09)") && scriptsLine[lineCounter + 2].Contains("Condition"))
-                {
-                    var temp3 = next.Split(' ');
-                    varString2 = getStoredMagic(varNameDictionary, varLevel, temp3, 3);
-                    scriptBoxEditor.AppendText(space + "SET VAR " + varString2 + ";\n");
-                    lineCounter += 1;
-                    condition = getCondition(scriptsLine, lineCounter);
-                    scriptBoxEditor.AppendText(space + "If( " + varString + " " + condition + " " + varString2 + " )\n");
-                    lineCounter += 1;
-                }
-                else
-                {
-                    int c = lineCounter;
-                    while (scriptsLine[c].Contains("SetVar(09)"))
-                        c++;
-                    if (scriptsLine[c].Contains("CompareTo"))
+                    while (scriptsLine[tempLineCounter].Contains("SetVar(09)") && scriptsLine[tempLineCounter + 1].Contains("CompareTo")
+                        || scriptsLine[tempLineCounter].Contains("SetVar(09)") && scriptsLine[tempLineCounter + 1].Contains("SetVar(09)"))
                     {
-                        while (scriptsLine[lineCounter].Contains("SetVar(09)"))
+                        numSetVar++;
+
+                        //First Member
+                        var next = scriptsLine[tempLineCounter];
+                        commandList = next.Split(' ');
+                        newVar = checkStored(commandList, 3);
+                        varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
+                        firstMembers.Add(varString);
+                        tempLineCounter++;
+
+                        //Second Member
+                        next = scriptsLine[tempLineCounter];
+                        if (next.Contains("SetVar(09)"))
                         {
-                            line = scriptsLine[lineCounter];
-                            commandList = line.Split(' ');
+                            commandList = next.Split(' ');
                             newVar = checkStored(commandList, 3);
                             varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
-                            next = scriptsLine[lineCounter + 1];
-                            temp2 = next.Split(' ')[3];
-                            var text = getTextFromCondition(temp2, cond);
-                            condition = getCondition(scriptsLine, lineCounter + 1);
-                            operatorList.Add(space + "If( " + varString + " " + condition + " " + text + ")");
-                            //isFirst = false;
-                            lineCounter += 3;
-                            next = scriptsLine[lineCounter];
-                            var counter = lineCounter;
-                            while (next.Contains("Condition"))
-                            {
-                                conditionList.Add(next.Split(' ')[3]);
-                                counter++;
-                                next = scriptsLine[counter];
-                            }
-                            if (counter > lineCounter + 1)
-                            {
-                                if (!(blockList[blockList.Count - 1].Contains("AND")) && !(blockList[blockList.Count - 1].Contains("OR")))
-                                    blockList.RemoveAt(blockList.Count - 1);
-                                blockList.Add(" (" + operatorList[operatorList.Count - 1] + " " + next.Split(' ')[3] + " " + operatorList[operatorList.Count - 2] + ") ");
-                                var length = blockList.Count;
-                                counter = length - 1;
-                                //if (scriptsLine[lineCounter + 2].Contains("Condition"))
-                                //{
-                                //    while (scriptsLine[lineCounter + 2].Contains("Condition") && counter > 0)
-                                //    {
-                                //        conditionList.Add(blockList[blockList.Count - 1 - counter] + " " + scriptsLine[lineCounter + 1].Split(' ')[3]);
-                                //        lineCounter++;
-                                //        counter--;
-                                //    }
-                                //    blockList = conditionList;
-                                //}
-                            }
-                            else
-                                blockList.Add(operatorList[operatorList.Count - 1]);
-
+                            //scriptBoxEditor.AppendText(space + "SET VAR " + varString + ";\n");
+                            temp2 = varString;
                         }
-                        for (int i = 0; i < blockList.Count; i++)
+                        else
                         {
-                            scriptBoxEditor.AppendText(blockList[i]);
-                            blockList.RemoveAt(i);
+                            temp2 = next.Split(' ')[3];
                         }
-                        scriptBoxEditor.AppendText("\n");
-                        lineCounter -= 1;
-
+                        secondMembers.Add(getTextFromCondition(temp2, cond));
+                        tempLineCounter++;
+                
+                        //Condition
+                        next = scriptsLine[tempLineCounter];
+                        conditions.Add(getCondition(scriptsLine, tempLineCounter -1));
+                        tempLineCounter++;
                     }
+                    scriptBoxEditor.AppendText(space + "If( ");
+                    for (int i = 0; i < numSetVar; i++)
+                    {
+                        string extCondition = "";
+                        if (i != 0)
+                        {
+                            extCondition = getCondition(scriptsLine, tempLineCounter-1);
+                            scriptBoxEditor.AppendText(" " + extCondition + " ");
+                        }
+                        if (numSetVar>1)
+                            scriptBoxEditor.AppendText("( " + firstMembers[i] + " " + conditions[i] + " " + secondMembers[i] + " )");
+                        else
+                            scriptBoxEditor.AppendText(firstMembers[i] + " " + conditions[i] + " " + secondMembers[i]);
+                    }
+                    scriptBoxEditor.AppendText("); \n");
                 }
-                temp = newVar.ToString();
+                lineCounter = tempLineCounter-1;
+                //if (scriptsLine[lineCounter + 1].Contains("SetVar(09)") && scriptsLine[lineCounter + 2].Contains("CompareTo"))
+                //{
+                //    temp2 = next.Split(' ')[1];
+                //    var text = getTextFromCondition(temp2, cond);
+                //    lineCounter += 2;
+                //    condition = getCondition(scriptsLine, lineCounter);
+                //    scriptBoxEditor.AppendText(space + "If( " + temp + " " + condition + " " + text + ")");
+                //}
+                //else if (scriptsLine[lineCounter + 1].Contains("SetVar(09)") && scriptsLine[lineCounter + 2].Contains("Condition"))
+                //{
+                //    var temp3 = next.Split(' ');
+                //    varString2 = getStoredMagic(varNameDictionary, varLevel, temp3, 3);
+                //    scriptBoxEditor.AppendText(space + "SET VAR " + varString2 + ";\n");
+                //    lineCounter += 1;
+                //    condition = getCondition(scriptsLine, lineCounter);
+                //    scriptBoxEditor.AppendText(space + "If( " + varString + " " + condition + " " + varString2 + " )\n");
+                //    lineCounter += 1;
+                //}
+                //else
+                //{
+                //    int c = lineCounter;
+                //    while (scriptsLine[c].Contains("SetVar(09)"))
+                //        c++;
+                //    if (scriptsLine[c].Contains("CompareTo"))
+                //    {
+                //        while (scriptsLine[lineCounter].Contains("SetVar(09)"))
+                //        {
+                //            line = scriptsLine[lineCounter];
+                //            commandList = line.Split(' ');
+                //            newVar = checkStored(commandList, 3);
+                //            varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
+                //            next = scriptsLine[lineCounter + 1];
+                //            temp2 = next.Split(' ')[3];
+                //            var text = getTextFromCondition(temp2, cond);
+                //            condition = getCondition(scriptsLine, lineCounter + 1);
+                //            operatorList.Add(space + "If( " + varString + " " + condition + " " + text + ")");
+                //            //isFirst = false;
+                //            lineCounter += 3;
+                //            next = scriptsLine[lineCounter];
+                //            var counter = lineCounter;
+                //            while (next.Contains("Condition"))
+                //            {
+                //                conditionList.Add(next.Split(' ')[3]);
+                //                counter++;
+                //                next = scriptsLine[counter];
+                //            }
+                //            if (counter > lineCounter + 1)
+                //            {
+                //                if (!(blockList[blockList.Count - 1].Contains("AND")) && !(blockList[blockList.Count - 1].Contains("OR")))
+                //                    blockList.RemoveAt(blockList.Count - 1);
+                //                blockList.Add(" (" + operatorList[operatorList.Count - 1] + " " + next.Split(' ')[3] + " " + operatorList[operatorList.Count - 2] + ") ");
+                //                var length = blockList.Count;
+                //                counter = length - 1;
+                //                //if (scriptsLine[lineCounter + 2].Contains("Condition"))
+                //                //{
+                //                //    while (scriptsLine[lineCounter + 2].Contains("Condition") && counter > 0)
+                //                //    {
+                //                //        conditionList.Add(blockList[blockList.Count - 1 - counter] + " " + scriptsLine[lineCounter + 1].Split(' ')[3]);
+                //                //        lineCounter++;
+                //                //        counter--;
+                //                //    }
+                //                //    blockList = conditionList;
+                //                //}
+                //            }
+                //            else
+                //                blockList.Add(operatorList[operatorList.Count - 1]);
+
+                //        }
+                //        for (int i = 0; i < blockList.Count; i++)
+                //        {
+                //            scriptBoxEditor.AppendText(blockList[i]);
+                //            blockList.RemoveAt(i);
+                //        }
+                //        scriptBoxEditor.AppendText("\n");
+                //        lineCounter -= 1;
+
+                //    }
+                //}
+                //temp = newVar.ToString();
                 break;
             case "SetVarRoutine":
                 newVar = checkStored(commandList, 3);
@@ -4115,7 +4174,6 @@ public class Utils
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar, "TRADE_POKEMON", "NOR");
                 scriptBoxEditor.AppendText(space + "TRADE_POKEMON " + commandList[3] + "  = " + commandList[2] + "();\n");
                 break;
-
             case "StoreDay":
                 newVar = checkStored(commandList, 3);
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar, "DAY", "DAY");
@@ -4679,6 +4737,7 @@ public class Utils
             if (nameDictionary.ContainsKey(var))
                     return getVarStringFromDict(var, ref varString, nameDictionary);
         }
+        cond = "NOR";
         return varString;
     }
 
@@ -4698,18 +4757,42 @@ public class Utils
         {
             if (varString == "0")
             {
-                if (typeROM != 3)
+                if (typeROM != 3 || typeROM!=4)
                     return "YES";
                 else
                     return "NO";
             }
             if (varString == "1")
             {
-                if (typeROM == 3)
+                if (typeROM == 3 || typeROM == 4)
                     return "YES";
                 else
                     return "NO";
             }
+        }
+        if (condition == "GEN")
+        {
+            if (varString == "0")
+                return "MALE";
+            if (varString == "1")
+                return "FEMALE";
+        }
+        if (condition == "DAY")
+        {
+            if (varString == "0")
+                return "SUNDAY";
+            if (varString == "1")
+                return "MONDAY";
+            if (varString == "2")
+                return "TUESDAY";
+            if (varString == "3")
+                return "WEDNESDDAY";
+            if (varString == "4")
+                return "THURSDAY";
+            if (varString == "5")
+                return "FRIDAY";
+            if (varString == "6")
+                return "SATURDAY";
         }
         if (condition == "GEN")
         {

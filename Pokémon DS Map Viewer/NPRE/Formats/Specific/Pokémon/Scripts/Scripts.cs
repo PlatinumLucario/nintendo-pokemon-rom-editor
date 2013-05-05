@@ -10048,7 +10048,7 @@ namespace PG4Map.Formats
                     break;
                 case 0x06:
                     com.Name = "SetVar(06)";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); 
                     break;
                 case 0x07:
                     com.Name = "SetVar(07)";
@@ -10056,7 +10056,7 @@ namespace PG4Map.Formats
                     break;
                 case 0x08:
                     com.Name = "CompareTo";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Value to Compare
                     break;
                 case 0x09:
                     com.Name = "SetVar(09)";
@@ -10072,7 +10072,7 @@ namespace PG4Map.Formats
                     break;
                 case 0x10:
                     com.Name = "StoreFlag";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Flag
                     break;
                 case 0x11:
                     com.Name = "Condition";
@@ -10405,7 +10405,7 @@ namespace PG4Map.Formats
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x5B:
-                    com.Name = "SetVar(58)";
+                    com.Name = "SetVarPokèMansion";
                     com.parameters.Add(reader.ReadByte());
                     com.parameters.Add(reader.ReadUInt16());
                     break;
@@ -10896,7 +10896,7 @@ namespace PG4Map.Formats
                     break;
                 case 0xCF:
                     com.Name = "StoreDay";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Day(Ret)
                     break;
                 case 0xD0:
                     com.Name = "StoreDate";
@@ -10904,13 +10904,13 @@ namespace PG4Map.Formats
                     com.parameters.Add(reader.ReadUInt16()); //Day Return to var/cont
                     break;
                 case 0xD1:
-                    com.Name = "D1";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "StoreHour";
+                    com.parameters.Add(reader.ReadUInt16()); //Hour(Ret)
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0xD2:
                     com.Name = "StoreSeason";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Season(Ret)
                     break;
                 case 0xD3:
                     com.Name = "D3";
@@ -11024,58 +11024,58 @@ namespace PG4Map.Formats
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0xEC:
-                    com.Name = "EC";
+                    com.Name = "TakeEggDayCare";
                     break;
                 case 0xED:
-                    com.Name = "ED";
+                    com.Name = "KeepEggDayCare";
                     break;
                 case 0xEE:
                     com.Name = "EE";
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0xEF:
-                    com.Name = "EF";
+                    com.Name = "StoreAffinityDayCare";
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0xF0:
-                    com.Name = "F0";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "GivePokèDayCare";
+                    com.parameters.Add(reader.ReadUInt16()); //POKE
                     break;
                 case 0xF1:
-                    com.Name = "F1";
+                    com.Name = "TakePokèDayCare";
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0xF2:
-                    com.Name = "F2";
+                    com.Name = "StorePokèDayCare";
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0xF3:
-                    com.Name = "F3";
+                    com.Name = "StoreFormDayCare";
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0xF4:
-                    com.Name = "F4";
+                    com.Name = "StoreLevelDayCare";
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0xF5:
-                    com.Name = "F5";
+                    com.Name = "StoreLevelDiffDayCare";
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0xF6:
-                    com.Name = "F6";
+                    com.Name = "StoreMoneyDayCare";
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0xF7:
-                    com.Name = "F7";
+                    com.Name = "ChoosePokèDayCare";
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0xF8:
-                    com.Name = "F8";
+                    com.Name = "StoreDayCare(F8)";
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     break;
@@ -11297,8 +11297,9 @@ namespace PG4Map.Formats
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x121:
-                    com.Name = "121";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "CheckPartyAmount";
+                    com.parameters.Add(reader.ReadUInt16()); //Result Storage Variable(Boolean)
+                    com.parameters.Add(reader.ReadUInt16()); //Amount
                     break;
                 case 0x122:
                     com.Name = "122";
@@ -11502,7 +11503,7 @@ namespace PG4Map.Formats
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x14F:
-                    com.Name = "14F";
+                    com.Name = "CallPcFunction";
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     break;
@@ -12460,18 +12461,18 @@ namespace PG4Map.Formats
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x231:
-                    com.Name = "231";
-                    com.parameters.Add(reader.ReadUInt16()); // Var
+                    com.Name = "StoreFishPokèmon";
+                    com.parameters.Add(reader.ReadUInt16()); // Pokèmon to catch(Ret)
                     break;
                 case 0x232:
                     com.Name = "232";
                     com.parameters.Add(reader.ReadUInt16()); // Var
-                    com.parameters.Add(reader.ReadUInt16()); // Var
+                    com.parameters.Add(reader.ReadUInt16()); // Var(Ret)
                     break;
                 case 0x233:
-                        com.Name = "233";
-                        com.parameters.Add(reader.ReadUInt16()); // Var
-                        com.parameters.Add(reader.ReadUInt16()); // Var
+                    com.Name = "233";
+                    com.parameters.Add(reader.ReadUInt16()); // Var
+                    com.parameters.Add(reader.ReadUInt16()); // Var
                     break;
                 case 0x234:
                     com.Name = "234";
@@ -12522,13 +12523,13 @@ namespace PG4Map.Formats
                     com.parameters.Add(reader.ReadUInt16()); //RV = Message Id
                     break;
                 case 0x23E:
-                    com.Name = "23E";
+                    com.Name = "23E"; //Lock
                     com.parameters.Add(reader.ReadUInt16()); //var
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16()); //var
                     break;
                 case 0x23F:
-                    com.Name = "23F";
+                    com.Name = "23F"; //Freeze
                     break;
                 case 0x240:
                     com.Name = "240";
@@ -12543,7 +12544,7 @@ namespace PG4Map.Formats
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x243:
-                    com.Name = "BorderedMessage2";
+                    com.Name = "SpecialMessage";
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     break;
@@ -12561,11 +12562,12 @@ namespace PG4Map.Formats
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x247:
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "Warp(247)";
+                    com.parameters.Add(reader.ReadUInt16()); //Ow
+                    com.parameters.Add(reader.ReadUInt16()); //X
+                    com.parameters.Add(reader.ReadUInt16()); //Y
+                    com.parameters.Add(reader.ReadUInt16()); //Z
+                    com.parameters.Add(reader.ReadUInt16()); //Orientation
                     break;
                 case 0x248:
                     com.Name = "248";
@@ -12578,67 +12580,60 @@ namespace PG4Map.Formats
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
-                    var next249 = reader.ReadUInt16();
-                    while (next249 >= 0x4000) { com.parameters.Add(next249); next249 = reader.ReadUInt16(); }
-                    reader.BaseStream.Position -= 2;
                     break;
                 case 0x24A:
-                        com.Name = "TakeInterestingItem";
-                        com.parameters.Add(reader.ReadUInt16());
-                        com.parameters.Add(reader.ReadUInt16());
-                        break;
+                    com.Name = "TakeInterestingItem";
+                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16());
+                    break;
                 case 0x24B:
                     com.Name = "24B";
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x24C:
+                    com.Name = "24C";
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x24D:
-                    com.Name = "24D";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "Cry(24D)";
+                    com.parameters.Add(reader.ReadUInt16()); //Cry
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x24E:
-                    com.Name = "24E";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "24E"; //Lock
                     break;
                 case 0x24F:
-                    com.Name = "24F";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "24F"; //Lock
+                    break;
+                case 0x250:
+                    com.Name = "250"; //Freeze
                     break;
                 case 0x251:
                     com.Name = "251";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //(Ret)
+                    com.parameters.Add(reader.ReadUInt16()); //0
+                    com.parameters.Add(reader.ReadUInt16()); //Var
                     break;
                 case 0x252:
-                    com.Name = "252";
+                    com.Name = "ShowMapName";
                     break;
                 case 0x253:
-                    com.Name = "253";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "ChangeMusicVolume(253)";
+                    com.parameters.Add(reader.ReadUInt16()); //Volume
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x254:
                     com.parameters.Add(reader.ReadUInt16());
                     break;
-                case 0x255:
-                    com.Name = "255";
+                case 0x255: //Freeze
+                    com.Name = "255"; 
                     com.parameters.Add(reader.ReadUInt16());
                     break;
-                case 0x257:
+                case 0x257: //Freeze
                     com.Name = "257";
                     break;
                 case 0x259:
-                    com.Name = "259";
+                    com.Name = "StopMusic(259)";
                     break;
                 case 0x25A:
                     com.Name = "25A";
@@ -12653,13 +12648,13 @@ namespace PG4Map.Formats
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x25C:
-                    com.Name = "25C";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "25C"; //Used in stadium
+                    com.parameters.Add(reader.ReadUInt16()); //var (0x4XXX)
+                    com.parameters.Add(reader.ReadUInt16()); //var (0x4XXX)
+                    com.parameters.Add(reader.ReadUInt16()); //var (0x4XXX)
+                    com.parameters.Add(reader.ReadUInt16()); //var (0x4XXX)
+                    com.parameters.Add(reader.ReadUInt16()); //var (0x4XXX)
+                    com.parameters.Add(reader.ReadUInt16()); //var (0x4XXX)
                     break;
                 case 0x25D:
                     com.Name = "CheckCGearActive";
@@ -12671,8 +12666,8 @@ namespace PG4Map.Formats
                 case 0x25F:
                     com.Name = "25F";
                     break;
-                case 0x260:
-                    com.Name = "260";
+                case 0x260: //126
+                    com.Name = "260"; 
                     break;
                 default:
                     com.Name = "0x" + com.Id.ToString("X");
@@ -13879,8 +13874,8 @@ namespace PG4Map.Formats
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0xF0:
-                    com.Name = "F0";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "GivePokèmonMansion";
+                    com.parameters.Add(reader.ReadUInt16()); //POKE
                     break;
                 case 0xF1:
                     com.Name = "F1";
@@ -14134,8 +14129,9 @@ namespace PG4Map.Formats
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x121:
-                    com.Name = "121";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "CheckPartyAmount";
+                    com.parameters.Add(reader.ReadUInt16());//Bool(Ret)
+                    com.parameters.Add(reader.ReadUInt16());//Amount
                     break;
                 case 0x124:
                     com.Name = "124";
@@ -16754,6 +16750,8 @@ namespace PG4Map.Formats
                 }
                 else if (scriptType == 3)
                 {
+                    if (idScript == 856)
+                        idMessage = 426;
                     if (idScript == 859)
                         idMessage = 347;
                     if (idScript == 860)
