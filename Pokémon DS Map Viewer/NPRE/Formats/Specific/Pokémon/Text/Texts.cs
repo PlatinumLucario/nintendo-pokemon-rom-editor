@@ -38,6 +38,7 @@
         private short numTextFile;
         private List<Int32> originalKey;
         private ArrayList originalOffsets;
+        private Button button1;
         private List<Int32> originalSizes;
 
 
@@ -1413,6 +1414,7 @@
         public void readTextBW(BinaryReader reader, int i, RichTextBox textBox)
         {
             messageList  = new List<String>();
+            textList = new List<TextStruct>();
             if (i >= 0)
             {
                 UInt16 numSections, numEntries, tmpCharCount, tmpUnknown, tmpChar;
@@ -1549,10 +1551,24 @@
                                             isVar = true;
                                             k++;
                                         }
+                                        else if (encText[i][j][k + 1].ToString() == "263")
+                                        {
+                                            count++;
+                                            stringa += "MOVE: ";
+                                            isVar = true;
+                                            k++;
+                                        }
                                         else if (encText[i][j][k + 1].ToString() == "265")
                                         {
                                             count++;
                                             stringa += "ITEM: ";
+                                            isVar = true;
+                                            k++;
+                                        }
+                                        else if (encText[i][j][k + 1].ToString() == "274")
+                                        {
+                                            count++;
+                                            stringa += "BAG: ";
                                             isVar = true;
                                             k++;
                                         }
@@ -1563,6 +1579,13 @@
                                             isVar = true;
                                             k++;
                                         }
+                                        else if (encText[i][j][k + 1].ToString() == "514")
+                                        {
+                                            count++;
+                                            stringa += "CAUGHT NUM: ";
+                                            isVar = true;
+                                            k++;
+                                        }
                                         else if (encText[i][j][k + 1].ToString() == "516")
                                         {
                                             count++;
@@ -1570,7 +1593,7 @@
                                             isVar = true;
                                             k++;
                                         }
-                                        else if (encText[i][j][k + 1].ToString() == "65280")
+                                        else if (encText[i][j][k + 1].ToString() == "6528")
                                         {
                                             count++;
                                             stringa += "COLOR: ";
@@ -1606,6 +1629,7 @@
                         }
                         //}
                         messageList.Add(stringa);
+                        textList.Add(new TextStruct(){text = stringa});
                         if (!decText.ContainsKey(i))
                             decText.Add(i, new List<List<string>>());
                         decText[i].Add(chars);
@@ -1637,6 +1661,7 @@
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.textToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.narcToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.button1 = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -1683,7 +1708,7 @@
             this.textToolStripMenuItem,
             this.narcToolStripMenuItem});
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
             this.openToolStripMenuItem.Text = "Open";
             // 
             // textToolStripMenuItem
@@ -1705,25 +1730,36 @@
             this.textToolStripMenuItem1,
             this.narcToolStripMenuItem1});
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
             this.saveToolStripMenuItem.Text = "Save";
             // 
             // textToolStripMenuItem1
             // 
             this.textToolStripMenuItem1.Name = "textToolStripMenuItem1";
-            this.textToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.textToolStripMenuItem1.Size = new System.Drawing.Size(99, 22);
             this.textToolStripMenuItem1.Text = "E";
             this.textToolStripMenuItem1.Click += new System.EventHandler(this.textToolStripMenuItem1_Click);
             // 
             // narcToolStripMenuItem1
             // 
             this.narcToolStripMenuItem1.Name = "narcToolStripMenuItem1";
-            this.narcToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.narcToolStripMenuItem1.Size = new System.Drawing.Size(99, 22);
             this.narcToolStripMenuItem1.Text = "Narc";
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(153, 36);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 4;
+            this.button1.Text = "DumpAll";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // Texts
             // 
             this.ClientSize = new System.Drawing.Size(997, 688);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.listText);
             this.Controls.Add(this.textBox);
             this.Controls.Add(this.menuStrip1);
@@ -1780,7 +1816,29 @@
                 saveText(new BinaryWriter(file), textBox.Lines);
                 file.Close();
             }
-        } 
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            FileStream text = File.Create(Directory.GetCurrentDirectory() + "messageDump.txt");
+            var writer = new BinaryWriter(text);
+            int fileCounter = 0;
+            foreach (ClosableMemoryStream actualText in textNarc.figm.fileData)
+            {
+                textBox.Clear();
+                writer.Write("FILE: " + fileCounter + "\r\r");
+                var reader = new BinaryReader(actualText);
+                reader.BaseStream.Position = 0;
+                if (type == 0)
+                    readText(reader, textBox);
+                else
+                    readTextBW(reader, 0, textBox);
+                writer.Write(textBox.Text);
+                writer.Write("\n");
+                fileCounter++;
+            }
+            writer.Close();
+        }
 
 
     }

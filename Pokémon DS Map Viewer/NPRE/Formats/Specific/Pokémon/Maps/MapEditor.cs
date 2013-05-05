@@ -9527,7 +9527,7 @@
 
         private void subScripts_SelectedIndexChanged(object sender, EventArgs e)
         {
-            scriptViewer.printSimplifiedScript(scriptBoxEditor, scriptBoxViewer, romType, subScripts);
+            scriptViewer.printSimplifiedScript(scriptBoxEditor, scriptBoxViewer, romType, subScripts.SelectedItem.ToString());
         }
 
         private void OrthoView_CheckedChanged(object sender, EventArgs e)
