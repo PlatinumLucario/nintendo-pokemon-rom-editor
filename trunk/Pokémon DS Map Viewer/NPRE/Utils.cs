@@ -3085,9 +3085,9 @@ public class Utils
                                 line2 = scriptsLine[functionLineCounter];
                                 var movList = line2.Split(' ');
                                 if (line2.Length > 1)
-                                    scriptBoxEditor.AppendText(space + " MOV " + movList[2].ToString().TrimStart('m') + " TIMES " + movList[3] + "\n");
+                                    scriptBoxEditor.AppendText(space + " " + movList[2].ToString().TrimStart('m') + " TIMES " + movList[3] + "\n");
                                 functionLineCounter++;
-                            } while (!line2.Contains("m254") && functionLineCounter + 1 < scriptsLine.Length);
+                            } while (!line2.Contains("End_Movement") && functionLineCounter + 1 < scriptsLine.Length);
                             scriptBoxEditor.AppendText(space + "}\n");
                             return;
                         }
@@ -3100,9 +3100,9 @@ public class Utils
                             line2 = scriptsLine[functionLineCounter];
                             var movList = line2.Split(' ');
                             if (line2.Length > 1)
-                                scriptBoxEditor.AppendText(space + " MOV " + movList[2].ToString().TrimStart('m') + " TIMES " + movList[3] + "\n");
+                                scriptBoxEditor.AppendText(space + " " + movList[2].ToString().TrimStart('m') + " " + movList[3].TrimStart('0').TrimStart('x') + "\n");
                             functionLineCounter++;
-                        } while (!line2.Contains("m254") && functionLineCounter + 1 < scriptsLine.Length);
+                        } while (!line2.Contains("End_Movement") && functionLineCounter + 1 < scriptsLine.Length);
                         scriptBoxEditor.AppendText(space + "}\n");
                         return;
                     }
@@ -3301,6 +3301,11 @@ public class Utils
                 newVar = checkStored(commandList, 3);
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar, "IS_ACTIVE", "BOL");
                 scriptBoxEditor.AppendText(space + "IS_ACTIVE " + commandList[3] + " = " + commandList[2] + "( POKEDEX " + commandList[4] + " );\n");
+                break;
+            case "CheckPokèrus":
+                newVar = checkStored(commandList, 3);
+                addToVarNameDictionary(varNameDictionary, varLevel, newVar, "HAVE_POKERUS", "BOL");
+                scriptBoxEditor.AppendText(space + "HAVE_POKERUS " + commandList[3] + " = " + commandList[2] + "();\n");
                 break;
             case "CheckRelocatorPassword":
                 newVar = checkStored(commandList, 6);
@@ -3852,11 +3857,11 @@ public class Utils
                 List<string> conditions = new List<string>();
                 List<string> secondMembers = new List<string>();
                 int numSetVar = 0;
-                bool setVarCompareConditionBlock = scriptsLine[tempLineCounter].Contains("SetVar(09)") && scriptsLine[tempLineCounter + 1].Contains("CompareTo");
+                bool setVarCompareConditionBlock = (scriptsLine[tempLineCounter].Contains("SetVar(09)") || scriptsLine[tempLineCounter].Contains("StoreFlag")) && scriptsLine[tempLineCounter + 1].Contains("CompareTo");
                 bool setVarsetVarConditionBlock = scriptsLine[tempLineCounter].Contains("SetVar(09)") && scriptsLine[tempLineCounter + 1].Contains("SetVar(09)");
                 if (setVarCompareConditionBlock || setVarsetVarConditionBlock)
                 {
-                    while (scriptsLine[tempLineCounter].Contains("SetVar(09)") && scriptsLine[tempLineCounter + 1].Contains("CompareTo")
+                    while ((scriptsLine[tempLineCounter].Contains("SetVar(09)") || scriptsLine[tempLineCounter].Contains("StoreFlag")) && scriptsLine[tempLineCounter + 1].Contains("CompareTo")
                         || scriptsLine[tempLineCounter].Contains("SetVar(09)") && scriptsLine[tempLineCounter + 1].Contains("SetVar(09)"))
                     {
                         numSetVar++;
@@ -3866,7 +3871,10 @@ public class Utils
                         commandList = next.Split(' ');
                         newVar = checkStored(commandList, 3);
                         varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
-                        firstMembers.Add(varString);
+                        if (next.Contains("Flag"))
+                            firstMembers.Add("FLAG " + varString);
+                        else
+                            firstMembers.Add(varString);
                         tempLineCounter++;
 
                         //Second Member
@@ -3885,10 +3893,10 @@ public class Utils
                         }
                         secondMembers.Add(getTextFromCondition(temp2, cond));
                         tempLineCounter++;
-                
+
                         //Condition
                         next = scriptsLine[tempLineCounter];
-                        conditions.Add(getCondition(scriptsLine, tempLineCounter -1));
+                        conditions.Add(getCondition(scriptsLine, tempLineCounter - 1));
                         tempLineCounter++;
                     }
                     scriptBoxEditor.AppendText(space + "If( ");
@@ -3897,17 +3905,22 @@ public class Utils
                         string extCondition = "";
                         if (i != 0)
                         {
-                            extCondition = getCondition(scriptsLine, tempLineCounter-1);
+                            extCondition = getCondition(scriptsLine, tempLineCounter - 1);
                             scriptBoxEditor.AppendText(" " + extCondition + " ");
                         }
-                        if (numSetVar>1)
+                        if (numSetVar > 1)
                             scriptBoxEditor.AppendText("( " + firstMembers[i] + " " + conditions[i] + " " + secondMembers[i] + " )");
                         else
                             scriptBoxEditor.AppendText(firstMembers[i] + " " + conditions[i] + " " + secondMembers[i]);
                     }
                     scriptBoxEditor.AppendText("); \n");
                 }
-                lineCounter = tempLineCounter-1;
+                else
+                {
+                    scriptBoxEditor.AppendText(space + "SET VAR " + varString + ";\n");
+                    break;
+                }
+                lineCounter = tempLineCounter - 1;
                 //if (scriptsLine[lineCounter + 1].Contains("SetVar(09)") && scriptsLine[lineCounter + 2].Contains("CompareTo"))
                 //{
                 //    temp2 = next.Split(' ')[1];
@@ -4145,6 +4158,13 @@ public class Utils
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar, "BATTLE_RESULT", "NOR");
                 scriptBoxEditor.AppendText(space + "BATTLE_RESULT " + commandList[3] + " = " + commandList[2] + "();\n");
                 break;
+            case "StoreBirthDay":
+                newVar = checkStored(commandList, 3);
+                newVar2 = checkStored(commandList, 4);
+                addToVarNameDictionary(varNameDictionary, varLevel, newVar, "BIRTH_MONTH", "NOR");
+                addToVarNameDictionary(varNameDictionary, varLevel, newVar2, "BIRTH_DAY", "NOR");
+                scriptBoxEditor.AppendText(space + "BIRTH_MONTH " + commandList[3] + " , BIRTH_DAY " + commandList[4] + " = " + commandList[2] + "();\n");
+                break;
             case "StoreBoxNumber":
                 newVar = checkStored(commandList, 3);
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar, "BOX_SPACE", "NOR");
@@ -4178,6 +4198,19 @@ public class Utils
                 newVar = checkStored(commandList, 3);
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar, "DAY", "DAY");
                 scriptBoxEditor.AppendText(space + "DAY " + commandList[3] + " = " + commandList[2] + "();\n");
+                break;
+            case "StoreDayPart":
+                newVar = checkStored(commandList, 3);
+                addToVarNameDictionary(varNameDictionary, varLevel, newVar, "DAY_PART", "NOR");
+                scriptBoxEditor.AppendText(space + "DAY_PART " + commandList[3] + " = " + commandList[2] + "();\n");
+                break;
+
+            case "StoreDate":
+                newVar = checkStored(commandList, 3);
+                newVar2 = checkStored(commandList, 4);
+                addToVarNameDictionary(varNameDictionary, varLevel, newVar, "MONTH", "NOR");
+                addToVarNameDictionary(varNameDictionary, varLevel, newVar2, "DAY", "NOR");
+                scriptBoxEditor.AppendText(space + "MONTH " + commandList[3] + " , DAY " + commandList[4] + " = " + commandList[2] + "();\n");
                 break;
             case "StoreDataUnity":
                 newVar = checkStored(commandList, 4);

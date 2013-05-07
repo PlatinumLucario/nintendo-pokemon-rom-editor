@@ -653,12 +653,283 @@ namespace PG4Map.Formats
 
             scriptBoxViewer.AppendText("\n=== Movement " + movCounter + " === \n\n");
             for (int i = 0; i < actualMov.Count; i++)
-                scriptBoxViewer.AppendText("Offset: " + actualMov[i].offset.ToString() + " m" + actualMov[i].moveId.ToString() + " 0x" + actualMov[i].repeatTime.ToString() + "\n");
+                scriptBoxViewer.AppendText("Offset: " + actualMov[i].offset.ToString()  + ": " + getMovement(actualMov[i].moveId) + " 0x" + actualMov[i].repeatTime.ToString() + "\n");
 
             var position = reader.BaseStream.Position;
             //reader.BaseStream.Position += 3;
 
             return actualMov;
+        }
+
+        private string getMovement(int p)
+        {
+            switch (p)
+            {
+                case 0x0:
+                    return "Face_Up";
+                case 0x1:
+                    return "Face_Down";
+                case 0x2:
+                    return "Face_Left";
+                case 0x3:
+                    return "Face_Right";
+                case 0x4:
+                    return "Walk_Slow_Up";
+                case 0x5:
+                    return "Walk_Slow_Down";
+                case 0x6:
+                    return "Walk_Slow_Left";
+                case 0x7:
+                    return "Walk_Slow_Right";
+                case 0x8:
+                    return "Stroll_up";
+                case 0x9:
+                    return "Stroll_Down";
+                case 0xA:
+                    return "Stroll_up";
+                case 0xB:
+                    return "Stroll_right";
+                case 0xC:
+                    return "Walk_Fast_Up";
+                case 0xD:
+                    return "Walk_Fast_Down";
+                case 0xE:
+                    return "Walk_Fast_Left";
+                case 0xF:
+                    return "Walk_Fast_Right";
+                case 0x10:
+                    return "Jog_Up";
+                case 0x11:
+                    return "Jog_Down";
+                case 0x12:
+                    return "Jog_Left";
+                case 0x13:
+                    return "Jog_Right";
+                case 0x14:
+                    return "Bike_Up";
+                case 0x15:
+                    return "Bike_Down";
+                case 0x16:
+                    return "Bike_Left";
+                case 0x17:
+                    return "Bike_Right";
+                case 0x18:
+                    return "Wait_VSlow_Up";
+                case 0x19:
+                    return "Wait_VSlow_Down";
+                case 0x1A:
+                    return "Wait_VSlow_up";
+                case 0x1B:
+                    return "Wait_VSlow_right";
+                case 0x1C:
+                    return "Wait_Slow_Up";
+                case 0x1D:
+                    return "Wait_Slow_Down";
+                case 0x1E:
+                    return "Wait_Slow_Left";
+                case 0x1F:
+                    return "Wait_Slow_Right";
+                case 0x20:
+                    return "Wait_Normal_Up";
+                case 0x21:
+                    return "Wait_Normal_Down";
+                case 0x22:
+                    return "Wait_Normal_Left";
+                case 0x23:
+                    return "Wait_Normal_Right";
+                case 0x24:
+                    return "Wait_Fast_Up";
+                case 0x25:
+                    return "Wait_Fast_Down";
+                case 0x26:
+                    return "Wait_Fast_Left";
+                case 0x27:
+                    return "Wait_Fast_Right";
+                case 0x28:
+                    return "Wait_VFast_Up";
+                case 0x29:
+                    return "Wait_VFast_Down";
+                case 0x2A:
+                    return "Wait_VFast_up";
+                case 0x2B:
+                    return "Wait_VFast_right";
+                case 0x2C:
+                    return "HopPlace_Slow_Up";
+                case 0x2D:
+                    return "HopPlace_Slow_Down";
+                case 0x2E:
+                    return "HopPlace_Slow_Left";
+                case 0x2F:
+                    return "HopPlace_Slow_Right";
+                case 0x30:
+                    return "HopPlace_Fast_Up";
+                case 0x31:
+                    return "HopPlace_Fast_Down";
+                case 0x32:
+                    return "HopPlace_Fast_Left";
+                case 0x33:
+                    return "HopPlace_Fast_Right";
+                case 0x34:
+                    return "Hop_Up";
+                case 0x35:
+                    return "Hop_Down";
+                case 0x36:
+                    return "Hop_Left";
+                case 0x37:
+                    return "Hop_Right";
+                case 0x38:
+                    return "Hop_Bound_Up";
+                case 0x39:
+                    return "Hop_Bound_Down";
+                case 0x3A:
+                    return "Hop_Buond_up";
+                case 0x3B:
+                    return "Hop_Bound_right";
+                case 0x3C:
+                    return "3C";
+                case 0x3D:
+                    return "3D";
+                case 0x3E:
+                    return "3E";
+                case 0x3F:
+                    return "3F";
+                case 0x40:
+                    return "40";
+                case 0x41:
+                    return "41";
+                case 0x42:
+                    return "42";
+                case 0x43:
+                    return "Warp_Up";
+                case 0x44:
+                    return "Warp_Down";
+                case 0x45:
+                    return "Vanish";
+                case 0x46:
+                    return "Reappear";
+                case 0x47:
+                    return "47";
+                case 0x48:
+                    return "48";
+                case 0x49:
+                    return "49";
+                case 0x4A:
+                    return "4A";
+                case 0x4B:
+                    return "Exclaim";
+                case 0x4C:
+                    return "Move_Slow_Up";
+                case 0x4D:
+                    return "Move_Slow_Down";
+                case 0x4E:
+                    return "Move_Slow_Left";
+                case 0x4F:
+                    return "Move_Slow_Right";
+                case 0x50:
+                    return "Move_Normal_Up";
+                case 0x51:
+                    return "Move_Normal_Down";
+                case 0x52:
+                    return "Move_Normal_Left";
+                case 0x53:
+                    return "Move_Normal_Right";
+                case 0x54:
+                    return "Move_Fast_Up";
+                case 0x55:
+                    return "Move_Fast_Down";
+                case 0x56:
+                    return "Move_Fast_Left";
+                case 0x57:
+                    return "Move_Fast_Right";
+                case 0xFE:
+                    return "End_Movement";
+                default:
+                    return p.ToString();
+            }
+	
+
+	
+
+
+
+
+
+
+
+//58	Spin Up	Walking speed.
+//59	Spin Down	
+//005A	Spin Left	
+//005B	Spin Right	
+//005C	Pounce Left	medium speed hop
+//005D	Pounce Right	
+//005E	Leap Left	2 panels
+//005F	Leap Right	
+//60	Walk Up	Walk speed movement
+//61	Walk Down	
+//62	Walk Left	
+//63	Walk Right	
+//64	Turn-90 Return	-90 turn, +90 turn
+//65	HopInPlace	..
+//66	Bounce	Bounce once
+//67	Exclaim	!
+//68	MoveInPlace	
+//69	RiseUp	Upwards *param
+//006A	RiseDown	Downwards *param
+//006B	90walk	*param
+//006C	90+up?	
+//006D	FRightRiseUp	
+//006E	FLeftRiseDown	
+//006F	Walk Up	..
+//70	Walk Down	
+//71	Walk Down	
+//72	Walk Up	
+//73	SlideMove Left	dont face, just moonwalk!
+//74	SlideMove Right	
+//75	Leap Up	Moon bounce *3param
+//76	Leap Down	3
+//77	Leap Left	3
+//78	Leap Right	3
+//79	T90FL-RU	This stuff below is stupid.
+//007A	Down of ^	.
+//007B	Slide Down, Face Down	.
+//007C	Slide Up, Face Up	.
+//007D	RiseUpLeftFaceRight	.
+//007E	RiseDownRightcrap	.
+//007F	SlideUpFaceUp	.
+//80	FU-SlideUp-FU	.
+//81	FU-SlideDown-FD	.
+//82	FU-SlideUp-FU	.
+//83	FU-SlideLeft-FR	.
+//84	FD-SlideRight-FL	.
+//85	FL-Hop-RiseUp	.
+//86	FR-Hop-RiseDown	.
+//87	TD-HopForward	.
+//88	TU-HopForward	.
+//89	TR-Hop-RiseUp	.
+//008A	TL-Hop-RiseDown	.
+//008B	Hop Up	.
+//008C	Hop Down	*param 
+//008D	Hop Down	.
+//008E	Hop Up	.
+//008F	HopSlide Left	.
+//90	HopSlide Right	.
+//91	FastWalkDown	.
+//92	FastWalkUp	.
+//93	Slide Left	.
+//94	Slide Right	.
+//95	RapidWalk Down	.
+//96	RapidWalk Up	.
+//97	QuickSlide Left	.
+//98	QuickSlide Right	.
+//99	Exclaim 	.
+//009A	Hopscotch in	.
+//009B	Shuffle Up	
+//009C	Shuffle Down	
+//009D	Shuffle Left	
+//009E	Shuffle Right	
+//009F	Question 	
+//00A0	MusicNote	
+//00A1	"..."
         }
 
         private Script_s readCommands(BinaryReader reader, Script_s actualFunction, uint index)
@@ -9995,9 +10266,6 @@ namespace PG4Map.Formats
             if (reader.BaseStream.Position < reader.BaseStream.Length)
             {
                 actualPos = reader.BaseStream.Position;
-                if (actualPos == 368)
-                {
-                }
                 if (actualPos + 1 == reader.BaseStream.Length || movOffsetList.Contains((uint)actualPos) || scriptStartList.Contains((uint)actualPos) || functionOffsetList.Contains((uint)actualPos))
                 {
                     com.isEnd = 1;
@@ -10005,12 +10273,16 @@ namespace PG4Map.Formats
             }
             switch (com.Id)
             {
+                case 0x0 :
+                    com.Name = "Nop";
+                    com.isEnd = 1;
+                    break;
                 case 0x2:
                     com.Name = "End";
                     if (reader.BaseStream.Position < reader.BaseStream.Length)
                     {
                         var next = reader.ReadByte();
-                        if (next == 0)
+                        if (next == 0 || next == 40)
                             com.isEnd = 1;
                         else
                             reader.BaseStream.Position -= 1;
@@ -10037,7 +10309,7 @@ namespace PG4Map.Formats
                     com.Name = "EndFunction";
                     if (reader.BaseStream.Position + 1 > reader.BaseStream.Length) { com.isEnd = 1; break; }
                     var next5 = reader.ReadByte();
-                    if (next5 == 0 || movOffsetList.Contains((uint)reader.BaseStream.Position - 1) || scriptOffList.Contains((uint)reader.BaseStream.Position - 1))
+                    if (next5 == 0 || next5 == 40 || movOffsetList.Contains((uint)reader.BaseStream.Position - 1) || scriptOffList.Contains((uint)reader.BaseStream.Position - 1))
                     {
                         com.isEnd = 1;
                         reader.BaseStream.Position -= 1;
@@ -10470,33 +10742,25 @@ namespace PG4Map.Formats
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x67:
-                    com.Name = "67";
-                    com.parameters.Add(reader.ReadUInt16());
-                    uint variable = 0;
-                    do
-                    {
-                        variable = reader.ReadUInt16();
-                        if (variable < 0x8000)
-                            reader.BaseStream.Position -= 2;
-                        else
-                            com.parameters.Add(variable);
-                    }
-                    while (variable > 0x8000);
+                    com.Name = "StoreNPCPosition";
+                    com.parameters.Add(reader.ReadUInt16()); //NPC
+                    com.parameters.Add(reader.ReadUInt16()); //X container
+                    com.parameters.Add(reader.ReadUInt16()); //Y container
 
                     break;
                 case 0x68:
                     com.Name = "StoreHeroPosition";
-                    com.parameters.Add(reader.ReadUInt16()); // Variable as X container.
-                    com.parameters.Add(reader.ReadUInt16()); // Variable as Y container.
+                    com.parameters.Add(reader.ReadUInt16()); // X container.
+                    com.parameters.Add(reader.ReadUInt16()); // Y container.
                     break;
                 case 0x69:
-                    com.Name = "StoreNPCPosition";
+                    com.Name = "CreateNPC";
+                    com.parameters.Add(reader.ReadUInt16()); // X container
+                    com.parameters.Add(reader.ReadUInt16()); // Y container.
+                    com.parameters.Add(reader.ReadUInt16()); // Face Direction
                     com.parameters.Add(reader.ReadUInt16()); // NPC Id
-                    com.parameters.Add(reader.ReadUInt16()); // Variable as X container.
-                    com.parameters.Add(reader.ReadUInt16()); // Variable as Y container.
-                    com.parameters.Add(reader.ReadUInt16()); // NPC Id
-                    com.parameters.Add(reader.ReadUInt16()); // Variable as X container.
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); // Sprite
+                    com.parameters.Add(reader.ReadUInt16()); // Movement Permission
                     break;
                 case 0x6A:
                     com.Name = "StoreNPCFlag";
@@ -10512,7 +10776,7 @@ namespace PG4Map.Formats
                     com.parameters.Add(reader.ReadUInt16()); //Npc Id
                     break;
                 case 0x6D:
-                    com.Name = "SetOWPosition";
+                    com.Name = "RelocateNPC";
                     com.parameters.Add(reader.ReadUInt16()); //Npc Id
                     com.parameters.Add(reader.ReadUInt16()); //X coordinate
                     com.parameters.Add(reader.ReadUInt16()); //Y coordinate
@@ -10524,13 +10788,13 @@ namespace PG4Map.Formats
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x6F:
-                    com.Name = "6F";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "CheckNPCRemoved";
+                    com.parameters.Add(reader.ReadUInt16()); //NPC Id
+                    com.parameters.Add(reader.ReadUInt16()); //Return Value
                     break;
                 case 0x70:
                     com.Name = "70";
-                    com.parameters.Add(reader.ReadUInt16()); //Ow_Id (Variable)
+                    com.parameters.Add(reader.ReadUInt16()); //NPC Id
                     com.parameters.Add(reader.ReadUInt16()); //Return Value
                     com.parameters.Add(reader.ReadUInt16()); //X
                     com.parameters.Add(reader.ReadUInt16()); //S_854 = 0, S_855 = 3
@@ -10651,15 +10915,10 @@ namespace PG4Map.Formats
                 case 0x8E:
                     com.Name = "DisableTrainer";
                     break;
-                case 0x90:
-                    com.Name = "90";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
-                    break;
                 case 0x92:
                     com.Name = "92";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Trainer Id
+                    com.parameters.Add(reader.ReadUInt16()); //Variable as container
                     break;
                 case 0x93:
                     com.Name = "93";
@@ -10918,8 +11177,8 @@ namespace PG4Map.Formats
                     break;
                 case 0xD4:
                     com.Name = "StoreBirthDay";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Month
+                    com.parameters.Add(reader.ReadUInt16()); //Day
                     break;
                 case 0xD5:
                     com.Name = "StoreBadge";
@@ -10950,7 +11209,7 @@ namespace PG4Map.Formats
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0xDB:
-                    com.Name = "DB";
+                    com.Name = "ActUnionRoom";
                     break;
                 case 0xDC:
                     com.Name = "DC";
@@ -10993,7 +11252,7 @@ namespace PG4Map.Formats
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0xE5:
-                    com.Name = "E5";
+                    com.Name = "CheckTrainerTypeChanged";
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     break;
@@ -11130,7 +11389,7 @@ namespace PG4Map.Formats
                     reader.BaseStream.Position -= 2;
                     break;
                 case 0x100:
-                    com.Name = "100";
+                    com.Name = "CheckPokèrus";
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x101:
@@ -11733,7 +11992,6 @@ namespace PG4Map.Formats
                     break;
                 case 0x187:
                     com.Name = "187";
-                    com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x188:
@@ -12398,7 +12656,11 @@ namespace PG4Map.Formats
                 case 0x223:
                     com.Name = "StoreHiddenPowerType";			// ex 382
                     com.parameters.Add(reader.ReadUInt16()); //Storage for result (0-17 move type)
-                    com.parameters.Add(reader.ReadUInt16()); //Party member to Store
+                    nextFF = reader.ReadUInt16();
+                    if (nextFF > 10)
+                        reader.BaseStream.Position -= 2;
+                    else
+                        com.parameters.Add(reader.ReadUInt16()); //Party member to Store
                     break;
                 case 0x224:
                     com.Name = "224";
@@ -12505,7 +12767,7 @@ namespace PG4Map.Formats
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x23A:
-                    com.Name = "23A";
+                    com.Name = "Animation(23A)";
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     break;
@@ -12526,6 +12788,7 @@ namespace PG4Map.Formats
                     com.Name = "23E"; //Lock
                     com.parameters.Add(reader.ReadUInt16()); //var
                     com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //var
                     com.parameters.Add(reader.ReadUInt16()); //var
                     break;
                 case 0x23F:
@@ -12623,11 +12886,12 @@ namespace PG4Map.Formats
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x254:
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "254";
+                    com.parameters.Add(reader.ReadUInt16()); //1 60
                     break;
                 case 0x255: //Freeze
                     com.Name = "255"; 
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //0
                     break;
                 case 0x257: //Freeze
                     com.Name = "257";
@@ -12636,7 +12900,7 @@ namespace PG4Map.Formats
                     com.Name = "StopMusic(259)";
                     break;
                 case 0x25A:
-                    com.Name = "25A";
+                    com.Name = "ShipAnimation";
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
@@ -12645,7 +12909,7 @@ namespace PG4Map.Formats
                     break;
                 case 0x25B:
                     com.Name = "25B";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //0 1
                     break;
                 case 0x25C:
                     com.Name = "25C"; //Used in stadium
@@ -16636,8 +16900,8 @@ namespace PG4Map.Formats
             if (p == 3) return "LOWER/EQUAL";
             if (p == 4) return "BIGGER/EQUAL";
             if (p == 5) return "DIFFERENT";
-            if (p == 6) return "AND";
-            if (p == 7) return "OR";
+            if (p == 6) return "OR";
+            if (p == 7) return "AND";
             return p.ToString();
         }
 
@@ -16750,6 +17014,8 @@ namespace PG4Map.Formats
                 }
                 else if (scriptType == 3)
                 {
+                    if (idScript == 855)
+                        idMessage = 346;
                     if (idScript == 856)
                         idMessage = 426;
                     if (idScript == 859)
@@ -16834,7 +17100,7 @@ namespace PG4Map.Formats
                 if (scriptType == HGSSSCRIPT)
                     if (fileCounter < 266 || fileCounter > 734)
                         loadScript(stream);
-                if (scriptType == BWSCRIPT && fileCounter != 90)
+                if (scriptType == BWSCRIPT && ((fileCounter%2 == 0 && fileCounter < 854) || fileCounter>854))
                     loadScript(stream);
                 if (scriptType == BW2SCRIPT && fileCounter != 90)
                     loadScript(stream);
