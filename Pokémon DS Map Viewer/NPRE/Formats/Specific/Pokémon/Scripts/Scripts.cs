@@ -10282,7 +10282,7 @@ namespace PG4Map.Formats
                     if (reader.BaseStream.Position < reader.BaseStream.Length)
                     {
                         var next = reader.ReadByte();
-                        if (next == 0 || next == 40)
+                        if (next == 0)
                             com.isEnd = 1;
                         else
                             reader.BaseStream.Position -= 1;
@@ -10309,7 +10309,7 @@ namespace PG4Map.Formats
                     com.Name = "EndFunction";
                     if (reader.BaseStream.Position + 1 > reader.BaseStream.Length) { com.isEnd = 1; break; }
                     var next5 = reader.ReadByte();
-                    if (next5 == 0 || next5 == 40 || movOffsetList.Contains((uint)reader.BaseStream.Position - 1) || scriptOffList.Contains((uint)reader.BaseStream.Position - 1))
+                    if (next5 == 0 || movOffsetList.Contains((uint)reader.BaseStream.Position - 1) || scriptOffList.Contains((uint)reader.BaseStream.Position - 1))
                     {
                         com.isEnd = 1;
                         reader.BaseStream.Position -= 1;
@@ -10802,7 +10802,7 @@ namespace PG4Map.Formats
                     break;
                 case 0x73:
                     com.Name = "73";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //NPC Id
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x74:
@@ -10847,9 +10847,9 @@ namespace PG4Map.Formats
                     com.parameters.Add(reader.ReadUInt16()); //Npc Id
                     break;
                 case 0x7F:
-                    com.Name = "7F";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "StoreTrainerIdNPCS";
+                    com.parameters.Add(reader.ReadUInt16()); //NPC Id
+                    com.parameters.Add(reader.ReadUInt16()); //Trainer Id
                     break;
                 case 0x80:
                     com.Name = "80";
@@ -10967,16 +10967,16 @@ namespace PG4Map.Formats
                     break;
                 case 0xA3:
                     com.Name = "AddInstrument";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Instrument
                     break;
                 case 0xA4:
-                    com.Name = "A4";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "RemoveInstrument";
+                    com.parameters.Add(reader.ReadUInt16()); //Instrument
                     break;
                 case 0xA5:
                     com.Name = "CheckInstrument";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Active/Not active(ret)
+                    com.parameters.Add(reader.ReadUInt16()); //Instrument
                     break;
                 case 0xA6:
                     com.Name = "PlaySound";
@@ -11150,8 +11150,8 @@ namespace PG4Map.Formats
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0xCE:
-                    com.Name = "CE";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "StoreStarCardNumber";
+                    com.parameters.Add(reader.ReadUInt16()); //Star on Trainer Card
                     break;
                 case 0xCF:
                     com.Name = "StoreDay";
@@ -11223,17 +11223,16 @@ namespace PG4Map.Formats
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     break;
-
                 case 0xDE:
-                    com.Name = "SpeciesDisplayDE"; // species display popup, Store
+                    com.Name = "ShowPokèmonSpecies"; // species display popup, Store
                     com.parameters.Add(reader.ReadUInt16()); //0
                     com.parameters.Add(reader.ReadUInt16()); //species
                     break;
                 case 0xDF:
-                    com.Name = "DF"; // species display popup, Store
+                    com.Name = "CheckPokèmonSeen";
                     com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Pokèmon Id
+                    com.parameters.Add(reader.ReadUInt16()); //True/False (Ret)
                     break;
                 case 0xE0:
                     com.Name = "StoreVersion";
@@ -11252,7 +11251,7 @@ namespace PG4Map.Formats
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0xE5:
-                    com.Name = "CheckTrainerTypeChanged";
+                    com.Name = "StoreTrainerType";
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     break;
@@ -12680,6 +12679,8 @@ namespace PG4Map.Formats
                     com.Name = "ShowPokèmonPicture";
                     com.parameters.Add(reader.ReadUInt16()); //Pokèmon Id
                     com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x228:
                     com.Name = "228";
@@ -12928,7 +12929,7 @@ namespace PG4Map.Formats
                     com.Name = "25E";
                     break;
                 case 0x25F:
-                    com.Name = "25F";
+                    com.Name = "PlayTheatralMusic";
                     break;
                 case 0x260: //126
                     com.Name = "260"; 
@@ -17024,8 +17025,6 @@ namespace PG4Map.Formats
                         idMessage = 425;
                     if (idScript == 862)
                         idMessage = 283;
-                    if (idScript == 863)
-                        idMessage = 9;
                     if (idScript == 864)
                         idMessage = 283;
                     if (idScript == 867)
