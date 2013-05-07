@@ -2980,16 +2980,12 @@ public class Utils
             case "8A":
                 var varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
                 addToVarNameDictionary(varNameDictionary, varLevel, checkStored(commandList, 4), "8A_VALUE", "NOR");
-                scriptBoxEditor.AppendText(space + "8A_VALUE " + commandList[4] + " = " + commandList[2] + "( TRAINER_ID" + varString + " );\n");
+                scriptBoxEditor.AppendText(space + "8A_VALUE " + commandList[4] + " = " + commandList[2] + "( TRAINER_ID " + varString + " );\n");
                 break;
             case "92":
                 varString = getStoredMagic(varNameDictionary, varLevel, commandList, 3);
                 addToVarNameDictionary(varNameDictionary, varLevel, checkStored(commandList, 4), "92_VALUE", "NOR");
                 scriptBoxEditor.AppendText(space + "92_VALUE " + commandList[4] + " = " + commandList[2] + "( TRAINER_ID " + varString + " );\n");
-                break;
-            case "CE":
-                addToVarNameDictionary(varNameDictionary, varLevel, checkStored(commandList, 3), "CE_VALUE", "NOR");
-                scriptBoxEditor.AppendText(space + "CE_VALUE " + commandList[3] + " = " + commandList[2] + "();\n");
                 break;
             case "E1":
                 addToVarNameDictionary(varNameDictionary, varLevel, checkStored(commandList, 3), "E1_VALUE", "NOR");
@@ -3301,6 +3297,11 @@ public class Utils
                 newVar = checkStored(commandList, 3);
                 addToVarNameDictionary(varNameDictionary, varLevel, newVar, "IS_ACTIVE", "BOL");
                 scriptBoxEditor.AppendText(space + "IS_ACTIVE " + commandList[3] + " = " + commandList[2] + "( POKEDEX " + commandList[4] + " );\n");
+                break;
+            case "CheckPokèmonSeen":
+                newVar = checkStored(commandList, 5);
+                addToVarNameDictionary(varNameDictionary, varLevel, newVar, "HAVE_SEEN", "BOL");
+                scriptBoxEditor.AppendText(space + "HAVE_SEEN " + commandList[5] + " = " + commandList[2] + "( " + commandList[3] + " POKEMON " + commandList[4] + " );\n");
                 break;
             case "CheckPokèrus":
                 newVar = checkStored(commandList, 3);
@@ -3858,11 +3859,11 @@ public class Utils
                 List<string> secondMembers = new List<string>();
                 int numSetVar = 0;
                 bool setVarCompareConditionBlock = (scriptsLine[tempLineCounter].Contains("SetVar(09)") || scriptsLine[tempLineCounter].Contains("StoreFlag")) && scriptsLine[tempLineCounter + 1].Contains("CompareTo");
-                bool setVarsetVarConditionBlock = scriptsLine[tempLineCounter].Contains("SetVar(09)") && scriptsLine[tempLineCounter + 1].Contains("SetVar(09)");
+                bool setVarsetVarConditionBlock = scriptsLine[tempLineCounter].Contains("SetVar(09)") && scriptsLine[tempLineCounter + 1].Contains("SetVar(09)") && scriptsLine[tempLineCounter + 2].Contains("CompareTo");
                 if (setVarCompareConditionBlock || setVarsetVarConditionBlock)
                 {
                     while ((scriptsLine[tempLineCounter].Contains("SetVar(09)") || scriptsLine[tempLineCounter].Contains("StoreFlag")) && scriptsLine[tempLineCounter + 1].Contains("CompareTo")
-                        || scriptsLine[tempLineCounter].Contains("SetVar(09)") && scriptsLine[tempLineCounter + 1].Contains("SetVar(09)"))
+                        || scriptsLine[tempLineCounter].Contains("SetVar(09)") && scriptsLine[tempLineCounter + 1].Contains("SetVar(09)") && scriptsLine[tempLineCounter + 2].Contains("CompareTo"))
                     {
                         numSetVar++;
 
