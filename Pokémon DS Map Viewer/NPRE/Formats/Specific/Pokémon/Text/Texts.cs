@@ -859,6 +859,8 @@
                     return ".0 ";
                 case 0x1:
                     return ".1 ";
+                case 0x62:
+                    return "RIBBON: ";
                 case 0xA2:
                     return "０";
                 case 0xA3:
@@ -1138,6 +1140,8 @@
                 case 0x152:
                     return "n";
                 case 0x153:
+                    if (isVar)
+                        return "MINIGAME: ";
                     return "o";
                 case 0x154:
                     return "p";
@@ -1395,6 +1399,10 @@
                     if (isVar)
                         return "COLOR: ";
                     break;
+                case 0x261:
+                    if (isVar)
+                        return "ABILITY: ";
+                    break;
                 case 0xE000:
                     return "/n";
                 case 0x25BC:
@@ -1590,6 +1598,13 @@
                                         {
                                             count++;
                                             stringa += "NUM: ";
+                                            isVar = true;
+                                            k++;
+                                        }
+                                        else if (encText[i][j][k + 1].ToString() == "519")
+                                        {
+                                            count++;
+                                            stringa += "PRIZE: ";
                                             isVar = true;
                                             k++;
                                         }

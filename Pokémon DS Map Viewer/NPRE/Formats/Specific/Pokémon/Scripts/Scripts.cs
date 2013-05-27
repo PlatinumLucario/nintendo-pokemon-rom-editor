@@ -188,20 +188,20 @@ namespace PG4Map.Formats
             this.scriptToolStripMenuItem1,
             this.narcToolStripMenuItem});
             this.scriptToolStripMenuItem.Name = "scriptToolStripMenuItem";
-            this.scriptToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.scriptToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.scriptToolStripMenuItem.Text = "Open";
             // 
             // scriptToolStripMenuItem1
             // 
             this.scriptToolStripMenuItem1.Name = "scriptToolStripMenuItem1";
-            this.scriptToolStripMenuItem1.Size = new System.Drawing.Size(104, 22);
+            this.scriptToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
             this.scriptToolStripMenuItem1.Text = "Script";
             this.scriptToolStripMenuItem1.Click += new System.EventHandler(this.scriptToolStripMenuItem1_Click);
             // 
             // narcToolStripMenuItem
             // 
             this.narcToolStripMenuItem.Name = "narcToolStripMenuItem";
-            this.narcToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
+            this.narcToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.narcToolStripMenuItem.Text = "Narc";
             this.narcToolStripMenuItem.Click += new System.EventHandler(this.narcToolStripMenuItem_Click);
             // 
@@ -211,7 +211,7 @@ namespace PG4Map.Formats
             this.scriptToolStripMenuItem2,
             this.narcToolStripMenuItem1});
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.saveToolStripMenuItem.Text = "Save";
             // 
             // scriptToolStripMenuItem2
@@ -301,6 +301,7 @@ namespace PG4Map.Formats
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Scripts";
             this.Text = "Scripts";
+            this.Load += new System.EventHandler(this.Scripts_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -435,8 +436,8 @@ namespace PG4Map.Formats
             scriptOffFinder = reader.ReadUInt16();
             reader.ReadUInt16();
             uint pad = (uint)reader.BaseStream.Position;
-            uint scriptStart = scriptOffFinder + pad;
-
+            uint scriptStart = 0;
+            scriptStart = scriptOffFinder + pad;
             scriptOffList.Add(scriptOffFinder);
             scriptStartList.Add(scriptStart);
             scriptOrder.Add(scriptStart);
@@ -653,7 +654,7 @@ namespace PG4Map.Formats
 
             scriptBoxViewer.AppendText("\n=== Movement " + movCounter + " === \n\n");
             for (int i = 0; i < actualMov.Count; i++)
-                scriptBoxViewer.AppendText("Offset: " + actualMov[i].offset.ToString()  + ": " + getMovement(actualMov[i].moveId) + " 0x" + actualMov[i].repeatTime.ToString() + "\n");
+                scriptBoxViewer.AppendText("Offset: " + actualMov[i].offset.ToString() + ": " + getMovement(actualMov[i].moveId) + " 0x" + actualMov[i].repeatTime.ToString() + "\n");
 
             var position = reader.BaseStream.Position;
             //reader.BaseStream.Position += 3;
@@ -846,9 +847,6 @@ namespace PG4Map.Formats
                 default:
                     return p.ToString();
             }
-	
-
-	
 
 
 
@@ -856,80 +854,83 @@ namespace PG4Map.Formats
 
 
 
-//58	Spin Up	Walking speed.
-//59	Spin Down	
-//005A	Spin Left	
-//005B	Spin Right	
-//005C	Pounce Left	medium speed hop
-//005D	Pounce Right	
-//005E	Leap Left	2 panels
-//005F	Leap Right	
-//60	Walk Up	Walk speed movement
-//61	Walk Down	
-//62	Walk Left	
-//63	Walk Right	
-//64	Turn-90 Return	-90 turn, +90 turn
-//65	HopInPlace	..
-//66	Bounce	Bounce once
-//67	Exclaim	!
-//68	MoveInPlace	
-//69	RiseUp	Upwards *param
-//006A	RiseDown	Downwards *param
-//006B	90walk	*param
-//006C	90+up?	
-//006D	FRightRiseUp	
-//006E	FLeftRiseDown	
-//006F	Walk Up	..
-//70	Walk Down	
-//71	Walk Down	
-//72	Walk Up	
-//73	SlideMove Left	dont face, just moonwalk!
-//74	SlideMove Right	
-//75	Leap Up	Moon bounce *3param
-//76	Leap Down	3
-//77	Leap Left	3
-//78	Leap Right	3
-//79	T90FL-RU	This stuff below is stupid.
-//007A	Down of ^	.
-//007B	Slide Down, Face Down	.
-//007C	Slide Up, Face Up	.
-//007D	RiseUpLeftFaceRight	.
-//007E	RiseDownRightcrap	.
-//007F	SlideUpFaceUp	.
-//80	FU-SlideUp-FU	.
-//81	FU-SlideDown-FD	.
-//82	FU-SlideUp-FU	.
-//83	FU-SlideLeft-FR	.
-//84	FD-SlideRight-FL	.
-//85	FL-Hop-RiseUp	.
-//86	FR-Hop-RiseDown	.
-//87	TD-HopForward	.
-//88	TU-HopForward	.
-//89	TR-Hop-RiseUp	.
-//008A	TL-Hop-RiseDown	.
-//008B	Hop Up	.
-//008C	Hop Down	*param 
-//008D	Hop Down	.
-//008E	Hop Up	.
-//008F	HopSlide Left	.
-//90	HopSlide Right	.
-//91	FastWalkDown	.
-//92	FastWalkUp	.
-//93	Slide Left	.
-//94	Slide Right	.
-//95	RapidWalk Down	.
-//96	RapidWalk Up	.
-//97	QuickSlide Left	.
-//98	QuickSlide Right	.
-//99	Exclaim 	.
-//009A	Hopscotch in	.
-//009B	Shuffle Up	
-//009C	Shuffle Down	
-//009D	Shuffle Left	
-//009E	Shuffle Right	
-//009F	Question 	
-//00A0	MusicNote	
-//00A1	"..."
+
+
+
+            //58	Spin Up	Walking speed.
+            //59	Spin Down	
+            //005A	Spin Left	
+            //005B	Spin Right	
+            //005C	Pounce Left	medium speed hop
+            //005D	Pounce Right	
+            //005E	Leap Left	2 panels
+            //005F	Leap Right	
+            //60	Walk Up	Walk speed movement
+            //61	Walk Down	
+            //62	Walk Left	
+            //63	Walk Right	
+            //64	Turn-90 Return	-90 turn, +90 turn
+            //65	HopInPlace	..
+            //66	Bounce	Bounce once
+            //67	Exclaim	!
+            //68	MoveInPlace	
+            //69	RiseUp	Upwards *param
+            //006A	RiseDown	Downwards *param
+            //006B	90walk	*param
+            //006C	90+up?	
+            //006D	FRightRiseUp	
+            //006E	FLeftRiseDown	
+            //006F	Walk Up	..
+            //70	Walk Down	
+            //71	Walk Down	
+            //72	Walk Up	
+            //73	SlideMove Left	dont face, just moonwalk!
+            //74	SlideMove Right	
+            //75	Leap Up	Moon bounce *3param
+            //76	Leap Down	3
+            //77	Leap Left	3
+            //78	Leap Right	3
+            //79	T90FL-RU	This stuff below is stupid.
+            //007A	Down of ^	.
+            //007B	Slide Down, Face Down	.
+            //007C	Slide Up, Face Up	.
+            //007D	RiseUpLeftFaceRight	.
+            //007E	RiseDownRightcrap	.
+            //007F	SlideUpFaceUp	.
+            //80	FU-SlideUp-FU	.
+            //81	FU-SlideDown-FD	.
+            //82	FU-SlideUp-FU	.
+            //83	FU-SlideLeft-FR	.
+            //84	FD-SlideRight-FL	.
+            //85	FL-Hop-RiseUp	.
+            //86	FR-Hop-RiseDown	.
+            //87	TD-HopForward	.
+            //88	TU-HopForward	.
+            //89	TR-Hop-RiseUp	.
+            //008A	TL-Hop-RiseDown	.
+            //008B	Hop Up	.
+            //008C	Hop Down	*param 
+            //008D	Hop Down	.
+            //008E	Hop Up	.
+            //008F	HopSlide Left	.
+            //90	HopSlide Right	.
+            //91	FastWalkDown	.
+            //92	FastWalkUp	.
+            //93	Slide Left	.
+            //94	Slide Right	.
+            //95	RapidWalk Down	.
+            //96	RapidWalk Up	.
+            //97	QuickSlide Left	.
+            //98	QuickSlide Right	.
+            //99	Exclaim 	.
+            //009A	Hopscotch in	.
+            //009B	Shuffle Up	
+            //009C	Shuffle Down	
+            //009D	Shuffle Left	
+            //009E	Shuffle Right	
+            //009F	Question 	
+            //00A0	MusicNote	
+            //00A1	"..."
         }
 
         private Script_s readCommands(BinaryReader reader, Script_s actualFunction, uint index)
@@ -1807,12 +1808,10 @@ namespace PG4Map.Formats
                     com.Name = "SetFlag";
                     com.parameters.Add(reader.ReadUInt16());
                     break;
-
                 case 0x1F:
                     com.Name = "ClearFlag";
                     com.parameters.Add(reader.ReadUInt16());
                     break;
-
                 case 0x20:
                     com.Name = "StoreFlag";
                     com.parameters.Add(reader.ReadUInt16());
@@ -1833,27 +1832,25 @@ namespace PG4Map.Formats
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x26:
-                    com.Name = "SetValue";
+                    com.Name = "StoreAddVar";
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x27:
-                    com.Name = "CopyValue";
+                    com.Name = "StoreSubVar";
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x28:
-                    com.Name = "SetVar";
+                    com.Name = "StoreVarVariable";
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     break;
-
                 case 0x29:
-                    com.Name = "CopyVar";
+                    com.Name = "StoreVarValue";
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     break;
-
                 case 0x2b:
                     com.Name = "Message";
                     com.parameters.Add(reader.ReadByte());
@@ -1889,219 +1886,174 @@ namespace PG4Map.Formats
                 case 0x34:
                     com.Name = "CloseMessageKeyPress";
                     break;
-
                 case 0x35:
                     com.Name = "FreezeMessageBox";
                     break;
-
                 case 0x36:
                     com.Name = "CallMessageBox";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Text Id
+                    com.parameters.Add(reader.ReadUInt16()); //Type
+                    com.parameters.Add(reader.ReadUInt16()); //RV
                     break;
-
                 case 0x37:
                     com.Name = "ColorMessageBox";
-                    com.parameters.Add(reader.ReadByte());
+                    com.parameters.Add(reader.ReadByte()); //Color
                     com.parameters.Add(reader.ReadUInt16());
                     break;
-
                 case 0x38:
                     com.Name = "TypeMessageBox";
-                    com.parameters.Add(reader.ReadByte());
+                    com.parameters.Add(reader.ReadByte()); //Type
                     break;
-
-                case 0x39:
+               case 0x39:
                     com.Name = "NoMapMessageBox";
                     break;
-
-                case 0x3a:
+                case 0x3A:
                     com.Name = "CallTextMessageBox";
-                    com.parameters.Add(reader.ReadByte());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadByte()); //Text Id
+                    com.parameters.Add(reader.ReadUInt16()); //RV
                     break;
-
-                case 0x3b:
+                case 0x3B:
                     com.Name = "StoreMenuStatus";
                     com.parameters.Add(reader.ReadUInt16());
                     break;
-
-                case 0x3c:
+                case 0x3C:
                     com.Name = "ShowMenu";
                     com.parameters.Add(reader.ReadUInt16());
                     break;
-
-                case 0x3e:
+                case 0x3E:
                     com.Name = "YesNoBox";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //RV = YES/NO
                     break;
-
-                case 0x3f:
+                case 0x3F:
                     com.Name = "WaitFor";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Time for waiting
                     break;
-
                 case 0x40:
-                    com.Name = "MultiTextScript(40)";
-                    com.parameters.Add(reader.ReadByte());
-                    com.parameters.Add(reader.ReadByte());
-                    com.parameters.Add(reader.ReadByte());
-                    com.parameters.Add(reader.ReadByte());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "MultiTextScriptMessage(40)";
+                    com.parameters.Add(reader.ReadByte()); //X Screen Coordinate
+                    com.parameters.Add(reader.ReadByte()); //Y Screen Coordinate
+                    com.parameters.Add(reader.ReadByte()); //Cursor Position
+                    com.parameters.Add(reader.ReadByte()); //B Cancel Active
+                    com.parameters.Add(reader.ReadUInt16()); //RV = Multi Condition Value
                     break;
-
                 case 0x41:
-                    com.Name = "MultiTextScript(41)";
-                    com.parameters.Add(reader.ReadByte());
-                    com.parameters.Add(reader.ReadByte());
-                    com.parameters.Add(reader.ReadByte());
-                    com.parameters.Add(reader.ReadByte());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "MultiTextScriptMessage(41)";
+                    com.parameters.Add(reader.ReadByte()); //X Screen Coordinate
+                    com.parameters.Add(reader.ReadByte()); //Y Screen Coordinate
+                    com.parameters.Add(reader.ReadByte()); //Cursor Position
+                    com.parameters.Add(reader.ReadByte()); //B Cancel Active
+                    com.parameters.Add(reader.ReadUInt16()); //RV = Multi Condition Id
                     break;
-
                 case 0x42:
-                    com.Name = "SetMultiTextScript";
-                    com.parameters.Add(reader.ReadByte());
-                    com.parameters.Add(reader.ReadByte());
+                    com.Name = "SetMultiTextScriptMessage";
+                    com.parameters.Add(reader.ReadByte()); //Text Id
+                    com.parameters.Add(reader.ReadByte()); //Multi Condition Id
                     break;
-
                 case 0x43:
-                    com.Name = "CloseMultiTextScript";
+                    com.Name = "CloseMultiTextScriptMessage";
                     break;
-
                 case 0x44:
                     com.Name = "MultiTextScriptMessage(44)";
-                    com.parameters.Add(reader.ReadByte());
-                    com.parameters.Add(reader.ReadByte());
-                    com.parameters.Add(reader.ReadByte());
-                    com.parameters.Add(reader.ReadByte());
-                    com.parameters.Add(reader.ReadUInt16());
-                    //com.parameters.Add(reader.ReadByte());
-                    //com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadByte()); //X Screen Coordinate
+                    com.parameters.Add(reader.ReadByte()); //Y Screen Coordinate
+                    com.parameters.Add(reader.ReadByte()); //Cursor Position
+                    com.parameters.Add(reader.ReadByte()); //B Cancel Active
+                    com.parameters.Add(reader.ReadUInt16()); //RV = Multi Condition Value
                     break;
-
                 case 0x45:
                     com.Name = "MultiTextScriptMessage(45)";
-                    com.parameters.Add(reader.ReadByte());
-                    com.parameters.Add(reader.ReadByte());
-                    com.parameters.Add(reader.ReadByte());
-                    com.parameters.Add(reader.ReadByte());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadByte()); //X Screen Coordinate
+                    com.parameters.Add(reader.ReadByte()); //Y Screen Coordinate
+                    com.parameters.Add(reader.ReadByte()); //Cursor Position
+                    com.parameters.Add(reader.ReadByte()); //B Cancel Active
+                    com.parameters.Add(reader.ReadUInt16()); //RV = Multi Condition Value
                     break;
-
                 case 0x46:
-                    com.Name = "SetMultiTextScriptMessage";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "SetMultiTextBoxScriptMessage";
+                    com.parameters.Add(reader.ReadUInt16()); //Message Text Id 
+                    com.parameters.Add(reader.ReadUInt16()); //Box Text Id
+                    com.parameters.Add(reader.ReadUInt16()); //Multi Condition Id
                     break;
-
                 case 0x47:
                     com.Name = "CloseMultiTextScriptMessage";
                     break;
-
                 case 0x48:
                     com.Name = "SetTextRowMulti";
-                    com.parameters.Add(reader.ReadByte());
+                    com.parameters.Add(reader.ReadByte()); //Row Number
                     break;
-
                 case 0x49:
-                    com.Name = "Fanfare";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "PlayFanfare(49)";
+                    com.parameters.Add(reader.ReadUInt16()); //Fanfare Id
                     break;
-
-                case 0x4a:
-                    com.Name = "Fanfare2";
-                    com.parameters.Add(reader.ReadUInt16());
+                case 0x4A:
+                    com.Name = "PlayFanfare(4A)";
+                    com.parameters.Add(reader.ReadUInt16()); //Fanfare Id
                     break;
-
-                case 0x4b:
+                case 0x4B:
                     com.Name = "WaitFanfare";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Fanfare Id
                     break;
-
-                case 0x4c:
+                case 0x4C:
                     com.Name = "Cry";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Pokèmon Id
                     com.parameters.Add(reader.ReadUInt16());
                     break;
-
-                case 0x4d:
+                case 0x4D:
                     com.Name = "WaitCry";
                     break;
-
-                case 0x4e:
-                    com.Name = "PlaySound";
-                    com.parameters.Add(reader.ReadUInt16());
+                case 0x4E:
+                    com.Name = "PlayMusic(4E)";
+                    com.parameters.Add(reader.ReadUInt16()); //Music Id
                     break;
-
-                case 0x4f:
+                case 0x4F:
                     com.Name = "FadeDef";
                     break;
-
                 case 80:
-                    com.Name = "PlaySound2";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "PlayMusic(50)";
+                    com.parameters.Add(reader.ReadUInt16()); //Music Id
                     break;
-
                 case 0x51:
-                    com.Name = "StopSound";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "StopMusic";
+                    com.parameters.Add(reader.ReadUInt16()); //Music Id
                     break;
-
                 case 0x52:
-                    com.Name = "RestartSound";
+                    com.Name = "RestartMusic";
                     break;
-
                 case 0x54:
-                    com.Name = "SwitchSound";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "ChangeVolume";
+                    com.parameters.Add(reader.ReadUInt16()); 
+                    com.parameters.Add(reader.ReadUInt16()); //Volume
                     break;
-
                 case 0x55:
-                    com.Name = "StoreSoundMicrophone";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "CheckVolume";
+                    com.parameters.Add(reader.ReadUInt16()); //RV = T/F
                     break;
-
                 case 0x57:
                     com.Name = "PlaySound3";
                     com.parameters.Add(reader.ReadUInt16());
                     break;
-
                 case 0x58:
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     break;
-
                 case 0x59:
-                    com.Name = "StoreSoundMicrophone";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "CheckOldTalkMicrophone";
+                    com.parameters.Add(reader.ReadUInt16()); //RV = T/F
                     break;
-
-                case 0x5a:
-                    com.Name = "SwitchSound2";
-                    com.parameters.Add(reader.ReadUInt16());
+                case 0x5A:
+                    com.Name = "CheckTalkMicrophone";
+                    com.parameters.Add(reader.ReadUInt16()); //RV = T/F
                     break;
-
-                case 0x5b:
+                case 0x5B:
                     com.Name = "ActivateMicrophone";
                     break;
-
-                case 0x5c:
+                case 0x5C:
                     com.Name = "DisactivateMicrophone";
                     break;
-                case 0x5d:
-                    com.Name = "5D";
-                    com.parameters.Add(reader.ReadByte());
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
-                    break;
-                case 0x5e:
+                case 0x5E:
                     com.Name = "ApplyMovement";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt32() + (uint)reader.BaseStream.Position);
+                    com.parameters.Add(reader.ReadUInt16()); //NPC Id
+                    com.parameters.Add(reader.ReadUInt32() + (uint)reader.BaseStream.Position); //Mov offset
                     var movOffset = com.parameters[1];
                     if (!movOffsetList.Contains(movOffset))
                     {
@@ -2109,109 +2061,94 @@ namespace PG4Map.Formats
                         Console.AppendText("\nA movement is in: " + movOffset.ToString());
                     }
                     break;
-
-                case 0x5f:
+                case 0x5F:
                     com.Name = "WaitMovement";
                     break;
-
                 case 0x60:
                     com.Name = "LockAll";
                     break;
-
                 case 0x61:
                     com.Name = "ReleaseAll";
                     break;
-
                 case 0x62:
-                    com.Name = "Lock";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "LockNPC";
+                    com.parameters.Add(reader.ReadUInt16()); //NPC Id
                     break;
-
                 case 0x63:
-                    com.Name = "Release";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "ReleaseNPC";
+                    com.parameters.Add(reader.ReadUInt16()); //NPC Id
                     break;
-
                 case 0x64:
-                    com.Name = "AddPeople";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "AddNPC";
+                    com.parameters.Add(reader.ReadUInt16()); //NPC Id
                     break;
 
                 case 0x65:
-                    com.Name = "RemovePeople";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "RemoveNPC";
+                    com.parameters.Add(reader.ReadUInt16()); //NPC Id
                     break;
-
                 case 0x66:
                     com.Name = "MoveCam";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //X
+                    com.parameters.Add(reader.ReadUInt16()); //Y
                     break;
-
                 case 0x67:
                     com.Name = "ZoomCam";
                     break;
-
                 case 0x68:
                     com.Name = "FacePlayer";
                     break;
-
                 case 0x69:
                     com.Name = "StoreHeroPosition";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //RV = X
+                    com.parameters.Add(reader.ReadUInt16()); //RV = Y
                     break;
-
-                case 0x6a:
-                    com.Name = "StoreOWPosition";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                case 0x6A:
+                    com.Name = "StoreNPCPosition";
+                    com.parameters.Add(reader.ReadUInt16()); //NPC Id
+                    com.parameters.Add(reader.ReadUInt16()); //RV = X
+                    com.parameters.Add(reader.ReadUInt16()); //RV = Y
                     break;
-
-                case 0x6b:
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                case 0x6B:
+                    com.Name = "6B";
+                    com.parameters.Add(reader.ReadUInt16()); //8
+                    com.parameters.Add(reader.ReadUInt16()); //0
+                    com.parameters.Add(reader.ReadUInt16()); //0
                     break;
-
-                case 0x6c:
-                    com.Name = "ContinueFollow";
+                case 0x6C:
+                    com.Name = "SetFollowHeroMovement?";
+                    com.parameters.Add(reader.ReadUInt16()); //NPC Id  
                     com.parameters.Add(reader.ReadByte());
-                    com.parameters.Add(reader.ReadUInt16());
                     break;
-
-                case 0x6d:
-                    com.Name = "FollowHero";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                case 0x6D:
+                    com.Name = "SetFollowHeroSprite?";
+                    com.parameters.Add(reader.ReadUInt16()); //NPC Id
+                    com.parameters.Add(reader.ReadUInt16()); //Depends from Hero orientation
                     break;
-
-                case 0x6e:
-                    com.Name = "StopFollowHero";
+                case 0x6E:
+                    com.Name = "6E";
                     break;
-
-                case 0x6f:
+                case 0x6F:
                     com.Name = "GiveMoney";
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x70:
                     com.Name = "TakeMoney";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Amount
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x71:
                     com.Name = "CheckMoney";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //RV = T/F
+                    com.parameters.Add(reader.ReadUInt16()); //Amount
                     com.parameters.Add(reader.ReadUInt16());
                     break;
 
                 case 0x72:
                     com.Name = "ShowMoney";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //X coordinate
+                    com.parameters.Add(reader.ReadUInt16()); //Y coordinate
                     break;
 
                 case 0x73:
@@ -2224,8 +2161,8 @@ namespace PG4Map.Formats
 
                 case 0x75:
                     com.Name = "ShowCoin";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //X coordinate
+                    com.parameters.Add(reader.ReadUInt16()); //Y coordinate
                     break;
 
                 case 0x76:
@@ -2245,101 +2182,88 @@ namespace PG4Map.Formats
 
                 case 0x79:
                     com.Name = "GiveCoin";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Amount
                     break;
 
-                case 0x7a:
+                case 0x7A:
                     com.Name = "TakeCoin";
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     break;
-
-                case 0x7b:
+                case 0x7B:
                     com.Name = "GiveItem";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Item Id
+                    com.parameters.Add(reader.ReadUInt16()); //Amount
+                    com.parameters.Add(reader.ReadUInt16()); //RV = T/F
                     break;
-
-                case 0x7c:
+                case 0x7C:
                     com.Name = "TakeItem";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Item Id
+                    com.parameters.Add(reader.ReadUInt16()); //Amount
+                    com.parameters.Add(reader.ReadUInt16()); //RV = T(Taken)/F(Bag Full)
                     break;
-
-                case 0x7d:
+                case 0x7D:
                     com.Name = "CheckItemBagSpace";
                     com.parameters.Add(reader.ReadUInt16()); //Item Id
                     com.parameters.Add(reader.ReadUInt16()); //Amount
                     com.parameters.Add(reader.ReadUInt16()); //RV = Item Bag Number
                     break;
-
-                case 0x7e:
+                case 0x7E:
                     com.Name = "CheckItemBagNumber";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Item
+                    com.parameters.Add(reader.ReadUInt16()); //Mininum Amount
+                    com.parameters.Add(reader.ReadUInt16()); //RV = T/F
                     break;
-
-                case 0x7f:
-                    com.Name = "StoreItemTaken";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                case 0x7F:
+                    com.Name = "StoreItemAmount";
+                    com.parameters.Add(reader.ReadUInt16()); //Item
+                    com.parameters.Add(reader.ReadUInt16()); //RV = Amount
                     break;
-
                 case 0x80:
-                    com.Name = "StoreItemType";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "StoreBag";
+                    com.parameters.Add(reader.ReadUInt16()); //Item
+                    com.parameters.Add(reader.ReadUInt16()); //RV = Bag
                     break;
-
                 case 0x83:
-                    com.Name = "SendItemType";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "GiveUndergroundItem(83)";
+                    com.parameters.Add(reader.ReadUInt16()); //Item
+                    com.parameters.Add(reader.ReadUInt16()); //Amount
+                    com.parameters.Add(reader.ReadUInt16()); //RV
                     break;
-
                 case 0x85:
-                    com.Name = "StoreUndergroundPcStatus";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "CheckUndergroundItemSpace";
+                    com.parameters.Add(reader.ReadUInt16()); //Item
+                    com.parameters.Add(reader.ReadUInt16()); //Amount
+                    com.parameters.Add(reader.ReadUInt16()); //RV
                     break;
-
                 case 0x87:
-                    com.Name = "StoreUndergroundItem";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "GiveUndergroundItem(87)";
+                    com.parameters.Add(reader.ReadUInt16()); //Item
+                    com.parameters.Add(reader.ReadUInt16()); //Amount
+                    com.parameters.Add(reader.ReadUInt16()); //RV
                     break;
-
-                case 0x8f:
-                    com.Name = "SendItemType";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                case 0x8F:
+                    com.Name = "GiveUndergroundGems";
+                    com.parameters.Add(reader.ReadUInt16()); //Gem
+                    com.parameters.Add(reader.ReadUInt16()); //Dimension
+                    com.parameters.Add(reader.ReadUInt16()); //RV
                     break;
-
                 case 0x93:
-                    com.Name = "StorePokèmonParty";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "StorePoffin";
+                    com.parameters.Add(reader.ReadUInt16()); //Poffin
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x94:
-                    com.Name = "StorePokèmonParty(94)";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "GivePoffin";
+                    com.parameters.Add(reader.ReadUInt16()); //Poffin Id
+                    com.parameters.Add(reader.ReadUInt16()); //Number
                     break;
-
                 case 0x95:
-                    com.Name = "StorePokèmonParty(95)";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "StorePokèmonPartySpecieNumber";
+                    com.parameters.Add(reader.ReadUInt16()); //Specie
                     com.parameters.Add(reader.ReadUInt16());
                     break;
-
                 case 0x96:
                     com.Name = "GivePokèmon";
                     com.parameters.Add(reader.ReadUInt16());
@@ -2347,31 +2271,26 @@ namespace PG4Map.Formats
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     break;
-
                 case 0x97:
                     com.Name = "GiveEgg";
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     break;
-
                 case 0x99:
-                    com.Name = "StoreMove";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "CheckMoveLearned";
+                    com.parameters.Add(reader.ReadUInt16()); //RV
+                    com.parameters.Add(reader.ReadUInt16()); //Move
+                    com.parameters.Add(reader.ReadUInt16()); //Pokèmon
                     break;
-
                 case 0x9A:
-                    com.Name = "StorePlace";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "StoreMNPokèmon";
+                    com.parameters.Add(reader.ReadUInt16()); //RV = Pokèmon
+                    com.parameters.Add(reader.ReadUInt16()); //Move
                     break;
-
                 case 0x9B:
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     break;
-
                 case 0xA1:
                     com.Name = "CallEnd";
                     break;
@@ -2381,118 +2300,94 @@ namespace PG4Map.Formats
                 case 0xA3:
                     com.Name = "StartWFC";
                     break;
-
                 case 0xA5:
                     com.Name = "StartInterview";
                     break;
-
                 case 0xA6:
                     com.Name = "StartDressPokèmon";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Pokèmon Id
+                    com.parameters.Add(reader.ReadUInt16()); //RV = Dress Decision
                     com.parameters.Add(reader.ReadUInt16());
                     break;
-
                 case 0xA7:
-                    com.Name = "DisplayDressedPokèmon";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "ShowDressedPokèmon";
+                    com.parameters.Add(reader.ReadUInt16()); //Picture Id
+                    com.parameters.Add(reader.ReadUInt16()); //Picture Pointer?
                     break;
-
                 case 0xA8:
-                    com.Name = "DisplayContestPokèmon";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "ShowContestPokèmon";
+                    com.parameters.Add(reader.ReadUInt16()); //Picture Id
+                    com.parameters.Add(reader.ReadUInt16()); //Picture Pointer?
                     break;
-
                 case 0xA9:
                     com.Name = "OpenBallCapsule";
                     break;
-
                 case 0xAA:
                     com.Name = "OpenSinnohMap";
                     break;
-
                 case 0xAB:
                     com.Name = "OpenPC";
-                    com.parameters.Add(reader.ReadByte());
+                    com.parameters.Add(reader.ReadByte()); //Pc Called Function Id
                     break;
-
                 case 0xAC:
                     com.Name = "StartDrawingUnion";
                     break;
-
                 case 0xAD:
                     com.Name = "ShowTrainerCaseUnion";
                     break;
-
                 case 0xAE:
                     com.Name = "StartTradingUnion";
                     break;
-
                 case 0xAF:
                     com.Name = "ShowRecordUnion";
                     break;
-
                 case 0xB0:
                     com.Name = "EndGame";
                     break;
-
                 case 0xB1:
                     com.Name = "ShowHallOfFame";
                     break;
-
                 case 0xB2:
-                    com.Name = "StoreWFC";
+                    com.Name = "CheckWFC";
                     com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //RV = T/F
                     break;
-
                 case 0xB3:
                     com.Name = "StartWFC2";
                     com.parameters.Add(reader.ReadUInt16());
                     break;
-
                 case 0xB4:
                     com.Name = "ChooseStarter";
                     break;
-
                 case 0xB5:
                     com.Name = "BattleStarter";
                     break;
-
                 case 0xB6:
                     com.Name = "StoreBattleID?";
                     com.parameters.Add(reader.ReadUInt16());
                     break;
-
                 case 0xB7:
                     com.Name = "SetVarBattle?";
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     break;
-
                 case 0xB8:
                     com.Name = "StoreTypeBattle?";
                     com.parameters.Add(reader.ReadUInt16());
                     break;
-
                 case 0xB9:
                     com.Name = "SetVarBattle2?";
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     break;
-
                 case 0xBA:
                     com.Name = "ChoosePlayerName";
                     break;
-
                 case 0xBB:
                     com.Name = "ChoosePokèmonName";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Pokèmon Id
+                    com.parameters.Add(reader.ReadUInt16()); //RV
                     break;
-
                 case 0xBC:
                     com.Name = "FadeScreen";
                     com.parameters.Add(reader.ReadUInt16());
@@ -2500,50 +2395,50 @@ namespace PG4Map.Formats
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     break;
-
                 case 0xBD:
                     com.Name = "ResetScreen";
                     break;
                 case 0xBE:
                     com.Name = "Warp";
+                    com.parameters.Add(reader.ReadUInt16()); //Map Id
                     com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //X coordinate
+                    com.parameters.Add(reader.ReadUInt16()); //Y coordinate
+                    com.parameters.Add(reader.ReadUInt16()); //Orientation
                     break;
-                case 0xbf:
+                case 0xBF:
                     com.Name = "RockClimbAnimation";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Pokèmon Id
                     break;
                 case 0xC0:
                     com.Name = "SurfAnimation";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Pokèmon Id
                     break;
                 case 0xC1:
                     com.Name = "WaterfallAnimation";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Pokèmon Id
                     break;
                 case 0xC2:
                     com.Name = "FlyAnimation";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Pokèmon Id
                     break;
                 case 0xC5:
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "CutAnimation";
+                    com.parameters.Add(reader.ReadUInt16()); //Pokèmon Id
                     break;
                 case 0xC6:
                     com.Name = "Tuxedo";
-                    //com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0xC7:
-                    com.Name = "StoreBike";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "CheckBike";
+                    com.parameters.Add(reader.ReadUInt16()); //RV = T/F
                     break;
                 case 0xC8:
                     com.Name = "RideBike";
-                    com.parameters.Add(reader.ReadByte());
+                    com.parameters.Add(reader.ReadByte()); //On/Off
                     break;
                 case 0xC9:
+                    com.Name = "C9";
                     com.parameters.Add(reader.ReadByte());
                     break;
                 case 0xCB:
@@ -2555,181 +2450,186 @@ namespace PG4Map.Formats
                     break;
                 case 0xCD:
                     com.Name = "SetVarHero";
-                    com.parameters.Add(reader.ReadByte());
+                    com.parameters.Add(reader.ReadByte()); //Text Var
                     break;
                 case 0xCE:
                     com.Name = "SetVarRival";
-                    com.parameters.Add(reader.ReadByte());
+                    com.parameters.Add(reader.ReadByte()); //Text Var
                     break;
                 case 0xCF:
                     com.Name = "SetVarAlter";
-                    com.parameters.Add(reader.ReadByte());
+                    com.parameters.Add(reader.ReadByte()); //Text Var
                     break;
                 case 0xD0:
                     com.Name = "SetVarPokémon";
-                    com.parameters.Add(reader.ReadByte());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadByte()); //Text Var
+                    com.parameters.Add(reader.ReadUInt16()); //Pokèmon Id
                     break;
                 case 0xD1:
                     com.Name = "SetVarItem";
-                    com.parameters.Add(reader.ReadByte());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadByte()); //Text Var
+                    com.parameters.Add(reader.ReadUInt16()); //Item Id
                     break;
                 case 0xD2:
-                    com.Name = "SetVarItemType";
-                    com.parameters.Add(reader.ReadByte());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "SetVarBag";
+                    com.parameters.Add(reader.ReadByte()); //Text Var
+                    com.parameters.Add(reader.ReadUInt16()); //Bag Id
                     break;
                 case 0xD3:
-                    com.Name = "SetVarBattleItem";
-                    com.parameters.Add(reader.ReadByte());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "SetVarMove";
+                    com.parameters.Add(reader.ReadByte()); //Text Var 
+                    com.parameters.Add(reader.ReadUInt16()); //Move Id
                     break;
                 case 0xD4:
                     com.Name = "SetVarAttack";
-                    com.parameters.Add(reader.ReadByte());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadByte()); //Text Var
+                    com.parameters.Add(reader.ReadUInt16()); //Attack Id
                     break;
                 case 0xD5:
                     com.Name = "SetVarNumber";
-                    com.parameters.Add(reader.ReadByte());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadByte());//Text Var
+                    com.parameters.Add(reader.ReadUInt16()); //Number
                     break;
                 case 0xD6:
                     com.Name = "SetVarNickPokémon";
-                    com.parameters.Add(reader.ReadByte());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadByte()); //Text Var
+                    com.parameters.Add(reader.ReadUInt16()); //Pokèmon Nick
                     break;
                 case 0xD7:
-                    com.Name = "SetVarKeyItem";
-                    com.parameters.Add(reader.ReadByte());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "SetVarPokèKronApp";
+                    com.parameters.Add(reader.ReadByte()); //Text Var
+                    com.parameters.Add(reader.ReadUInt16()); //Pokèkron App
                     break;
                 case 0xD8:
                     com.Name = "SetVarTrainer";
-                    com.parameters.Add(reader.ReadByte());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadByte()); //Text Var
+                    com.parameters.Add(reader.ReadUInt16()); //Trainer Id
                     break;
                 case 0xD9:
-                    com.Name = "SetVarTrainer(D9)";
-                    com.parameters.Add(reader.ReadByte());
+                    com.Name = "SetVarTrainerDefault";
+                    com.parameters.Add(reader.ReadByte()); //Text Var
                     break;
                 case 0xDA:
                     com.Name = "SetVarPokèmonStored";
-                    com.parameters.Add(reader.ReadByte());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadByte()); //Text Var
+                    com.parameters.Add(reader.ReadUInt16()); //Pokèmon Id
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadByte());
                     break;
                 case 0xDB:
                     com.Name = "SetVarHeroStarter";
-                    com.parameters.Add(reader.ReadByte());
+                    com.parameters.Add(reader.ReadByte()); //Text Var
                     break;
                 case 0xDC:
                     com.Name = "SetVarRivalStarter";
-                    com.parameters.Add(reader.ReadByte());
+                    com.parameters.Add(reader.ReadByte()); //Text Var
                     break;
                 case 0xDE:
                     com.Name = "StoreStarter";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //RV = Starter Id
                     break;
                 case 0xDF:
-                    com.Name = "SetVarDFItem";
-                    com.parameters.Add(reader.ReadByte());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "DF";
+                    com.parameters.Add(reader.ReadByte()); //Text Var
+                    com.parameters.Add(reader.ReadUInt16()); //Underground Item Id
                     break;
                 case 0xE0:
                     com.Name = "SetVarUndergroundItem";
-                    com.parameters.Add(reader.ReadByte());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadByte()); //Text Var
+                    com.parameters.Add(reader.ReadUInt16()); //Underground Item Id
                     break;
                 case 0xE1:
-                    com.Name = "SetVarE1Item";
-                    com.parameters.Add(reader.ReadByte());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "SetVarGem";
+                    com.parameters.Add(reader.ReadByte()); //Text Var
+                    com.parameters.Add(reader.ReadUInt16()); //Gem Id
                     break;
                 case 0xE2:
                     com.Name = "SetVarSwarmPlace";
-                    com.parameters.Add(reader.ReadByte());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadByte()); //Text Var
+                    com.parameters.Add(reader.ReadUInt16()); //Swarm Place Id
                     break;
                 case 0xE3:
                     com.Name = "StoreSwarmInfo";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //RV = Swarm Place
+                    com.parameters.Add(reader.ReadUInt16()); //RV = Swarm Pokèmon
                     break;
                 case 0xE4:
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "E4";
+                    com.parameters.Add(reader.ReadUInt16()); //Trainer Id
                     break;
                 case 0xE5:
                     com.Name = "TrainerBattle";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Trainer Id
+                    com.parameters.Add(reader.ReadUInt16()); //Ally Trainer Id
                     break;
                 case 0xE6:
                     com.Name = "MessageBattle";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Trainer Id
+                    com.parameters.Add(reader.ReadUInt16()); //Message Id
                     break;
                 case 0xE7:
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "StoreMessageBattle(E7)";
+                    com.parameters.Add(reader.ReadUInt16()); //Win Message Id
+                    com.parameters.Add(reader.ReadUInt16()); //Normal Message Id
+                    com.parameters.Add(reader.ReadUInt16()); //Lost Message Id
                     break;
                 case 0xE8:
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "StoreMessageBattle(E8)";
+                    com.parameters.Add(reader.ReadUInt16()); //Win Message Id
+                    com.parameters.Add(reader.ReadUInt16()); //Normal Message Id
+                    com.parameters.Add(reader.ReadUInt16()); //Lost Message Id
                     break;
                 case 0xE9:
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "E9";
+                    com.parameters.Add(reader.ReadUInt16()); //RV = T/F
                     break;
                 case 0xEA:
                     com.Name = "ActTrainer";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Trainer Id
                     break;
                 case 0xEB:
                     com.Name = "TeleportPC";
                     break;
                 case 0xEC:
-                    com.Name = "StoreBattleResult";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "StoreBattleResult"; 
+                    com.parameters.Add(reader.ReadUInt16()); //RV 
                     break;
                 case 0xED:
                     com.Name = "StoreBattleResult2";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //RV
                     break;
                 case 0xEE:
                     com.Name = "CheckDoubleBattle";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //RV
                     break;
                 case 0xF2:
-                    com.Name = "F2";
+                    com.Name = "StoreWirelessResponse";
+                    com.parameters.Add(reader.ReadUInt16()); //Function Id
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //RV = Response
                     break;
                 case 0xF3:
+                    com.Name = "StoreWirelessResponseHead";
+                    com.parameters.Add(reader.ReadUInt16()); //Function Id
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //RV = Response
                     break;
                 case 0xF6:
                     com.Name = "F6";
                     break;
                 case 0xF7:
-                    com.Name = "StartPokèmonContest";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "SetStatusPokèmonContest";
+                    com.parameters.Add(reader.ReadUInt16()); //T/F
                     break;
                 case 0xF8:
                     com.Name = "StartOvation";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Sound Id
                     break;
                 case 0xF9:
                     com.Name = "StopOvation";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Sound Id
                     break;
                 case 0xFA:
                     com.Name = "FA";
@@ -2744,38 +2644,37 @@ namespace PG4Map.Formats
                     break;
                 case 0xFD:
                     com.Name = "SetVarNamePartContest";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Part Id
+                    com.parameters.Add(reader.ReadUInt16()); //Text Var
                     break;
                 case 0xFE:
-                    com.Name = "Fe";
-                    com.parameters.Add(reader.ReadUInt16());
-                    if (scriptType == DPSCRIPT)
-                        com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "FE";
+                    com.parameters.Add(reader.ReadUInt16()); //Part Id
+                    com.parameters.Add(reader.ReadUInt16()); 
                     break;
                 case 0xFF:
-                    com.Name = "SetVarPartIdMusical";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "SetVarPartIdContest";
+                    com.parameters.Add(reader.ReadUInt16()); //Part Id
+                    com.parameters.Add(reader.ReadUInt16()); //Text Var
                     break;
                 case 0x101:
                     com.Name = "BlackScreenEffect";
                     break;
                 case 0x102:
                     com.Name = "SetVarModeContest";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Text Var
                     break;
                 case 0x103:
                     com.Name = "SetVarTypeContest";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Text Var
                     break;
                 case 0x104:
                     com.Name = "SetVarNameWinnerContest";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Text Var
                     break;
                 case 0x106:
                     com.Name = "SetVarPokèWinnerContest";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Text Var
                     break;
                 case 0x107:
                     com.Name = "107";
@@ -2783,48 +2682,48 @@ namespace PG4Map.Formats
                     break;
                 case 0x108:
                     com.Name = "StoreVarPeopleId";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //RV
                     break;
                 case 0x109:
                     com.Name = "StoreVarPartId";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //RV
                     break;
                 case 0x10A:
                     com.Name = "10A";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Part Id
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x10B:
-                    com.Name = "ActPeopleContest";
+                    com.Name = "StoreContestTrainerNumber";
                     com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //RV = Trainer Number
                     break;
                 case 0x10C:
-                    com.Name = "10C";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "StoreContestType";
+                    com.parameters.Add(reader.ReadUInt16()); //RV = Type Contest
                     break;
                 case 0x10D:
                     com.Name = "CheckWinContest";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //RV = T/F
                     break;
                 case 0x10E:
-                    com.Name = "SetVarItemWinnerContest";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "SetVarItemWinContest";
+                    com.parameters.Add(reader.ReadUInt16()); //Text Var
                     break;
                 case 0x10F:
-                    com.Name = "10f";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "StoreItemWinContest";
+                    com.parameters.Add(reader.ReadUInt16()); //Item win
                     break;
                 case 0x110:
-                    com.Name = "110";
+                    com.Name = "CallContestFunction";
                     com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Contest Level
+                    com.parameters.Add(reader.ReadUInt16()); //Contest Moment
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x111:
                     com.Name = "StartFlashContest";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Times
                     break;
                 case 0x112:
                     com.Name = "EndFlashContest";
@@ -2833,23 +2732,11 @@ namespace PG4Map.Formats
                     com.Name = "CarpetAnimationContest";
                     break;
                 case 0x114:
-                    com.Name = "SetFloorStatus";
-                    com.parameters.Add(reader.ReadUInt16());
-                    if (scriptType == PLSCRIPT)
-                    {
-                        var i = reader.ReadUInt16();
-                        while (i > 10000)
-                        {
-                            com.parameters.Add(i);
-                            i = reader.ReadUInt16();
-                        }
-                        if (i < 10000)
-                            reader.BaseStream.Position -= 2;
-                    }
+                    com.Name = "114";
                     break;
                 case 0x115:
                     com.Name = "CheckContestEnd";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //RV
                     break;
                 case 0x116:
                     com.Name = "116";
@@ -2859,35 +2746,33 @@ namespace PG4Map.Formats
                     break;
                 case 0x118:
                     com.Name = "118";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x119:
-                    com.Name = "CheckPokèru";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "CheckPokèrus";
+                    com.parameters.Add(reader.ReadUInt16()); //RV
                     break;
                 case 0x11B:
                     com.Name = "WarpMapLift";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Map Id
+                    com.parameters.Add(reader.ReadUInt16()); //X coordinate
+                    com.parameters.Add(reader.ReadUInt16()); //Y coordinate
+                    com.parameters.Add(reader.ReadUInt16()); //Z coordinate
+                    com.parameters.Add(reader.ReadUInt16()); //Orientation
                     break;
                 case 0x11C:
                     com.Name = "StoreFloor";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Floor Id
                     break;
                 case 0x11D:
                     com.Name = "StartLift";
                     break;
                 case 0x11E:
-                    com.Name = "StorePokèmonNumberCaught";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "StorePokèmonNumberCaught(11E)";
+                    com.parameters.Add(reader.ReadUInt16()); //Total Pokèmon Caught
                     break;
                 case 0x120:
-                    com.Name = "120";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "StorePokèmonNumberCaught(120)";
+                    com.parameters.Add(reader.ReadUInt16()); //Total Pokèmon Caught
                     break;
                 case 0x121:
                     com.Name = "121";
@@ -2895,27 +2780,27 @@ namespace PG4Map.Formats
                     break;
                 case 0x123:
                     com.Name = "123";
-                    com.parameters.Add(reader.ReadByte());
+                    com.parameters.Add(reader.ReadByte()); //Text Var
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x124:
                     com.Name = "WildPokèmonBattle";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Pokèmon Id
+                    com.parameters.Add(reader.ReadUInt16()); //Level
                     break;
                 case 0x125:
-                    com.Name = "125";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "RivalBattle?";
+                    com.parameters.Add(reader.ReadUInt16()); //Trainer Id
                     break;
                 case 0x126:
-                    com.Name = "126";
+                    com.Name = "ExampleCaughtBattle";
                     break;
                 case 0x127:
                     com.Name = "HoneyEffect";
                     break;
                 case 0x128:
-                    com.Name = "CheckHoney";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "StoreHoneyStatus";
+                    com.parameters.Add(reader.ReadUInt16()); //RV = Honey Status
                     break;
                 case 0x129:
                     com.Name = "StartHoneyBattle";
@@ -2928,41 +2813,41 @@ namespace PG4Map.Formats
                     break;
                 case 0x12C:
                     com.Name = "StoreStatusSave";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //RV = Save Status
                     break;
                 case 0x12D:
                     com.Name = "CheckErrorSave";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //RV
                     break;
                 case 0x12E:
                     com.Name = "CheckDressPicture";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Picture Id
+                    com.parameters.Add(reader.ReadUInt16()); //RV
                     break;
                 case 0x12F:
                     com.Name = "CheckContestPicture";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Picture Id
+                    com.parameters.Add(reader.ReadUInt16()); //RV
                     break;
                 case 0x130:
-                    com.Name = "StorePictureName";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "StorePictureTitle";
+                    com.parameters.Add(reader.ReadUInt16()); //Picture Title
                     break;
                 case 0x131:
                     com.Name = "ActPokèKron";
                     break;
                 case 0x132:
                     com.Name = "CheckPokèKron";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //RV
                     break;
                 case 0x133:
                     com.Name = "ActPokèKronApplication";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Application Id
                     break;
                 case 0x134:
                     com.Name = "CheckPokèKronApplication";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Application Id
+                    com.parameters.Add(reader.ReadUInt16()); //RV = Status
                     break;
                 case 0x135:
                     com.Name = "135";
@@ -2973,9 +2858,10 @@ namespace PG4Map.Formats
                     break;
                 case 0x138:
                     com.Name = "138";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Message Id
                     break;
                 case 0x139:
+                    com.Name = "139";
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x13A:
@@ -2985,21 +2871,22 @@ namespace PG4Map.Formats
                     com.Name = "13B";
                     break;
                 case 0x13C:
+                    com.Name = "13C";
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x13D:
-                    com.Name = "13d";
+                    com.Name = "13D";
                     break;
                 case 0x13E:
-                    com.Name = "13e";
+                    com.Name = "13E";
                     break;
                 case 0x13F:
-                    com.Name = "StoreTextVarUnion";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "13F";
+                    com.parameters.Add(reader.ReadUInt16()); 
+                    com.parameters.Add(reader.ReadUInt16()); //RV
                     break;
                 case 0x140:
-                    com.Name = "ChooseUnion";
+                    com.Name = "140";
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x141:
@@ -3015,7 +2902,8 @@ namespace PG4Map.Formats
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x144:
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "144";
+                    com.parameters.Add(reader.ReadUInt16()); //RV
                     break;
                 case 0x145:
                     com.Name = "StoreUnionAlterChoice";
@@ -3026,46 +2914,47 @@ namespace PG4Map.Formats
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x147:
-                    com.Name = "PokèMart";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "PokèMart(147)";
+                    com.parameters.Add(reader.ReadUInt16()); //Mart Type
                     break;
                 case 0x148:
-                    com.Name = "PokèMart2";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "PokèMart(148)";
+                    com.parameters.Add(reader.ReadUInt16()); //Mart Type
                     break;
                 case 0x149:
-                    com.Name = "149";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "PokèMart(149)";
+                    com.parameters.Add(reader.ReadUInt16()); //Mart Type
                     break;
                 case 0x14A:
-                    com.Name = "14A";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "PokèMart(14A)";
+                    com.parameters.Add(reader.ReadUInt16()); //Mart Type
                     break;
                 case 0x14B:
-                    com.Name = "14B";
+                    com.Name = "LostBattle(14B)";
                     break;
                 case 0x14C:
-                    com.Name = "14C";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "ActBike?";
+                    com.parameters.Add(reader.ReadUInt16()); //#9 - Unknown
                     break;
                 case 0x14D:
                     com.Name = "StoreGender";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //RV = Gender
                     break;
                 case 0x14E:
                     com.Name = "HealPokèmon";
                     break;
                 case 0x14F:
-                    com.Name = "14f";
+                    com.Name = "14F";
                     break;
                 case 0x150:
-                    com.Name = "150";
+                    com.Name = "EndWirelessFunction(150)";
                     break;
                 case 0x151:
                     com.Name = "151";
                     break;
                 case 0x152:
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "152";
+                    com.parameters.Add(reader.ReadUInt16()); //#3
                     break;
                 case 0x153:
                     com.Name = "153";
@@ -3075,12 +2964,12 @@ namespace PG4Map.Formats
                     break;
                 case 0x155:
                     com.Name = "ChooseWifiSprite";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Modality?
+                    com.parameters.Add(reader.ReadUInt16()); //RV = Wifi Sprite
                     break;
                 case 0x156:
                     com.Name = "ActWifiSprite";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Wifi Sprite
                     break;
                 case 0x158:
                     com.Name = "ActSinnohPokèdex";
@@ -3090,37 +2979,40 @@ namespace PG4Map.Formats
                     break;
                 case 0x15B:
                     com.Name = "CheckBadge";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Badge Id
+                    com.parameters.Add(reader.ReadUInt16()); //RV = Have/Don't have
                     break;
                 case 0x15C:
                     com.Name = "SetBadge";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Badge Id
                     break;
                 case 0x15D:
                     com.Name = "StoreBadgeNumber";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //RV = Badge Number
                     break;
                 case 0x15F:
                     com.Name = "ActRunningShoes2";
                     break;
                 case 0x160:
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "CheckFollowHero";
+                    com.parameters.Add(reader.ReadUInt16()); //RV = Active/Not active
                     break;
                 case 0x161:
-                    com.Name = "StartFollowHero";
+                    com.Name = "StartFollowHero(161)";
                     break;
                 case 0x162:
-                    com.Name = "StopFollowHero2";
+                    com.Name = "StopFollowHero(162)";
                     break;
                 case 0x163:
+                    com.Name = "163";
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x164:
-                    com.Name = "StartFollowHero2";
+                    com.Name = "StartFollowHero(164)";
                     break;
                 case 0x166:
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "166";
+                    com.parameters.Add(reader.ReadUInt16()); //RV
                     break;
                 case 0x168:
                     com.Name = "PrepareDoorAnimation";
@@ -3147,142 +3039,139 @@ namespace PG4Map.Formats
                     com.parameters.Add(reader.ReadByte());
                     break;
                 case 0x16D:
-                    com.Name = "16d";
+                    com.Name = "StartPokèmonDayCare";
                     break;
                 case 0x16E:
-                    com.Name = "16e";
-                    com.parameters.Add(reader.ReadUInt16());//Stored
+                    com.Name = "StoreDayCareStatus";
+                    com.parameters.Add(reader.ReadUInt16());//RV
                     break;
                 case 0x16F:
-                    com.Name = "16f";
+                    com.Name = "PastoriaGym(16F)";
                     break;
                 case 0x170:
-                    com.Name = "170";
+                    com.Name = "PastoriaGym(170)";
                     break;
                 case 0x171:
-                    com.Name = "171";
+                    com.Name = "HearthomeGym(171)";
                     break;
                 case 0x172:
-                    com.Name = "172";
+                    com.Name = "HearthomeGym(172)";
                     break;
                 case 0x173:
-                    com.Name = "173";
+                    com.Name = "OreburghGym";
                     break;
                 case 0x174:
-                    com.Name = "174";
+                    com.Name = "VeilstoneGym";
                     break;
                 case 0x175:
-                    com.Name = "175";
-                    com.parameters.Add(reader.ReadByte());
+                    com.Name = "SunyShoreGym(175)";
+                    com.parameters.Add(reader.ReadByte()); //9,1,2
                     break;
                 case 0x176:
-                    com.Name = "176";
-                    com.parameters.Add(reader.ReadByte());
+                    com.Name = "SunyShoreGym(176)";
+                    com.parameters.Add(reader.ReadByte()); //0,1,2
                     break;
                 case 0x177:
                     com.Name = "StorePokèmonPartyNumber(177)";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //RV = Pokèmon Number
                     break;
                 case 0x178:
-                    com.Name = "ShowBerry";
-                    com.parameters.Add(reader.ReadByte());
+                    com.Name = "SetBerry";
+                    com.parameters.Add(reader.ReadByte()); //RV
                     break;
                 case 0x179:
-                    com.Name = "StoreBerryPlanted";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "StoreItemBerry";
+                    com.parameters.Add(reader.ReadUInt16()); //RV = Fertilizer/Berry
                     break;
                 case 0x17A:
                     com.Name = "CheckPlantingLimit";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Limit(Quantity of Berry you can plant)
+                    com.parameters.Add(reader.ReadUInt16()); //RV
                     break;
                 case 379:
                     com.Name = "SetVarGrowingBerry(P)";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Text Var
                     break;
                 case 0x17C:
                     com.Name = "SetVarPokèmonNature";
-                    com.parameters.Add(reader.ReadByte());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadByte()); //Text Var
+                    com.parameters.Add(reader.ReadUInt16()); //Nature
                     break;
                 case 0x17D:
                     com.Name = "StoreBerryGrownState";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //RV = Grown State
                     break;
                 case 0x17E:
                     com.Name = "StoreBerryMatureType";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //RV = Berry Id
                     break;
                 case 0x17F:
                     com.Name = "StoreFertilizer";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //RV = Fertilizer Id
                     break;
                 case 384:
                     com.Name = "BerryGrownAnimation(P)";
-                    com.parameters.Add(reader.ReadByte());
+                    com.parameters.Add(reader.ReadByte()); //Status
                     break;
                 case 0x181:
                     com.Name = "StoreBerryMatureNumber";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //RV = Number Available Berries
                     break;
                 case 0x182:
                     com.Name = "AddFertilizer";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Fertilizer Id
                     break;
                 case 0x183:
                     com.Name = "PlantBerry";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Berry Id
                     break;
                 case 0x184:
                     com.Name = "PlantingBerryAnimation";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Status
                     break;
                 case 0x185:
                     com.Name = "RestoreSoil";
                     break;
                 case 0x186:
-                    com.Name = "ChangeOwPosition";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "SetNPCPosition";
+                    com.parameters.Add(reader.ReadUInt16()); //NPC Id
+                    com.parameters.Add(reader.ReadUInt16()); //X
+                    com.parameters.Add(reader.ReadUInt16()); //Y
                     break;
                 case 0x187:
-                    com.Name = "SetOwPosition";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "RelocateNPC";
+                    com.parameters.Add(reader.ReadUInt16()); // NPC Id
+                    com.parameters.Add(reader.ReadUInt16()); // X container
+                    com.parameters.Add(reader.ReadUInt16()); // 
+                    com.parameters.Add(reader.ReadUInt16()); // Y container
+                    com.parameters.Add(reader.ReadUInt16()); //
                     break;
                 case 0x188:
-                    com.Name = "SwitchOwPosition";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "SetNPCScript?";
+                    com.parameters.Add(reader.ReadUInt16()); // NPC Id
+                    com.parameters.Add(reader.ReadUInt16()); // Script?
                     break;
                 case 0x189:
-                    com.Name = "ReleaseOw";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "SetNPCMovement?";
+                    com.parameters.Add(reader.ReadUInt16()); // NPC Id
+                    com.parameters.Add(reader.ReadUInt16()); // Movement?
                     break;
                 case 0x18A:
                     com.Name = "SetTilePassable";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Orientation
+                    com.parameters.Add(reader.ReadUInt16()); //X
+                    com.parameters.Add(reader.ReadUInt16()); //Y
                     break;
                 case 0x18B:
                     com.Name = "SetTileLocked";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Orientation
+                    com.parameters.Add(reader.ReadUInt16()); //X
+                    com.parameters.Add(reader.ReadUInt16()); //Y
                     break;
                 case 0x18C:
                     com.Name = "18C";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
-                    //com.parameters.Add(reader.ReadUInt16());
-                    //com.parameters.Add(reader.ReadUInt16());
-                    //com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //NPC Id
+                    com.parameters.Add(reader.ReadUInt16()); //Depends from Orientation
                     break;
                 case 0x18D:
                     com.Name = "StartErrorCheckSaving";
@@ -3306,124 +3195,132 @@ namespace PG4Map.Formats
                     break;
                 case 0x193:
                     com.Name = "StoreChosenPokèmon";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //RV = Pokèmon Id
                     break;
                 case 0x194:
-                    com.Name = "ShowChoosePokèmonMusical";
+                    com.Name = "ChoosePokèmonMusical";
                     com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Match Level
                     com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Match Type
                     break;
                 case 0x195:
                     com.Name = "StoreChosenPokèmonMusical";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //RV = Chosen Status
+                    com.parameters.Add(reader.ReadUInt16()); //RV = Pokèmon Id
                     break;
                 case 0x196:
+                    com.Name = "196";
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x197:
+                    com.Name = "197";
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x198:
-                    com.Name = "StorePokèmonId";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "StorePokèmonSpecie";
+                    com.parameters.Add(reader.ReadUInt16()); //Pokèmon Id
+                    com.parameters.Add(reader.ReadUInt16()); //RV = Specie
                     break;
                 case 0x199:
-                    com.Name = "199";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "CheckPokèmonNickChanged";
+                    com.parameters.Add(reader.ReadUInt16()); //Pokèmon Id
+                    com.parameters.Add(reader.ReadUInt16()); //RV = Changed/Not Changed
                     break;
                 case 0x19A:
                     com.Name = "StorePokèmonPartyNumber(19A)";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Pokèmon Number
                     break;
                 case 0x19B:
-                    com.Name = "StorePokèmonPartyNumber(19B)";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "CheckPokèmonPartyNumber(19B)";
+                    com.parameters.Add(reader.ReadUInt16()); //RV = Have/Don't have
+                    com.parameters.Add(reader.ReadUInt16()); //Amount
                     break;
                 case 0x19C:
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "StorePokèmonPartyNumber(19C)";
+                    com.parameters.Add(reader.ReadUInt16()); //Pokèmon Number
                     break;
                 case 0x19D:
                     com.Name = "CheckEgg";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //RV
                     break;
                 case 0x19E:
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "19E";
+                    com.parameters.Add(reader.ReadUInt16()); //0,1,2
+                    com.parameters.Add(reader.ReadUInt16()); //RV
                     break;
                 case 0x19F:
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "19F";
+                    com.parameters.Add(reader.ReadUInt16()); //0
                     break;
                 case 0x1A0:
                     com.Name = "1A0";
                     break;
                 case 0x1A3:
-                    com.Name = "1A3";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "TakeMoneyDayCare";
+                    com.parameters.Add(reader.ReadUInt16()); //Amount
                     break;
                 case 0x1A4:
-                    com.Name = "1A4";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "TakePokèmonDayCare";
+                    com.parameters.Add(reader.ReadUInt16()); //RV = Pokèmon Id
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x1A8:
-                    com.Name = "1A8";
+                    com.Name = "TakeEggDayCare";
                     break;
                 case 0x1A9:
-                    com.Name = "1A9";
+                    com.Name = "GiveEggDayCare";
                     break;
                 case 0x1AA:
-                    com.Name = "1AA";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "StoreMoneyDayCare";
+                    com.parameters.Add(reader.ReadUInt16()); //RV = Amount
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x1AB:
-                    com.Name = "1AB";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "CheckEnoughMoney";
+                    com.parameters.Add(reader.ReadUInt16()); //RV = T/F
+                    com.parameters.Add(reader.ReadUInt16()); //Amount
                     break;
                 case 0x1AC:
                     com.Name = "EggAnimation";
                     break;
                 case 0x1AE:
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "CheckLevelDiffDayCare";
+                    com.parameters.Add(reader.ReadUInt16()); //RV
+                    com.parameters.Add(reader.ReadUInt16()); //Level Difference?
                     break;
                 case 0x1AF:
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "SetVarDataDayCare";
+                    com.parameters.Add(reader.ReadUInt16()); //Text Var
+                    com.parameters.Add(reader.ReadUInt16()); //Chosen Pokèmon
+                    com.parameters.Add(reader.ReadUInt16()); //RV = Pokèmon Id
                     break;
                 case 0x1B0:
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "GivePokèmonDayCare";
+                    com.parameters.Add(reader.ReadUInt16()); //Pokèmon Id
                     break;
                 case 0x1B1:
                     com.Name = "1B1";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //NPC Id
                     break;
                 case 0x1B2:
                     com.Name = "1B2";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //NPC Id
                     break;
                 case 0x1B3:
                     com.Name = "OpenMail";
                     break;
                 case 0x1B4:
                     com.Name = "CheckMail";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //RV
                     break;
                 case 0x1B5:
                     com.Name = "ShowRecordList";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //List Id
                     break;
                 case 0x1B6:
                     com.Name = "StoreTime";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //RV = Time
                     break;
                 case 0x1B7:
                     com.Name = "StoreBoundedVariable";
@@ -3445,6 +3342,7 @@ namespace PG4Map.Formats
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x1BC:
+                    com.Name = "1BC";
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     break;
@@ -3453,16 +3351,16 @@ namespace PG4Map.Formats
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x1BE:
-                    com.Name = "1Be";
-                    com.parameters.Add(reader.ReadUInt16());//Stored
+                    com.Name = "StoreDayCareAffinity";
+                    com.parameters.Add(reader.ReadUInt16());//RV
                     break;
                 case 0x1BF:
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x1C0:
-                    com.Name = "StoreSpecificPokèmonParty";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "CheckHavePartyPokèmon";
+                    com.parameters.Add(reader.ReadUInt16()); 
+                    com.parameters.Add(reader.ReadUInt16()); //Pokèmon Id
                     break;
                 case 0x1C1:
                     com.Name = "StorePokèmonSize";
@@ -3542,24 +3440,24 @@ namespace PG4Map.Formats
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x1D2:
-                    com.Name = "GiveAccessorie";
+                    com.Name = "GiveAccessories";
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x1D3:
-                    com.Name = "CheckAccessorie";
+                    com.Name = "CheckAccessories";
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x1D5:
-                    com.Name = "GiveAccPicture";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "GiveBackground";
+                    com.parameters.Add(reader.ReadUInt16()); //Background Id
                     break;
                 case 0x1D6:
-                    com.Name = "CheckAccPicture";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "CheckHaveBackground";
+                    com.parameters.Add(reader.ReadUInt16()); //Background Id
+                    com.parameters.Add(reader.ReadUInt16()); //RV
                     break;
                 case 0x1D7:
                     com.parameters.Add(reader.ReadUInt16());
@@ -3887,7 +3785,7 @@ namespace PG4Map.Formats
                     break;
                 case 0x233:
                     com.Name = "233";
-                    com.parameters.Add(reader.ReadByte());
+                    com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x234:
@@ -3912,12 +3810,14 @@ namespace PG4Map.Formats
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x237:
+                    com.Name = "StartInterview(237)";
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x238:
+                    com.Name = "CheckInterviewDone";
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     break;
@@ -4271,11 +4171,13 @@ namespace PG4Map.Formats
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x290:
+                    com.Name = "ChoosePokèmonDaycare";
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x291:
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "StoreChosenPokèmonDayCare";
+                    com.parameters.Add(reader.ReadUInt16()); //RV = Chosen Pokèmon
+                    com.parameters.Add(reader.ReadUInt16()); //RV = Chosen Status
                     break;
                 case 0x292:
                     com.parameters.Add(reader.ReadByte());
@@ -4459,8 +4361,8 @@ namespace PG4Map.Formats
                     //com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x2C7:
-                    com.Name = "2C7";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "CheckDiamondPearlUnion";
+                    com.parameters.Add(reader.ReadUInt16()); //T/F
                     break;
                 case 0x2C9:
                     com.Name = "2C9";
@@ -4473,14 +4375,22 @@ namespace PG4Map.Formats
                     com.parameters.Add(reader.ReadByte());
                     break;
                 case 0x2CB:
-                    com.Name = "SetVarStarterAccessorie";
-                    com.parameters.Add(reader.ReadByte());
+                    com.Name = "CheckPokèmonPartyMultiple";
+                    com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x2CC:
-                    com.Name = "SetVarWifiSprite";
-                    com.parameters.Add(reader.ReadByte());
-                    com.parameters.Add(reader.ReadUInt16());
+                    if (scriptType == DPSCRIPT)
+                    {
+                        com.Name = "SetVarWifiSprite";
+                        com.parameters.Add(reader.ReadByte());
+                        com.parameters.Add(reader.ReadUInt16());
+                    }
+                    else
+                        com.Name = "CallBattleParkFunction";
+                        com.parameters.Add(reader.ReadUInt16());
+                        com.parameters.Add(reader.ReadUInt16());
+                        com.parameters.Add(reader.ReadUInt16()); //RV;
                     break;
                 case 0x2CD:
                     com.parameters.Add(reader.ReadByte());
@@ -4490,7 +4400,21 @@ namespace PG4Map.Formats
                     com.parameters.Add(reader.ReadByte());
                     break;
                 case 0x2CF:
-                    com.parameters.Add(reader.ReadByte());
+                    if (scriptType == DPSCRIPT)
+                    {
+                        com.parameters.Add(reader.ReadByte());
+                    }
+                    else
+                    {
+                        com.Name = "CheckBattleParkHavePokèmonSameSpecie";
+                        com.parameters.Add(reader.ReadUInt16()); 
+                        com.parameters.Add(reader.ReadUInt16()); //RV = T/F
+                    }
+                    break;
+                case 0x2D0:
+                    com.Name = "StoreChosenPokèmonBattlePark";
+                    com.parameters.Add(reader.ReadUInt16()); //RV = Chosen Pokèmon Id
+                    com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x2D1:
                     com.Name = "LiftAnimation";
@@ -4553,9 +4477,9 @@ namespace PG4Map.Formats
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x2DD:
-                    com.Name = "2DD(P)";
+                    com.Name = "StorePokèmonSpecie(P)";
                     com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Pokèmon Id
                     break;
                 case 0x2DF:
                     com.Name = "2DF(P)";
@@ -4703,6 +4627,8 @@ namespace PG4Map.Formats
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x303:
                     com.Name = "303(P)";
@@ -4727,7 +4653,7 @@ namespace PG4Map.Formats
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x307:
-                    com.Name = "302(P)";
+                    com.Name = "307(P)";
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x308:
@@ -4772,8 +4698,8 @@ namespace PG4Map.Formats
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x313:
-                    com.Name = "313(P)";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "SetBattleParkStatus(P)";
+                    com.parameters.Add(reader.ReadUInt16()); //T/F
                     break;
                 case 0x314:
                     com.Name = "314(P)";
@@ -4883,10 +4809,10 @@ namespace PG4Map.Formats
                     break;
                 case 0x32C:
                     com.Name = "32C(P)";
+                    com.parameters.Add(reader.ReadUInt16()); //RV
                     com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //X
+                    com.parameters.Add(reader.ReadUInt16()); //Y
                     break;
                 case 0x32D:
                     com.Name = "32D(P)";
@@ -4896,8 +4822,8 @@ namespace PG4Map.Formats
                     break;
                 case 0x32F:
                     com.Name = "32F(P)";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Item
+                    com.parameters.Add(reader.ReadUInt16()); //RV = T/F
                     break;
                 case 0x330:
                     com.Name = "330(P)";
@@ -4910,16 +4836,18 @@ namespace PG4Map.Formats
                     break;
                 case 0x334:
                     com.Name = "334(P)";
+                    com.parameters.Add(reader.ReadUInt16()); //#35 - Unknown
+                    com.parameters.Add(reader.ReadUInt16()); //Money Amount
                     break;
                 case 0x335:
                     com.Name = "335(P)";
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //#35 - Unknown
+                    com.parameters.Add(reader.ReadUInt16()); //Money Amount
+                    com.parameters.Add(reader.ReadUInt16()); 
                     break;
                 case 0x336:
                     com.Name = "CheckHallofFameSaveStatus(P)";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //RV = T(OK)/F(Corrupted)
                     break;
                 case 0x337:
                     com.Name = "337(P)";
@@ -4932,39 +4860,45 @@ namespace PG4Map.Formats
                     break;
                 case 0x33A:
                     com.Name = "33A";
-                    com.parameters.Add(reader.ReadByte());
+                    com.parameters.Add(reader.ReadByte()); //#1 - Unknown
                     break;
                 case 0x33C:
-                    com.Name = "SetVarMultipleItem(P)";
-                    com.parameters.Add(reader.ReadByte());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "SetVarColorItem(P)";
+                    com.parameters.Add(reader.ReadByte()); //Text Var
+                    com.parameters.Add(reader.ReadUInt16()); //Item Id
                     break;
                 case 0x33D:
-                    com.Name = "SetVarMultipleItem2(P)";
-                    com.parameters.Add(reader.ReadByte());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "SetVarColorItem2(P)";
+                    com.parameters.Add(reader.ReadByte()); //Text Var
+                    com.parameters.Add(reader.ReadUInt16()); //Item Id
                     break;
                 case 0x33E:
                     com.Name = "SetVarUndergroundItem(P)";
-                    com.parameters.Add(reader.ReadByte());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadByte()); //Text Var
+                    com.parameters.Add(reader.ReadUInt16()); //Underground Id
                     break;
                 case 0x343:
-                    com.Name = "SetVarStarterAccessories2(P)";
-                    com.parameters.Add(reader.ReadByte());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "SetVarStarterAccessories(P)";
+                    com.parameters.Add(reader.ReadByte()); //Text Var
+                    com.parameters.Add(reader.ReadUInt16()); //Accessories Id
+                    break;
+                case 0x344:
+                    com.Name = "SetVarWifiSprite(P)";
+                    com.parameters.Add(reader.ReadByte()); //Text Var
+                    com.parameters.Add(reader.ReadUInt16()); //Category Id
                     break;
                 case 0x345:
-                    com.Name = "345(P)";
-                    com.parameters.Add(reader.ReadByte());
+                    com.Name = "SetVarPoffin(P)";
+                    com.parameters.Add(reader.ReadByte()); //Var Id
+                    com.parameters.Add(reader.ReadUInt16()); //Poffin Id
                     break;
                 case 838:
                     com.Name = "346(P)";
                     com.parameters.Add(reader.ReadByte());
                     break;
                 case 0x347:
-                    com.Name = "DisplayFloor";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "ShowFloor";
+                    com.parameters.Add(reader.ReadUInt16()); //Floor Id
                     break;
 
 
@@ -4974,7 +4908,6 @@ namespace PG4Map.Formats
                     break;
             }
         }
-
 
         private void readCommandHGSS(BinaryReader reader, ref Commands_s com)
         {
@@ -5024,13 +4957,6 @@ namespace PG4Map.Formats
                         checkNextFunction(reader, (uint)reader.BaseStream.Position - 2);
                     }
                     reader.BaseStream.Position -= 2;
-                    break;
-                case 0x18:
-                    com.parameters.Add(reader.ReadUInt16());
-                    break;
-                case 0x19:
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x1A:
                     com.Name = "Goto";
@@ -5087,57 +5013,57 @@ namespace PG4Map.Formats
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x21:
-                    com.Name = "21";
+                    com.Name = "SetVar(21)";
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x22:
-                    com.Name = "22";
+                    com.Name = "SetVar(22)";
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x23:
-                    com.Name = "23";
+                    com.Name = "StoreVar(23)";
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x24:
-                    com.Name = "24";
+                    com.Name = "SetVar(24)";
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x25:
-                    com.Name = "25";
+                    com.Name = "SetVar(25)";
                     com.parameters.Add(reader.ReadUInt16());
                     break;
 
                 case 0x26:
-                    com.Name = "26";
+                    com.Name = "SetVar(26)";
                     com.parameters.Add(reader.ReadUInt16());
                     break;
 
                 case 0x27:
-                    com.Name = "SetValue";
+                    com.Name = "StoreVar(27)";
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     break;
 
                 case 0x28:
-                    com.Name = "SetVar(28)";
+                    com.Name = "StoreVar(28)";
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     break;
 
                 case 0x29:
-                    com.Name = "SetVar(29)";
+                    com.Name = "StoreVarValue(29)";
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x2A:
-                    com.Name = "SetVar(2A)";
+                    com.Name = "StoreVar(2A)";
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     break;
 
                 case 0x2B:
-                    com.Name = "SetVar(2B)";
+                    com.Name = "StoreVar(2B)";
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     break;
@@ -5237,40 +5163,18 @@ namespace PG4Map.Formats
                 case 0x43:
                     com.Name = "CloseMulti(43)";
                     break;
-
-                //case 0x44:
-                //    com.Name = "Multi3";
-                //    com.parameters.Add(reader.ReadByte());
-                //    com.parameters.Add(reader.ReadByte());
-                //    com.parameters.Add(reader.ReadByte());
-                //    com.parameters.Add(reader.ReadByte());
-                //    com.parameters.Add(reader.ReadUInt16());
-                //    com.parameters.Add(reader.ReadByte());
-                //    com.parameters.Add(reader.ReadUInt16());
-                //    break;
-
-                //case 0x45:
-                //    com.Name = "SetTextScriptMessageMulti";
-                //    com.parameters.Add(reader.ReadUInt16());
-                //    com.parameters.Add(reader.ReadUInt16());
-                //    com.parameters.Add(reader.ReadUInt16());
-                //    break;
                 case 0x46:
                     com.Name = "CloseMulti(46)";
                     break;
                 case 0x47:
                     com.Name = "CloseMulti(47)";
                     break;
-                //case 0x48:
-                //    com.Name = "SetTextRowMulti";
-                //    com.parameters.Add(reader.ReadByte());
-                //    break;
                 case 0x49:
-                    com.Name = "Fanfare";
+                    com.Name = "Fanfare(49)";
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x4A:
-                    com.Name = "Fanfare2";
+                    com.Name = "Fanfare(4A)";
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x4B:
@@ -5589,9 +5493,8 @@ namespace PG4Map.Formats
                 case 0x96:
                     com.Name = "CallEnd";
                     break;
-
-                //case 0x97:
-                //    break;
+                case 0x97:
+                    break;
 
                 //case 0x99:
                 //    com.Name = "CheckMove";
@@ -5612,7 +5515,7 @@ namespace PG4Map.Formats
                 //    com.parameters.Add(reader.ReadUInt16());
                 //    break;
                 case 0x9D:
-                    com.Name = "9D";
+                    com.Name = "ShowMap";
                     break;
                 //case 0xA1:
                 //    com.Name = "CallEnd";
@@ -5772,6 +5675,10 @@ namespace PG4Map.Formats
                 case 0xC3:
                     com.Name = "SetVarItemType";
                     com.parameters.Add(reader.ReadByte());
+                    com.parameters.Add(reader.ReadUInt16());
+                    break;
+                case 0xC4:
+                    com.Name = "C4";
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0xC5:
@@ -5934,12 +5841,21 @@ namespace PG4Map.Formats
                 case 0xEE:
                     com.parameters.Add(reader.ReadUInt16());
                     break;
-                //case 0xF2:
-                //    com.parameters.Add(reader.ReadUInt16());
-                //    com.parameters.Add(reader.ReadUInt16());
-                //    com.parameters.Add(reader.ReadUInt16());
-                //    com.parameters.Add(reader.ReadUInt16());
-                //    break;
+                case 0xF0:
+                    com.Name = "F0";
+                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16());
+                    break;
+                case 0xF1:
+                    com.Name = "F1";
+                    com.parameters.Add(reader.ReadUInt16());
+                    break;
+                case 0xF2:
+                    com.Name = "F2";
+                    break;
                 //case 0xF3:
                 //    com.parameters.Add(reader.ReadUInt16());
                 //    com.parameters.Add(reader.ReadUInt16());
@@ -5983,7 +5899,8 @@ namespace PG4Map.Formats
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x114:
-                    com.Name = "114";
+                    com.Name = "SetFloorStatus";
+                    com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x117:
@@ -6492,6 +6409,9 @@ namespace PG4Map.Formats
                 //    com.parameters.Add(reader.ReadUInt16());
                 //    com.parameters.Add(reader.ReadUInt16());
                 //    break;
+                case 0x1C1:
+                    com.Name = "1C1";
+                    break;
 
                 //case 0x1C6:
                 //    com.Name = "CheckMoveDeleter";
@@ -6907,6 +6827,9 @@ namespace PG4Map.Formats
                 //    com.parameters.Add(reader.ReadUInt16());
                 //    com.parameters.Add(reader.ReadUInt16());
                 //    break;
+                case 0x24B:
+                    com.Name = "24B";
+                    break;
                 case 0x24D:
                     com.Name = "WildPokèmonBattle";
                     com.parameters.Add(reader.ReadUInt16());
@@ -6947,6 +6870,9 @@ namespace PG4Map.Formats
                     break;
                 case 0x25A:
                     com.parameters.Add(reader.ReadUInt16());
+                    break;
+                case 0x25B:
+                    com.Name = "25B";
                     break;
                 case 0x25C:
                     com.parameters.Add(reader.ReadUInt16());
@@ -7501,6 +7427,11 @@ namespace PG4Map.Formats
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     break;
+                case 0x349:
+                    com.Name = "349";
+                    com.parameters.Add(reader.ReadByte());
+                    com.parameters.Add(reader.ReadUInt16());
+                    break;
                 case 0x34C:
                     com.Name = "SetVarMultipleItem";
                     com.parameters.Add(reader.ReadByte());
@@ -7510,6 +7441,11 @@ namespace PG4Map.Formats
                     com.Name = "SetVarPoffin";
                     com.parameters.Add(reader.ReadByte());
                     com.parameters.Add(reader.ReadUInt16());
+                    break;
+                case 0x354:
+                    com.Name = "354";
+                    com.parameters.Add(reader.ReadByte());
+                    com.parameters.Add(reader.ReadByte());
                     break;
                 default:
                     com.Name = "0x" + com.Id.ToString("X");
@@ -10231,8 +10167,6 @@ namespace PG4Map.Formats
             textFile.textList[idMessage] = actualText;
         }
 
-
-
         private void checkNextFunction(BinaryReader reader, uint functionOffset)
         {
             if (functionOffset < reader.BaseStream.Length && reader.BaseStream.Position < reader.BaseStream.Length)
@@ -10273,7 +10207,7 @@ namespace PG4Map.Formats
             }
             switch (com.Id)
             {
-                case 0x0 :
+                case 0x0:
                     com.Name = "Nop";
                     com.isEnd = 1;
                     break;
@@ -10320,7 +10254,7 @@ namespace PG4Map.Formats
                     break;
                 case 0x06:
                     com.Name = "SetVar(06)";
-                    com.parameters.Add(reader.ReadUInt16()); 
+                    com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x07:
                     com.Name = "SetVar(07)";
@@ -10689,7 +10623,8 @@ namespace PG4Map.Formats
                     break;
                 case 0x5D:
                     com.Name = "SetVarMusicalInfo";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadByte());
+                    com.parameters.Add(reader.ReadByte());
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x5E:
@@ -11194,13 +11129,13 @@ namespace PG4Map.Formats
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0xD8:
-                    com.Name = "D8";
-                    com.parameters.Add(reader.ReadUInt16()); //Variable to return
-                    com.parameters.Add(reader.ReadUInt16()); //Badge Id
+                    com.Name = "CheckChangeMapEvent";
+                    com.parameters.Add(reader.ReadUInt16()); //Id event
+                    com.parameters.Add(reader.ReadUInt16()); //Is changed? (ret)
                     break;
                 case 0xD9:
                     com.Name = "D9";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //Number
                     break;
                 case 0xDA:
                     com.Name = "DA";
@@ -11486,9 +11421,9 @@ namespace PG4Map.Formats
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x113:
-                    com.Name = "113";
-                    com.parameters.Add(reader.ReadUInt16()); //var
-                    com.parameters.Add(reader.ReadUInt16()); //var
+                    com.Name = "CheckPokèmonNickname";
+                    com.parameters.Add(reader.ReadUInt16()); //Is different from default?(Ret)
+                    com.parameters.Add(reader.ReadUInt16()); //Pokèmon Id
                     break;
                 case 0x114:
                     com.Name = "StorePartyHavePokèmon";
@@ -11657,17 +11592,17 @@ namespace PG4Map.Formats
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x138:
-                    com.Name = "138";
+                    com.Name = "StoreSaveData";
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x139:
-                    com.Name = "SaveData(139)";
+                    com.Name = "SetComunication";
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x13A:
-                    com.Name = "13A";
+                    com.Name = "StoreComunicationStatus";
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x13B:
@@ -11874,7 +11809,7 @@ namespace PG4Map.Formats
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x16A:
-                    com.Name = "16A";
+                    com.Name = "StoreStatusPokèmonMusical";
                     com.parameters.Add(reader.ReadByte());
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
@@ -12096,7 +12031,7 @@ namespace PG4Map.Formats
                     break;
                 case 0x1A1:
                     com.Name = "OpenXtransciever(1A1)";
-                    com.parameters.Add(reader.ReadUInt16()); 
+                    com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x1A2:
                     com.Name = "1A2";
@@ -12434,20 +12369,20 @@ namespace PG4Map.Formats
                     com.Name = "1F2";
                     break;
                 case 0x1F3:
-                    com.Name = "1F3";
+                    com.Name = "CreateStadiumTrainer?";
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x1F4:
-                    com.Name = "1F4";
+                    com.Name = "StartStadiumFunction?";
                     break;
                 case 0x1F5:
-                    com.Name = "1F5";
+                    com.Name = "EndStadiumFunction?";
                     break;
                 case 0x1F6:
-                    com.Name = "1F6";
+                    com.Name = "CreateStadiumOverworld?";
                     com.parameters.Add(reader.ReadUInt16()); // 0
                     com.parameters.Add(reader.ReadUInt16()); // 0
                     com.parameters.Add(reader.ReadUInt16()); // 0
@@ -12462,17 +12397,18 @@ namespace PG4Map.Formats
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x1F8:
-                    com.Name = "1F8";
+                    com.Name = "SetStadiumBusy";
                     break;
                 case 0x1F9:
                     com.Name = "StartBattleExam";
                     break;
                 case 0x1FA:
-                    com.Name = "1FA";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "SetBattleExamTrainerNumber";
+                    com.parameters.Add(reader.ReadUInt16()); //Trainer Number
                     break;
                 case 0x1FB:
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "SetBattleExamType";
+                    com.parameters.Add(reader.ReadUInt16()); //Type
                     break;
                 case 0x1FC:
                     com.Name = "StoreBattleExamModality";
@@ -12481,26 +12417,25 @@ namespace PG4Map.Formats
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x1FD:
-                    com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "StoreBattleExamSprite";
+                    com.parameters.Add(reader.ReadUInt16()); //NPC Id
+                    com.parameters.Add(reader.ReadUInt16()); //Sprite(ret)
                     break;
                 case 0x1FE:
-                        com.parameters.Add(reader.ReadUInt16());
-                        com.parameters.Add(reader.ReadUInt16());
-                        com.parameters.Add(reader.ReadUInt16());
-                        com.parameters.Add(reader.ReadUInt16());
-                        com.parameters.Add(reader.ReadUInt16());
-                        com.parameters.Add(reader.ReadUInt16());
-                        com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "ExamBattle";
+                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //NPC Id
+                    break;
+                case 0x1FF:
+                    com.Name = "EndExamBattle";
                     break;
                 case 0x200:
                     com.Name = "CheckBattleExamStarted";
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x202:
-                        com.Name = "StoreBattleExamStarNumber";
-                        com.parameters.Add(reader.ReadUInt16());
-
+                    com.Name = "StoreBattleExamStarNumber";
+                    com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x203:
                     com.Name = "CheckBattleExamAvailable";
@@ -12525,37 +12460,41 @@ namespace PG4Map.Formats
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x208:
+                    com.Name = "StoreBattleExamWon";
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x209:
+                    com.Name = "DreamWorldFunction";
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x20A:
+                    com.Name = "DreamWorldFunction2";
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x20B:
-                        com.parameters.Add(reader.ReadUInt16());
-                        com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "ShowDreamWorldFurniture";
+                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x20C:
-                        com.Name = "CheckRelocatorPassword";
-                        com.parameters.Add(reader.ReadUInt16());
-                        com.parameters.Add(reader.ReadUInt16());
-                        com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "CheckRelocatorPassword";
+                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x20D:
                     com.Name = "20D";
                     com.parameters.Add(reader.ReadUInt16());
-                        com.parameters.Add(reader.ReadUInt16());
-                        com.parameters.Add(reader.ReadUInt16());
-                        com.parameters.Add(reader.ReadUInt16());
-                        break;
+                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16());
+                    break;
                 case 0x20E:
                     com.Name = "CheckItemInterestingBag";
                     com.parameters.Add(reader.ReadUInt16());
@@ -12569,34 +12508,33 @@ namespace PG4Map.Formats
                     break;
                 case 0x210:
                     com.Name = "210";
-                    com.parameters.Add(reader.ReadUInt16()); // species
-                    com.parameters.Add(reader.ReadUInt16()); //0
-                    com.parameters.Add(reader.ReadUInt16()); //0
-                    com.parameters.Add(reader.ReadUInt16()); //0
+                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16());
                     break;
                 case 0x211:
                     com.Name = "211";
                     break;
                 case 0x212:
-                    com.Name = "212";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "StoreSurveyActive";
+                    com.parameters.Add(reader.ReadUInt16()); //Survey Id
                     break;
                 case 0x213:
                     com.Name = "213";
-                    com.parameters.Add(reader.ReadUInt16()); //0
+                    com.parameters.Add(reader.ReadUInt16()); //(ret)
                     com.parameters.Add(reader.ReadUInt16()); //0
                     com.parameters.Add(reader.ReadUInt16()); //0
                     break;
                 case 0x214:
                     com.Name = "214";
-                    com.parameters.Add(reader.ReadUInt16()); // species
-                    com.parameters.Add(reader.ReadUInt16()); //0
-                    com.parameters.Add(reader.ReadUInt16()); //0
+                    com.parameters.Add(reader.ReadUInt16()); //
                     com.parameters.Add(reader.ReadUInt16()); //0
                     break;
                 case 0x215:
+                    com.Name = "215";
                     com.parameters.Add(reader.ReadUInt16());
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.parameters.Add(reader.ReadUInt16()); //(ret)
                     break;
                 case 0x216:
                     com.Name = "216";
@@ -12623,8 +12561,8 @@ namespace PG4Map.Formats
                     com.Name = "21D";
                     break;
                 case 0x21E:
-                    com.Name = "21E";
-                    com.parameters.Add(reader.ReadUInt16());
+                    com.Name = "StoreSurveyDone";
+                    com.parameters.Add(reader.ReadUInt16()); //Survey Number
                     break;
                 case 0x21F:
                     com.Name = "21F";
@@ -12733,9 +12671,9 @@ namespace PG4Map.Formats
                     com.parameters.Add(reader.ReadUInt16()); // Var(Ret)
                     break;
                 case 0x233:
-                    com.Name = "233";
-                    com.parameters.Add(reader.ReadUInt16()); // Var
-                    com.parameters.Add(reader.ReadUInt16()); // Var
+                    com.Name = "StoreTrainerFromSeason"; //?
+                    com.parameters.Add(reader.ReadUInt16()); // Season
+                    com.parameters.Add(reader.ReadUInt16()); // Trainer Id
                     break;
                 case 0x234:
                     com.Name = "234";
@@ -12891,7 +12829,7 @@ namespace PG4Map.Formats
                     com.parameters.Add(reader.ReadUInt16()); //1 60
                     break;
                 case 0x255: //Freeze
-                    com.Name = "255"; 
+                    com.Name = "255";
                     com.parameters.Add(reader.ReadUInt16()); //0
                     break;
                 case 0x257: //Freeze
@@ -12932,7 +12870,7 @@ namespace PG4Map.Formats
                     com.Name = "PlayTheatralMusic";
                     break;
                 case 0x260: //126
-                    com.Name = "260"; 
+                    com.Name = "260";
                     break;
                 default:
                     com.Name = "0x" + com.Id.ToString("X");
@@ -13018,6 +12956,7 @@ namespace PG4Map.Formats
         }
 
         public void printSimplifiedScript(RichTextBox scriptBoxEditor, RichTextBox scriptBoxViewer, int scriptType, string item)
+        
         {
 
             scriptBoxEditor.Clear();
@@ -13039,9 +12978,6 @@ namespace PG4Map.Formats
                 }
             }
         }
-
-
-
 
         private Commands_s readCommandBW2(BinaryReader reader, Commands_s com)
         {
@@ -16546,7 +16482,7 @@ namespace PG4Map.Formats
                         {
                         }
                     }
-                    else if (scriptType == BW2SCRIPT || scriptType == BWSCRIPT)
+                    else if (scriptType == BWSCRIPT)
                     {
                         try
                         {
@@ -16556,8 +16492,26 @@ namespace PG4Map.Formats
                         {
                         }
                     }
-                    //else if (scriptType == HGSSSCRIPT)
-                    //    Utils.getCommandSimplifiedHGSS(scriptsLine, lineCounter, space, scriptBoxEditor, varNameDictionaryList, 0, visitedLine, scriptType, textFile);
+                    else if (scriptType == BW2SCRIPT)
+                    {
+                        try
+                        {
+                            Utils.getCommandSimplifiedBW2(scriptsLine, ref lineCounter, space, visitedLine);
+                        }
+                        catch
+                        {
+                        }
+                    }
+                    else if (scriptType == HGSSSCRIPT)
+                    {
+                        try
+                        {
+                            Utils.getCommandSimplifiedHGSS(scriptsLine, lineCounter, space, visitedLine);
+                        }
+                        catch
+                        {
+                        }
+                    }
                 }
                 lineCounter++;
                 if ((scriptType == BWSCRIPT || scriptType == BW2SCRIPT))
@@ -16595,7 +16549,10 @@ namespace PG4Map.Formats
                     scriptBox.AppendText(StoreHex((int)command.parameters[0]) + setFunction(StoreHex((int)command.parameters[1])));
                 else if (command.Name == "Condition")
                     scriptBox.AppendText(StoreConditionCommand(command.parameters[0]));
-
+                else if (command.Name == "StoreTextVarUnion"){
+                    scriptBox.AppendText(StoreHex((int)command.parameters[0]) + StoreHex((int)command.parameters[1]));
+                    idMessage = (int)command.parameters[0] + 1;
+                    }
 
                 ////else if ( scriptBox.AppendText(StoreConditionCommand(command.parameters[0]) + getFunction(StoreHex((int)command.parameters[1])));.Name == "Compare" || command.Name == "Compare2")
                 ////    scriptBox.AppendText("0x" + command.parameters[0].ToString("X") + " 0x" + command.parameters[1].ToString());
@@ -16782,23 +16739,20 @@ namespace PG4Map.Formats
                         }
                     }
                 }
-                else if (command.Name != null && command.Name.Contains("SetTextScriptMessage"))
+                else if (command.Name == "SetMultiTextScript")
                 {
                     idMessage = (int)command.parameters[0];
-                    if (scriptType != BWSCRIPT && scriptType != BW2SCRIPT)
-                    {
-                        if (textFile != null && idMessage < textFile.textList.Count)
-                            scriptBox.AppendText(StoreHex((int)command.parameters[0]) + StoreHex((int)command.parameters[1]) + StoreHex((int)command.parameters[2]) + "= ' " + textFile.textList[idMessage].text + " '");
-                        else
-                            scriptBox.AppendText(StoreHex((int)command.parameters[0]) + StoreHex((int)command.parameters[1]) + StoreHex((int)command.parameters[2]));
-                    }
+                    if (textFile != null && idMessage < textFile.textList.Count)
+                        scriptBox.AppendText(StoreHex((int)command.parameters[0]) + StoreHex((int)command.parameters[1]) + "= ' " + textFile.textList[idMessage].text + " '");
+
+                }
+                else if (command.Name != null && command.Name.Contains("SetMultiTextScriptMessage"))
+                {
+                    idMessage = (int)command.parameters[0];
+                    if (multiFile != null && idMessage < multiFile.textList.Count)
+                        scriptBox.AppendText(StoreHex((int)command.parameters[0]) + StoreHex((int)command.parameters[1]) + "= ' " + multiFile.textList[idMessage].text + " '");
                     else
-                    {
-                        if (textFile != null && idMessage < textFile.textList.Count)
-                            scriptBox.AppendText(StoreHex((int)command.parameters[0]) + StoreHex((int)command.parameters[1]) + StoreHex((int)command.parameters[2]) + "= ' " + textFile.textList[idMessage].text + " '");
-                        else
-                            scriptBox.AppendText(StoreHex((int)command.parameters[0]) + StoreHex((int)command.parameters[1]) + StoreHex((int)command.parameters[2]));
-                    }
+                        scriptBox.AppendText(StoreHex((int)command.parameters[0]) + StoreHex((int)command.parameters[1]));
                 }
                 else if (command.Name == "ShowMessageAt")
                 {
@@ -16986,6 +16940,10 @@ namespace PG4Map.Formats
             int idScript = selectedIndex;
             int idMessage = -1;
             int idMulti = 321;
+            if (scriptType == HGSSSCRIPT)
+                idMulti = 191;
+            if (scriptType == PLSCRIPT)
+                idMulti = 361;
             bool isBWText = false;
             if (actualTable != null)
             {
@@ -16998,6 +16956,10 @@ namespace PG4Map.Formats
                         idMessage = 199;
                     if (idScript == 206)
                         idMessage = 203;
+                    if (idScript == 464)
+                        idMessage = 492;
+                    if (idScript == 1042)
+                        idMessage = 562;
                 }
                 else if (scriptType == PLSCRIPT)
                 {
@@ -17005,20 +16967,30 @@ namespace PG4Map.Formats
                         idMessage = 213;
                     if (idScript == 212)
                         idMessage = 217;
+                    if (idScript == 409)
+                        idMessage = 381;
                     if (idScript == 413)
                         idMessage = 397;
+                    if (idScript == 424)
+                        idMessage = 431;
                 }
-                else if (scriptType == 2)
+                else if (scriptType == HGSSSCRIPT)
                 {
+                    if (idScript == 2)
+                        idMessage = 748;
                     if (idScript == 3)
                         idMessage = 40;
                 }
                 else if (scriptType == 3)
                 {
+                    if (idScript == 854)
+                        idMessage = 158;
                     if (idScript == 855)
                         idMessage = 346;
                     if (idScript == 856)
                         idMessage = 426;
+                    if (idScript == 857)
+                        idMessage = 302;
                     if (idScript == 859)
                         idMessage = 347;
                     if (idScript == 860)
@@ -17045,6 +17017,8 @@ namespace PG4Map.Formats
                         idMessage = 281;
                     if (idScript == 890)
                         idMessage = 461;
+                    if (idScript == 891)
+                        idMessage = 316;
                     if (idScript == 892)
                         idMessage = 286;
                     if (idScript == 894)
@@ -17090,6 +17064,7 @@ namespace PG4Map.Formats
             {
                 int selectedText = loadText(fileCounter);
                 writer.Write("FILE: " + fileCounter + "\r\r");
+                scriptBoxEditor.Clear();
                 if (scriptType == DPSCRIPT)
                     if (fileCounter < 465 || fileCounter > 976)
                         loadScript(stream);
@@ -17099,7 +17074,7 @@ namespace PG4Map.Formats
                 if (scriptType == HGSSSCRIPT)
                     if (fileCounter < 266 || fileCounter > 734)
                         loadScript(stream);
-                if (scriptType == BWSCRIPT && ((fileCounter%2 == 0 && fileCounter < 854) || fileCounter>854))
+                if (scriptType == BWSCRIPT && ((fileCounter % 2 == 0 && fileCounter < 854) || fileCounter > 854))
                     loadScript(stream);
                 if (scriptType == BW2SCRIPT && fileCounter != 90)
                     loadScript(stream);
@@ -17491,6 +17466,11 @@ namespace PG4Map.Formats
                 fileCounter++;
             }
             writer.Close();
+        }
+
+        private void Scripts_Load(object sender, EventArgs e)
+        {
+
         }
 
 
