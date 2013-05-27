@@ -4894,7 +4894,7 @@ public class Utils
     {
         functionLineCounter++;
         var stringL = scriptsLine[lineCounter - 1];
-        if ((space.Length>100 || scriptBoxEditor.Lines.Length>3000) && visitedLine.Contains(functionLineCounter) && !stringL.Contains("StoreVarValue"))
+        if (/*(space.Length>40 || scriptBoxEditor.Lines.Length>3000) &&*/ visitedLine.Contains(functionLineCounter) && !stringL.Contains("StoreVarValue"))
         {
             var offset = scriptsLine[lineCounter].Split(' ');
             if (offset.Length > 7)
