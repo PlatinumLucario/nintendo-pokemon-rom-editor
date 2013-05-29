@@ -42,14 +42,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Pokémon DS Map Viewer.exe" size="864256">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Pokémon DS Map Viewer.exe" size="868864">
       <assemblyIdentity name="Pokémon DS Map Viewer" version="0.0.0.0" language="neutral" processorArchitecture="x86" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>4m/IBTp4qanJgw5qTMVuoqtA5yE=</dsig:DigestValue>
+        <dsig:DigestValue>gAu/88SDwQwKvOEB9dVe0bJyCp0=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
