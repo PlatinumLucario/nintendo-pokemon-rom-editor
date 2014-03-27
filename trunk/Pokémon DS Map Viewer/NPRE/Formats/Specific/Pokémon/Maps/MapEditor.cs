@@ -14,6 +14,7 @@
     using NPRE.Formats;
     using System.Runtime.InteropServices;
     using NPRE.Formats.Specific.Pokémon.Maps;
+    using NPRE.Formats.Specific.Pokémon.Scripts;
 
     public class MapEditor : Form
     {
@@ -4886,8 +4887,8 @@
             var actualScript = (ClosableMemoryStream)scriptNarc.figm.fileData[scriptValue];
             var textHandler = getTextHandler(textValue);
 
-            Scripts.scriptType = romType;
             scriptViewer = new Scripts(actualScript, textHandler, textValue);
+            scriptViewer.scriptType = romType;
             scriptViewer.printScripts(scriptViewer.scriptList, scriptBoxViewer,subScripts);
            
         }

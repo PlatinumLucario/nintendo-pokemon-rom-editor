@@ -4,6 +4,7 @@
     using System.ComponentModel;
     using System.Drawing;
     using System.Windows.Forms;
+    using NPRE.Commons;
 
     public class IsBWDialog : Form
     {
@@ -32,26 +33,26 @@
 
         public int CheckGame()
         {
-            if (  Dpp.Checked)
+            if ( Dpp.Checked)
             {
-                return 0;
+                return Constants.DPSCRIPT;
             }
             if (  Hgss.Checked)
             {
-                return 2;
+                return Constants.HGSSSCRIPT;
             }
             if (  Bw.Checked)
             {
-                return 3;
+                return Constants.BWSCRIPT;
             }
             if (  checkBox1.Checked)
             {
                 return 5;
             }
             if (  Pl.Checked)
-                return 1;
+                return Constants.PLSCRIPT;
             if (  BW2.Checked)
-                return 4;
+                return Constants.BW2SCRIPT;
             return -1;
         }
 

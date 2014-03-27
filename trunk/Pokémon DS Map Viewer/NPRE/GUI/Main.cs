@@ -11,6 +11,7 @@ namespace PG4Map
     using PG4Map.Formats;
     using NPRE.Archive;
     using NPRE.Formats.Specific.Pokémon.Maps;
+    using NPRE.Formats.Specific.Pokémon.Scripts;
 
     public class Main : Form
     {
@@ -594,8 +595,6 @@ namespace PG4Map
 
         #region Updating
 
-
-
         private TreeNode AddNodes(Common.Folder_s Folder, TreeNode Node, Boolean isNdsMainTree)
         {
             //Init counters
@@ -670,51 +669,33 @@ namespace PG4Map
             Sys.ContextMenuStrip = fileSystemContextMenu;
 
             //Disable all Context Menu item.
-            disableContextMenu();
+            DisableContextMenu();
         }
 
-
-        //private void initTree(string rootName)
-        //{
-        //    //Add root node to File System, taking the name from file onto your PC.
-        //    Sys.Nodes.Add(rootName);
-
-        //    //Populate File System.
-        //    isNdsMainTree = true;
-        //    makeTree(actualNds.Tree, Sys.Nodes[0]);
-
-        //    //Assign Context Menu to File System
-        //    Sys.ContextMenuStrip = fileSystemContextMenu;
-
-        //    //Disable all Context Menu item.
-        //    disableContextMenu();
-        //}
-
-        private TreeNode makeTree(Common.Folder_s Folder, TreeNode Node)
+        private TreeNode MakeTree(Common.Folder_s Folder, TreeNode Node)
         {
             //Init counters
             subElementsCounter = 0;
 
             //Check if actual folder contains other internal folders.
             if (Folder.Folders != null)
-                Folder = checkInternalFolders(Folder, Node);
+                Folder = CheckInternalFolders(Folder, Node);
 
             if (Folder.Files != null)
-                Folder = checkInternalFiles(Folder, Node);
+                Folder = CheckInternalFiles(Folder, Node);
 
             return Node;
         }
 
-
-        private Common.Folder_s checkInternalFolders(Common.Folder_s Folder, TreeNode Node)
+        private Common.Folder_s CheckInternalFolders(Common.Folder_s Folder, TreeNode Node)
         {
             //Iterate on internal folders.
             for (int folderCounter = 0; folderCounter < Folder.Folders.Count; folderCounter++)
-                Folder = checkInternalFolder(Folder, Node, ref folderCounter);
+                Folder = CheckInternalFolder(Folder, Node, ref folderCounter);
             return Folder;
         }
 
-        private Common.Folder_s checkInternalFolder(Common.Folder_s Folder, TreeNode Node, ref int folderCounter)
+        private Common.Folder_s CheckInternalFolder(Common.Folder_s Folder, TreeNode Node, ref int folderCounter)
         {
             //Store variables
             var actualFolder = Folder.Folders[folderCounter];
@@ -725,7 +706,7 @@ namespace PG4Map
             var actualNode = Node.Nodes[folderCounter];
 
             //Recursive call of method for actualFolder
-            makeTree(actualFolder, actualNode);
+            MakeTree(actualFolder, actualNode);
 
             //Set node tag to generic directory
             actualNode.Tag = GENERAL_DIRECTORY;
@@ -739,36 +720,35 @@ namespace PG4Map
             return Folder;
         }
 
-
-        private Common.Folder_s checkInternalFiles(Common.Folder_s Folder, TreeNode Node)
+        private Common.Folder_s CheckInternalFiles(Common.Folder_s Folder, TreeNode Node)
         {
             //Iterate on internal files.
             for (int fileCounter = 0; fileCounter < Folder.Files.Count; fileCounter++)
-                Folder = checkInternalFile(Folder, Node, fileCounter);
+                Folder = CheckInternalFile(Folder, Node, fileCounter);
             subElementsCounter = 0;
             return Folder;
         }
 
-        private Common.Folder_s checkInternalFile(Common.Folder_s Folder, TreeNode Node, int fileCounter)
+        private Common.Folder_s CheckInternalFile(Common.Folder_s Folder, TreeNode Node, int fileCounter)
         {
             //Add actualFile to File System
             var nodeName = Folder.Files[fileCounter].Name;
             Node.Nodes.Add(nodeName);
-            Folder = updateNodeTag(Folder, Node, fileCounter);
+            Folder = UpdateNodeTag(Folder, Node, fileCounter);
             return Folder;
         }
 
-        private Common.Folder_s updateNodeTag(Common.Folder_s Folder, TreeNode Node, int fileCounter)
+        private Common.Folder_s UpdateNodeTag(Common.Folder_s Folder, TreeNode Node, int fileCounter)
         {
             //Check if is a NDS archive or Narc archive
             if (isNdsMainTree)
-                Folder = updateNodeTagNds(Folder, Node, fileCounter);
+                Folder = UpdateNodeTagNds(Folder, Node, fileCounter);
             else
                 Node.Nodes[fileCounter].Tag = NARC_FILE;
             return Folder;
         }
 
-        private Common.Folder_s updateNodeTagNds(Common.Folder_s Folder, TreeNode Node, int fileCounter)
+        private Common.Folder_s UpdateNodeTagNds(Common.Folder_s Folder, TreeNode Node, int fileCounter)
         {
             //Check if there were other elements into folder and update tag.
             if (fileCounter > subElementsCounter)
@@ -778,21 +758,19 @@ namespace PG4Map
             return Folder;
         }
 
-
-
-        private void disableContextMenu()
+        private void DisableContextMenu()
         {
             foreach (ToolStripMenuItem item in fileSystemContextMenu.Items)
                 item.Enabled = false;
         }
 
-        private void resetTree()
+        private void ResetTree()
         {
             actualNode = null;
-            disableContextMenu();
+            DisableContextMenu();
         }
 
-        private void resetForm()
+        private void ResetForm()
         {
             Sys.Nodes.Clear();
         }
@@ -804,26 +782,26 @@ namespace PG4Map
 
         private void FileSystemNode_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            resetTree();
+            ResetTree();
 
             //Save Tag
             var tag = Convert.ToInt16(Sys.SelectedNode.Tag);
 
             if (isFileTag(tag))
             {
-                activeContextMenu();
-                loadFileData(tag);
+                ActiveContextMenu();
+                LoadFileData(tag);
             }
         }
 
-        private void loadFileData(int tag)
+        private void LoadFileData(int tag)
         {
             //Variable declaration;
             nodeStart = 0;
             nodeLength = 0;
 
             //Load file stream into actualNode, saving nodeStart and length
-            actualNode = loadFileStream(tag);
+            actualNode = LoadFileStream(tag);
 
             //Load extension
             nodeExtension = Utils.readExtension(actualNode);
@@ -831,12 +809,12 @@ namespace PG4Map
             ConsoleLog.AppendText("\nExtensione is: " + nodeExtension);
 
             //Update Info Table
-            popInfoTable();
+            PopInfoTable();
 
-            loadFileStructure(nodeExtension, actualNode);
+            LoadFileStructure(nodeExtension, actualNode);
         }
 
-        private void activeContextMenu()
+        private void ActiveContextMenu()
         {
             //active Context Menu
             for (int i = 0; i < 4; i++)
@@ -850,7 +828,7 @@ namespace PG4Map
             return tag != null && !tag.Equals(GENERAL_DIRECTORY);
         }
 
-        private void loadFileStructure(string nodeExtension, ClosableMemoryStream actualNode)
+        private void LoadFileStructure(string nodeExtension, ClosableMemoryStream actualNode)
         {
 
             var reader = new BinaryReader(actualNode);
@@ -872,10 +850,10 @@ namespace PG4Map
                     break;
             }
             if (nodeExtension.Substring(0, 2) == "AB")
-                reactionABArchive(reader);
+                HandleABArchive(reader);
         }
 
-        private void reactionABArchive(BinaryReader reader)
+        private void HandleABArchive(BinaryReader reader)
         {
             InfoFile.Rows[1].Cells[1].Value = "AB";
             abEditor = new abEditor();
@@ -885,7 +863,7 @@ namespace PG4Map
             abEditor.Ab.Add(abArchive);
         }
 
-        private void popInfoTable()
+        private void PopInfoTable()
         {
             InfoFile.Rows.Clear();
             InfoFile.Rows.Add(new object[] { "ActualFile:", Sys.SelectedNode.Text.Split('.')[0] });
@@ -894,7 +872,7 @@ namespace PG4Map
             InfoFile.Rows.Add(new object[] { "Size: ", nodeLength + " byte" });
         }
 
-        private ClosableMemoryStream loadFileStream(int tag)
+        private ClosableMemoryStream LoadFileStream(int tag)
         {
             switch (tag)
             {
@@ -934,7 +912,7 @@ namespace PG4Map
 
             if (dialog.ShowDialog() != DialogResult.Cancel)
             {
-                resetForm();
+                ResetForm();
                 ROM = dialog.OpenFile();
                 var reader = new BinaryReader(ROM);
                 actualNds = new Nds(reader);
@@ -990,7 +968,7 @@ namespace PG4Map
             else
             {
                 isNdsMainTree = false;
-                makeTree(actualNarc.treeSystem, Sys.SelectedNode);
+                MakeTree(actualNarc.treeSystem, Sys.SelectedNode);
             }
         }
 
@@ -1201,13 +1179,13 @@ namespace PG4Map
             Narc scriptNarc = new Narc();
             scriptNarc.LoadNarc(new BinaryReader(actualNode));
             var scriptEditor = new Scripts(scriptNarc, textNarc,this);
-            try
-            {
-                Utils.bwTextNarc = new Narc().LoadNarc(new BinaryReader(actualNds.getFat().getFileStreamAt(Int16.Parse(Sys.Nodes[0].Nodes[0].Nodes[0].Nodes[0].Nodes[2].Tag.ToString()))));
-            }
-            catch
-            {
-            }
+            //try
+            //{
+            //    Utils.bwTextNarc = new Narc().LoadNarc(new BinaryReader(actualNds.getFat().getFileStreamAt(Int16.Parse(Sys.Nodes[0].Nodes[0].Nodes[0].Nodes[0].Nodes[2].Tag.ToString()))));
+            //}
+            //catch
+            //{
+            //}
 
                 scriptEditor.Show();
         }
